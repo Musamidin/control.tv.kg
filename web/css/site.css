@@ -1,0 +1,179 @@
+html,
+body {
+    height: 100%;
+}
+
+.wrapper {
+    max-width: 1280px;
+    background: #f1f1f1;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto;
+    -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+    position: relative;
+}
+
+.wrap > .container {
+    padding: 70px 15px 20px;
+}
+
+.footer {
+    height: 60px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    padding-left: 5px;
+}
+
+a.asc:after {
+    content: /*"\e113"*/ "\e151";
+}
+
+a.desc:after {
+    content: /*"\e114"*/ "\e152";
+}
+
+.sort-numerical a.asc:after {
+    content: "\e153";
+}
+
+.sort-numerical a.desc:after {
+    content: "\e154";
+}
+
+.sort-ordinal a.asc:after {
+    content: "\e155";
+}
+
+.sort-ordinal a.desc:after {
+    content: "\e156";
+}
+
+.grid-view th {
+    white-space: nowrap;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+header {
+    position: relative;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+.tabMenu {
+
+}
+.tabMenu a.active {
+    background: #FFC107;
+    /* border-bottom: 10px solid #b99466; */
+    color: #000000;
+    padding-top: 21px;
+}
+.tabMenu a {
+    -webkit-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+    box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
+    -webkit-border-top-right-radius: 15px;
+    -webkit-border-bottom-left-radius: 15px;
+    -moz-border-radius-topright: 15px;
+    -moz-border-radius-bottomleft: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    margin: 1%;
+    border: 1px dashed black;
+    padding-top: 25px;
+    font-weight: bold;
+    font-size: 18px;
+    background: #ffc107;
+    display: block;
+    float: left;
+    width: 48%;
+    text-align: center;
+    height: 75px;
+    text-transform: uppercase;
+    color: #888888;
+    text-decoration: none;
+}
+@media (max-width: 420px) {
+  .tabMenu a.active {
+    padding-top: 11px;
+  }
+}
+@media (max-width: 991px) {
+  .tabMenu a,.text > h1 {
+    font-size: 16px;
+  }
+}
+@media (max-width: 767px) {
+  .tabMenu a,.text > h1 {
+    font-size: 12px;
+  }
+}
+@media (max-width: 420px) {
+  .tabMenu a {
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-size: 12px;
+  }
+  .text > h1{ font-size: 12px; }
+}
+@media (max-width: 360px) {
+  .text > h1 {
+    font-size: 12px;
+  }
+}
+.text>h1 {
+    font-style: italic;
+}
+.langs {
+    position: absolute;
+    right: 40px;
+    top: 23px;
+    z-index: 500;
+}
+.pd-40 {
+    padding-left: 40px;
+    padding-right: 40px;
+}
