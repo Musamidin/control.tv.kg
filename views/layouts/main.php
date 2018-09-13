@@ -27,11 +27,36 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <nav class="tabMenu">
-        <?=Html::a(Yii::t('common','Размещение строчного объявления'),['/index'], ['class' => 'active main-link']) ?>
-        <?=Html::a(Yii::t('common','Размещение баннерной рекламы'),['/bannernayareklama'], ['class' => 'main-link']) ?>
-    </nav>
-
+    <?php
+    NavBar::begin([
+        'brandLabel' => Yii::$app->name,
+        'brandUrl' => Yii::$app->homeUrl,
+        'options' => [
+            'class' => 'navbar-inverse navbar-fixed-top',
+        ],
+    ]);
+    echo Nav::widget([
+        'options' => ['class' => 'navbar-nav navbar-right'],
+        'items' => [
+            ['label' => 'Home', 'url' => ['/']],
+            ['label' => 'About', 'url' => ['/about']],
+            ['label' => 'Contact', 'url' => ['/contact']],
+            Yii::$app->user->isGuest ? (
+                ['label' => 'Login', Url::to(['/login'])]
+            ) : (
+                '<li>'
+                . Html::beginForm(['/logout'], 'post')
+                . Html::submitButton(
+                    'Выход (' . Yii::$app->user->identity->login . ')',
+                    ['class' => 'btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>'
+            )
+        ],
+    ]);
+    NavBar::end();
+    ?>
     <div class="container">
         <?= Alert::widget() ?>
         <?= $content ?>
@@ -40,7 +65,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?> | <?= $this->render('language')?></p>
+        <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?> | <?= $this->render('language')?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

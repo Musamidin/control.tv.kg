@@ -60,8 +60,11 @@ $config = [
             'enableDefaultLanguageUrlCode' => true,
             'enableLanguagePersistence' => false,
             'rules' => [
-                //'index' => 'site/index',
-                //'test' => 'site/test',
+                'index' => 'site/index',
+                'login' => 'site/login',
+                'logout' => 'site/logout',
+                'result' => 'site/result',
+                'about' => 'site/about',
                 'index' => 'client/admin',
                 'logout' => 'client/logout',
                 'index' => 'admin/admin',
@@ -80,6 +83,7 @@ $config = [
         
     ],
     'params' => $params,
+    //'defaultRoute' => 'client/index',
 ];
 
 if (YII_ENV_DEV) {

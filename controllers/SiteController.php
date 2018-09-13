@@ -7,15 +7,32 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
+
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\web\UploadedFile;
+
+use app\models\Filestore;
+use app\models\UploadForm;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use app\models\MyReadFilter;
 use app\componets\HelperFunc;
 
+
 class SiteController extends Controller
 {
+
+    public function beforeAction($action)
+    {
+        if (\Yii::$app->getUser()->isGuest && $action->id !== 'login' && $action->id !=='/'){
+            Yii::$app->response->redirect(Url::to(['login']), 301); //Url::to(['login'])
+            Yii::$app->end();
+        }
+
+        return parent::beforeAction($action);    
+    }
     /**
      * {@inheritdoc}
      */
@@ -65,122 +82,88 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        //$this->layout = 'client';
+        $model = new UploadForm();
+        return $this->render('index',['model'=>$model]);
     }
-
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionBannernayareklama()
+    public function actionAbout()
     {
-        return $this->render('bannernayareklama');
+        //$this->layout = 'client';
+        return $this->render('aboutRu');
     }
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionTest()
-    {
-        try{
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-            $reader->setReadDataOnly(true);
-            //$reader->setLoadSheetsOnly(["sheet1"]);
-            //$reader->setReadFilter( new MyReadFilter() );
-            $spreadsheet = $reader->load('D:\testData.xlsx');
-            $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-            //print_r($data);
-            unset($data[1]);
-            $rows = [];
-            foreach ($data as $row) {
-                foreach ($row as $key => $value) {
-                    unset($row[$key]);
-                    if($key == 'A'){
-                        $row['channels'] = $value;
-                    }elseif($key == 'B'){
-                        unset($row[$key]);
-                        $row['text'] = $value;
-                    }elseif($key == 'C'){
-                        unset($row[$key]);
-                        $row['dates'] = $value;
-                    }                
-                }
-                $rows[] = $row;
-            }
-
-            Yii::$app->HelperFunc->save($rows);
-            
-        }catch(Exception $e){
-            print_r($e);
-        }
-    }
-
-    /**
-     * Login action.
-     *
-     * @return Response|string
-     */
+    
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
+            return $this->redirect('/');
+        }else{
+           $this->layout = 'login';
+           return $this->render('login', ['model' => $model]);
         }
-
-        $model->password = '';
-        return $this->render('login', [
-            'model' => $model,
-        ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
-        return $this->goHome();
+        return $this->redirect('login');
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
+    public function actionResult()
     {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+        $response = null;
 
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
+        $model = new UploadForm();
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        if(Yii::$app->language == 'ru'){
-            return $this->render('aboutRu');
-        }else{
-            return $this->render('aboutEn');
+        if (Yii::$app->request->isPost) {
+            $model->fileref = UploadedFile::getInstance($model, 'fileref');
+
+            $fname = explode('.', $_FILES['UploadForm']['name']['fileref']);
+            $fnames = md5($fname[0].date('Y-m-d H:i:s'));
+            
+
+            if ($model->upload($fnames)) {
+                // file is uploaded successfully
+                try{
+                    
+                    $flink = \Yii::$app->basePath."\web\data\\" . $fnames.'.'.$fname[1];
+                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+                    $reader->setReadDataOnly(true);
+                    //$reader->setLoadSheetsOnly(["sheet1"]);
+                    //$reader->setReadFilter( new MyReadFilter() );
+                    $spreadsheet = $reader->load($flink);
+                    $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+                    //print_r($data);
+                    unset($data[1]);
+                    $rows = [];
+                    foreach ($data as $row) {
+                        foreach ($row as $key => $value) {
+                            unset($row[$key]);
+                            if($key == 'A'){
+                                $row['channels'] = $value;
+                            }elseif($key == 'B'){
+                                unset($row[$key]);
+                                $row['text'] = $value;
+                            }elseif($key == 'C'){
+                                unset($row[$key]);
+                                $row['dates'] = $value;
+                            }                
+                        }
+                        $rows[] = $row;
+                    }
+
+                    $response = Yii::$app->HelperFunc->save($rows);
+                    //unlink($flink);
+                }catch(Exception $e){
+                    $response = $e;
+                }
+            }else{
+               $response = null;
+            }
         }
-        
-    }
+
+        return $this->render('result', ['model' => $response]);
+
+    }    
+
 }
