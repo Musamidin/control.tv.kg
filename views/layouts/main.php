@@ -14,7 +14,7 @@ AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>">
+<html lang="<?= Yii::$app->language ?>" ng-app="myApp">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -65,7 +65,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?> | <?= $this->render('language')?></p>
+        <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?> | <!--?= $this->render('language')?--></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

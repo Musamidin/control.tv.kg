@@ -9,7 +9,9 @@ use Yii;
  *
  * @property int $id
  * @property int $mid
- * @property string $dates
+ * @property string $daterent
+ * @property int $astatus
+ * @property string $comment
  *
  * @property MainHub $m
  */
@@ -30,8 +32,9 @@ class DatesHub extends \yii\db\ActiveRecord
     {
         return [
             [['mid'], 'required'],
-            [['mid'], 'integer'],
-            [['dates'], 'safe'],
+            [['mid','astatus'], 'integer'],
+            [['comment'], 'string'],
+            [['daterent'], 'safe'],
             [['mid'], 'exist', 'skipOnError' => true, 'targetClass' => MainHub::className(), 'targetAttribute' => ['mid' => 'id']],
         ];
     }
@@ -44,7 +47,7 @@ class DatesHub extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'mid' => 'Mid',
-            'dates' => 'Dates',
+            'daterent' => 'Dates',
         ];
     }
 

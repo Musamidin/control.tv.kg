@@ -9,27 +9,27 @@ class UploadForm extends Model
     /**
      * @var UploadedFile
      */
-    public $fileref;
+    public $userfile;
 
     public function rules()
     {
         return [
-            [['fileref'], 'file', 'skipOnEmpty' => false, 
+            [['userfile'], 'file', 'skipOnEmpty' => false, 
                           'extensions' => 'xlsx, xls',
                           'checkExtensionByMimeType' => false, 
                           ],
-            // [['fileref'], 'file', 'mimeTypes' => 'application/x-ms-excel'],
-            // [['fileref'], 'file', 'mimeTypes' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+            // [['userfile'], 'file', 'mimeTypes' => 'application/x-ms-excel'],
+            // [['userfile'], 'file', 'mimeTypes' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
         ];
     }
     
-    public function upload($fname)
+    public function upload()
     {
-        if ($this->validate()) {
-            $this->fileref->saveAs(\Yii::$app->basePath."\web\data\\" . $fname . '.' . $this->fileref->extension);
+      //  if ($this->validate()) {
+            $this->userfile->saveAs(\Yii::$app->basePath."\web\data\\" .$this->userfile->baseName . '.' . $this->userfile->extension);
             return true;
-        } else {
-            return false;
-        }
+        // } else {
+        //     return false;
+        // }
     }
 }

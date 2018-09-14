@@ -19,7 +19,7 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Sf7LapkC_wdc9me7F4TH74Hyf1XfTQV_',
             'baseUrl' => '/',
-            'parsers' => ['application/json' => 'yii\web\JsonParser'],
+            //'parsers' => ['application/json' => 'yii\web\JsonParser'],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -54,11 +54,11 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'baseUrl' => '/',
-            'class' => 'codemix\localeurls\UrlManager',
-            'languages' => ['ru','kr'],
-            //'enableLanguageDetection' => true,
-            'enableDefaultLanguageUrlCode' => true,
-            'enableLanguagePersistence' => false,
+            //'class' => 'codemix\localeurls\UrlManager',
+            //'languages' => ['ru','kr'],
+            ///'enableLanguageDetection' => true,
+            //'enableDefaultLanguageUrlCode' => true,
+            //'enableLanguagePersistence' => false,
             'rules' => [
                 'index' => 'site/index',
                 'login' => 'site/login',
@@ -71,15 +71,15 @@ $config = [
                 'logout' => 'admin/logout',
             ],
         ],
-        'i18n' => [
-            'translations' => [
-                'common*' => [
-                    'class' => 'yii\i18n\PhpMessageSource',
-                    'sourceLanguage' => 'ru-RU',
-                    'basePath' => '@app/messages'
-                ],
-            ],
-        ],
+        // 'i18n' => [
+        //     'translations' => [
+        //         'common*' => [
+        //             'class' => 'yii\i18n\PhpMessageSource',
+        //             'sourceLanguage' => 'ru-RU',
+        //             'basePath' => '@app/messages'
+        //         ],
+        //     ],
+        // ],
         
     ],
     'params' => $params,

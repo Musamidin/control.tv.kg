@@ -29,6 +29,8 @@ class SiteController extends Controller
         if (\Yii::$app->getUser()->isGuest && $action->id !== 'login' && $action->id !=='/'){
             Yii::$app->response->redirect(Url::to(['login']), 301); //Url::to(['login'])
             Yii::$app->end();
+        }elseif($action->id === 'result'){
+            $this->enableCsrfValidation = false;
         }
 
         return parent::beforeAction($action);    
@@ -54,6 +56,7 @@ class SiteController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
+                    'result' => ['POST','FILES'],
                 ],
             ],
         ];
@@ -109,61 +112,73 @@ class SiteController extends Controller
         return $this->redirect('login');
     }
 
+    // public function actionResult()
+    // {
+    //     header('Content-Type: application/json');
+
+    //     return json_encode(['test'=>Yii::$app->request->headers->get('token')]);
+    // }
+
     public function actionResult()
     {
+        //header('Content-Type: application/json');
         $response = null;
 
         $model = new UploadForm();
 
         if (Yii::$app->request->isPost) {
-            $model->fileref = UploadedFile::getInstance($model, 'fileref');
 
-            $fname = explode('.', $_FILES['UploadForm']['name']['fileref']);
-            $fnames = md5($fname[0].date('Y-m-d H:i:s'));
-            
+            $model->userfile = UploadedFile::getInstance($model, 'userfile');
 
-            if ($model->upload($fnames)) {
-                // file is uploaded successfully
-                try{
+            // $fname = explode('.', $_FILES['userfile']['name']);
+            // $fnames = md5($fname[0].date('Y-m-d H:i:s'));
+            // $flink = \Yii::$app->basePath."\web\data\\" . $fnames.'.'.$fname[1];
+
+            $model->upload();
+
+            // if ($model->upload($fname)) {
+            //     // file is uploaded successfully
+            //     try{
                     
-                    $flink = \Yii::$app->basePath."\web\data\\" . $fnames.'.'.$fname[1];
-                    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-                    $reader->setReadDataOnly(true);
-                    //$reader->setLoadSheetsOnly(["sheet1"]);
-                    //$reader->setReadFilter( new MyReadFilter() );
-                    $spreadsheet = $reader->load($flink);
-                    $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
-                    //print_r($data);
-                    unset($data[1]);
-                    $rows = [];
-                    foreach ($data as $row) {
-                        foreach ($row as $key => $value) {
-                            unset($row[$key]);
-                            if($key == 'A'){
-                                $row['channels'] = $value;
-                            }elseif($key == 'B'){
-                                unset($row[$key]);
-                                $row['text'] = $value;
-                            }elseif($key == 'C'){
-                                unset($row[$key]);
-                                $row['dates'] = $value;
-                            }                
-                        }
-                        $rows[] = $row;
-                    }
+                    
+            //         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            //         $reader->setReadDataOnly(true);
+            //         //$reader->setLoadSheetsOnly(["sheet1"]);
+            //         //$reader->setReadFilter( new MyReadFilter() );
+            //         $spreadsheet = $reader->load($flink);
+            //         $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            //         unset($data[1]);
+            //         $rows = [];
+            //         foreach ($data as $row) {
+            //             foreach ($row as $key => $value) {
+            //                 unset($row[$key]);
+            //                 if($key == 'A'){
+            //                     $row['channels'] = $value;
+            //                 }elseif($key == 'B'){
+            //                     unset($row[$key]);
+            //                     $row['text'] = $value;
+            //                 }elseif($key == 'C'){
+            //                     unset($row[$key]);
+            //                     $row['dates'] = $value;
+            //                 }                
+            //             }
+            //             $rows[] = $row;
+            //         }
 
-                    $response = Yii::$app->HelperFunc->save($rows);
-                    //unlink($flink);
-                }catch(Exception $e){
-                    $response = $e;
-                }
-            }else{
-               $response = null;
-            }
+            //         $response = Yii::$app->HelperFunc->save($rows);
+            //         //unlink($flink);
+            //     }catch(Exception $e){
+            //         $response = $e;
+            //     }
+            // }else{
+            //    $response = 'not successfully uploaded!';
+            // }
         }
+        print_r($_FILES);
+        //return json_encode(['response'=>$ts ]);
+        //$this->render('result', ['model' => $response]);
+        //Yii::$app->request->headers->get('token')
 
-        return $this->render('result', ['model' => $response]);
-
-    }    
+    } 
 
 }

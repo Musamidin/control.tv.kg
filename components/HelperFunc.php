@@ -37,6 +37,7 @@ class HelperFunc extends Component
                 $mh->channels = $itm['channels'];
                 $mh->text = $itm['text'];
                 $mh->dates = $itm['dates'];
+                $mh->client_id = Yii::$app->user->identity->getId();
                 $mh->save();
                 $this->arr_map($itm['dates'],$mh->id);
             }
@@ -51,7 +52,8 @@ class HelperFunc extends Component
         $arr = explode(',', $data);
         for($i = 0; $i < count($arr); $i++){
                 $dh = new DatesHub();
-                $dh->dates = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
+                $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
+                $dh->astatus = 0;
                 $dh->mid = $id;
                 $dh->save();
                 //echo $arr[$i].'<br/>';
