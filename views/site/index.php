@@ -16,6 +16,7 @@ $this->title = 'Размещение бегущей строки на все Т�
         'attribute' => 'userfile',
         'url' => ['/result'], // your url, this is just for demo purposes,
         'options' => ['accept' => '*'],
+
         'clientOptions' => [
             'maxFileSize' => 2000000
         ],
@@ -23,8 +24,16 @@ $this->title = 'Размещение бегущей строки на все Т�
         // see: https://github.com/blueimp/jQuery-File-Upload/wiki/Options#processing-callback-options
         'clientEvents' => [
             'fileuploaddone' => 'function(e, data) {
-                                    console.log(e);
-                                    console.log(data);
+                                    //console.log(e);
+                                    //console.log(data);
+                            var obj = JSON.parse(data.result);
+                        if(data.textStatus == "success"){
+                            $("#upcount").html(obj.files[0].count);
+                            alert("Файл успешно загружен!");
+                        }else{
+                            alert("Файл не загружен, обратитесь к администратору софта!");
+                        }    
+                            
                                 }',
             'fileuploadfail' => 'function(e, data) {
                                     console.log(e);
@@ -36,6 +45,7 @@ $this->title = 'Размещение бегущей строки на все Т�
     ?>
     </div>
     <div class="col-md-10">
-        ghfghfghfg
+       
+    <span id="status">Количество не обработанных записей: <span id="upcount"><?=$upcount ?></span> <a href="javascript:void(0)" id="ts">посмотреть загруженные записи</a></span>
     </div>
 </div>

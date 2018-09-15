@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'Online TV Маркет', //Yii::$app->name
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -38,9 +38,9 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/']],
-            ['label' => 'About', 'url' => ['/about']],
-            ['label' => 'Contact', 'url' => ['/contact']],
+            ['label' => 'Главная', 'url' => ['/']],
+            //['label' => 'About', 'url' => ['/about']],
+            ['label' => 'Отчёт', 'url' => ['/report']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', Url::to(['/login'])]
             ) : (
@@ -67,7 +67,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?> | <!--?= $this->render('language')?--></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <!--p class="pull-right"><?= Yii::powered() ?></p-->
     </div>
 </footer>
 

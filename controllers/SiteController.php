@@ -13,6 +13,7 @@ use yii\helpers\Json;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\web\UploadedFile;
+use app\models\MainHub;
 
 use app\models\Filestore;
 use app\models\UploadForm;
@@ -84,9 +85,11 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        //$this->layout = 'client';
+        $count = MainHub::find()
+                ->filterWhere(['=', 'status', 0])
+                ->count();
         $model = new UploadForm();
-        return $this->render('index',['model'=>$model]);
+        return $this->render('index',['model'=>$model,'upcount'=>$count]);
     }
     public function actionAbout()
     {
@@ -122,13 +125,21 @@ class SiteController extends Controller
             $fileName = $uid . '.' . $userfile->extension;
             $filePath = Yii::getAlias(\Yii::$app->basePath.'/web/data/').$fileName;
             if ($userfile->saveAs($filePath)) {
+                
+                $result = Yii::$app->HelperFunc->savedb($fileName);
+                unlink($filePath);
+                $count = MainHub::find()
+                ->filterWhere(['=', 'status', 0])
+                ->count();
+
                 return Json::encode([
                     'files' => [
                         [
                             'name' => $fileName,
                             'size' => $userfile->size,
                             'status' => 0,
-                            'result' => Yii::$app->HelperFunc->savedb($fileName),
+                            'count' => $count,
+                            'result' => $result,
                             //'deleteUrl' => 'filedelete?name=' . $fileName,
                             //'deleteType' => 'POST',
                         ],

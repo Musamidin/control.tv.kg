@@ -114,41 +114,6 @@ a.desc:after {
     outline: none;
 }
 
-
-.tabMenu {
-
-}
-.tabMenu a.active {
-    background: #FFC107;
-    /* border-bottom: 10px solid #b99466; */
-    color: #000000;
-    padding-top: 21px;
-}
-.tabMenu a {
-    -webkit-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 5px -8px rgba(0,0,0,0.75);
-    -webkit-border-top-right-radius: 15px;
-    -webkit-border-bottom-left-radius: 15px;
-    -moz-border-radius-topright: 15px;
-    -moz-border-radius-bottomleft: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-left-radius: 15px;
-    margin: 1%;
-    border: 1px dashed black;
-    padding-top: 25px;
-    font-weight: bold;
-    font-size: 18px;
-    background: #ffc107;
-    display: block;
-    float: left;
-    width: 48%;
-    text-align: center;
-    height: 75px;
-    text-transform: uppercase;
-    color: #888888;
-    text-decoration: none;
-}
 @media (max-width: 420px) {
   .tabMenu a.active {
     padding-top: 11px;
@@ -178,16 +143,7 @@ a.desc:after {
     font-size: 12px;
   }
 }
-.text>h1 {
-    font-style: italic;
-}
-.langs {
-    position: absolute;
-    right: 40px;
-    top: 23px;
-    z-index: 500;
-}
-.pd-40 {
-    padding-left: 40px;
-    padding-right: 40px;
+span#status {
+    font-size: 18px;
+    font-weight: bold;
 }
