@@ -127,7 +127,7 @@ class HelperFunc extends Component
         }
    }
 
-   public function getDatas($param)
+   public function getDatas()
    {
         $data = [];
         try{

@@ -232,12 +232,12 @@ class SiteController extends Controller
         header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
         header('Cache-Control: max-age=0');
 
-        $retData = Yii::$app->HelperFunc->getDatas($data);
+        $retData = Yii::$app->HelperFunc->getDatas();
 
         foreach ($retData['mlv'] as $item) {
             $string .= $item['text']."\r\n";
         }
-        return $string;
+        return 'sfsdfsdfsdf';//$string;
         
     }
 }
