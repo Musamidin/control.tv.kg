@@ -8,6 +8,10 @@ use yii\base\Component;
 use app\models\MainHub;
 use app\models\DatesHub;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use app\models\MyReadFilter;
+
 /**
  * This command echoes the first argument that you have entered.
  *
@@ -18,6 +22,40 @@ use app\models\DatesHub;
  */
 class HelperFunc extends Component
 {
+    public function savedb($fileName)
+    {
+        try{
+                    
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $reader->setReadDataOnly(true);
+            //$reader->setLoadSheetsOnly(["sheet1"]);
+            //$reader->setReadFilter( new MyReadFilter() );
+            $spreadsheet = $reader->load(\Yii::$app->basePath.'\web\data\\'.$fileName);
+            $data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            unset($data[1]);
+            $rows = [];
+            foreach ($data as $row) {
+                foreach ($row as $key => $value) {
+                    unset($row[$key]);
+                    if($key == 'A'){
+                        $row['channels'] = $value;
+                    }elseif($key == 'B'){
+                        unset($row[$key]);
+                        $row['text'] = $value;
+                    }elseif($key == 'C'){
+                        unset($row[$key]);
+                        $row['dates'] = $value;
+                    }                
+                }
+                $rows[] = $row;
+            }
+
+            return $this->save($rows);
+                    
+        }catch(Exception $e){
+            return $e;
+        }
+    }
     /**
      * This command echoes what you have entered as the message.
      * @param string $message the message to be echoed.
