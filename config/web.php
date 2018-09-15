@@ -14,12 +14,25 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'fileStorage' => [
+            'class' => 'yii2tech\filestorage\local\Storage',
+            'basePath' => '@webroot/files',
+            'baseUrl' => '@web/files',
+            'dirPermission' => 0775,
+            'filePermission' => 0755,
+            'buckets' => [
+                'tempFiles' => [
+                    'baseSubPath' => 'temp',
+                    'fileSubDirTemplate' => '{^name}/{^^name}',
+                ],
+            ]
+        ],
         'HelperFunc' => ['class'=>'app\components\HelperFunc'],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Sf7LapkC_wdc9me7F4TH74Hyf1XfTQV_',
             'baseUrl' => '/',
-            //'parsers' => ['application/json' => 'yii\web\JsonParser'],
+            'parsers' => ['application/json' => 'yii\web\JsonParser'],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -65,10 +78,12 @@ $config = [
                 'logout' => 'site/logout',
                 'result' => 'site/result',
                 'about' => 'site/about',
-                'index' => 'client/admin',
-                'logout' => 'client/logout',
-                'index' => 'admin/admin',
-                'logout' => 'admin/logout',
+                'admin' => 'site/admin',
+                'export' => 'site/export',
+                'getdata' => 'site/getdata',
+                'getdatas' => 'site/getdatas',
+                'report' => 'site/report',
+                'download' => 'site/download',
             ],
         ],
         // 'i18n' => [

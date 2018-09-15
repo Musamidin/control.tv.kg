@@ -45,7 +45,7 @@ $this->title = 'Размещение бегущей строки на все Т�
     ?>
     </div>
     <div class="col-md-10">
-       
+       <?=Yii::$app->user->identity->role; ?>
     <span id="status">Количество не обработанных записей: <span id="upcount"><?=$upcount ?></span> <a href="javascript:void(0)" id="ts">посмотреть загруженные записи</a></span>
     </div>
 </div>

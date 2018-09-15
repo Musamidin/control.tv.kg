@@ -65,7 +65,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?> | <!--?= $this->render('language')?--></p>
+        <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?><!--?= $this->render('language')?--></p>
 
         <!--p class="pull-right"><?= Yii::powered() ?></p-->
     </div>

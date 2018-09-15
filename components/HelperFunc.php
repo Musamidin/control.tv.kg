@@ -4,9 +4,11 @@ namespace app\components;
 
 use Yii;
 use yii\base\Component;
+use yii\data\Pagination;
 
 use app\models\MainHub;
 use app\models\DatesHub;
+use app\models\ExportView;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -56,11 +58,6 @@ class HelperFunc extends Component
             return $e;
         }
     }
-    /**
-     * This command echoes what you have entered as the message.
-     * @param string $message the message to be echoed.
-     * @return int Exit code
-     */
     public function save($data)
     {
         try{
@@ -97,5 +94,56 @@ class HelperFunc extends Component
                 //echo $arr[$i].'<br/>';
         }
     }
+
+   public function getData($param)
+   {
+        $data = [];
+        try{
+          if($param['sts'] == 0){
+              $data['count'] = MainHub::find()->filterWhere(['=','status',$param['sts']])->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+              $data['mlv'] = MainHub::find()
+              ->filterWhere(['=','status',0])
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+          }else{
+            $data['count'] = MainHub::find()->filterWhere(['status'=> $param['sts']])->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['mlv'] = MainHub::find()
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->filterWhere(['status'=> $param['sts']])
+            ->asArray()
+            ->orderBy(['last_up_date'=>SORT_DESC])
+            ->all();
+          }
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
+
+   public function getDatas($param)
+   {
+        $data = [];
+        try{
+
+            $data['count'] = ExportView::find()->filterWhere(['status'=> 1])->count();
+              $data['mlv'] = ExportView::find()
+              ->filterWhere(['=','status',1])
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
 
 }

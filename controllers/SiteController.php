@@ -27,9 +27,11 @@ class SiteController extends Controller
     public function beforeAction($action)
     {
         if (\Yii::$app->getUser()->isGuest && $action->id !== 'login' && $action->id !=='/'){
-            Yii::$app->response->redirect(Url::to(['login']), 301); //Url::to(['login'])
+            Yii::$app->response->redirect(Url::to(['/login']), 301); //Url::to(['login'])
             Yii::$app->end();
         }elseif($action->id === 'result'){
+            $this->enableCsrfValidation = false;
+        }elseif($action->id ==='getdata' || $action->id ==='getdatas'){
             $this->enableCsrfValidation = false;
         }
 
@@ -55,7 +57,7 @@ class SiteController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+                    'logout' => ['POST'],
                     'result' => ['POST','FILES'],
                 ],
             ],
@@ -101,7 +103,11 @@ class SiteController extends Controller
     {
         $model = new LoginForm();
         if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
-            return $this->redirect('/');
+            if(Yii::$app->user->identity->role == 0){
+                return $this->redirect('/');
+            }elseif(Yii::$app->user->identity->role == 1){
+                return $this->redirect('/admin');
+            }
         }else{
            $this->layout = 'login';
            return $this->render('login', ['model' => $model]);
@@ -111,7 +117,7 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-        return $this->redirect('login');
+        return $this->redirect(Url::to(['/login']));
     }
 
     public function actionResult()
@@ -151,11 +157,87 @@ class SiteController extends Controller
         return '';
     }
 
-    public function actionResults()
+    public function actionReport()
     {
-        //['test'=>Yii::$app->request->headers->get('token')]
-        //Yii::$app->request->headers->get('token')
+        return $this->render('report');
+    }
+    public function actionAdmin()
+    {
+        if(Yii::$app->user->identity->role == 1){
+            $this->layout = 'admin';
+            return $this->render('admin');
+        }else{
+            return $this->redirect('/');
+        }
+    }
+    public function actionExport()
+    {
+        if(Yii::$app->user->identity->role == 1){
+            $this->layout = 'admin';
+            return $this->render('export');
+        }else{
+            return $this->redirect('/');
+        }
+    }
 
-    } 
+    public function actionGetdata()
+    {
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        header('Content-Type: application/json');
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $data = [];
+        $data['sts'] = $request->get('sts');
+        $data['page'] = $request->get('page');
+        $data['shpcount'] = 15;
+         
+        //if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getData($data);
+          
+          return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                          );
+     // }else{
+     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      //}
+    }
 
+    public function actionGetdatas()
+    {
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        header('Content-Type: application/json');
+        $request = Yii::$app->request;
+        //$token = $request->get('token');
+        $data = [];
+        $data['dates'] = $request->get('dates');
+         
+        //if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getDatas($data);
+          
+          return json_encode(['status'=>0,
+                            'data'=>[
+                                'mainlistview' => $retData['mlv'],
+                                'count'=>$retData['count']],
+                            'msg'=>'OK']
+                          );
+     // }else{
+     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      //}
+    }
+
+    public function actionDownload()
+    {
+        header('Content-Type: text/plain');
+        header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
+        header('Cache-Control: max-age=0');
+
+        $retData = Yii::$app->HelperFunc->getDatas($data);
+
+        foreach ($retData['mlv'] as $item) {
+            $string .= $item['text']."\r\n";
+        }
+        return $string;
+        
+    }
 }

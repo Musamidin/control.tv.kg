@@ -5,9 +5,14 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "main_hub".
+ * This is the model class for table "exportView".
  *
  * @property int $id
+ * @property int $mid
+ * @property string $daterent
+ * @property int $astatus
+ * @property string $comment
+ * @property int $Expr1
  * @property string $datetime
  * @property string $channels
  * @property string $text
@@ -16,17 +21,15 @@ use Yii;
  * @property int $status
  * @property string $description
  * @property string $last_up_date
- * @property DatesHub[] $datesHubs
  */
-class MainHub extends \yii\db\ActiveRecord
+class ExportView extends \yii\db\ActiveRecord
 {
-    const SCENARIO_CREATE = 'create';
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'main_hub';
+        return 'exportView';
     }
 
     /**
@@ -35,17 +38,11 @@ class MainHub extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['datetime','last_up_date'], 'safe'],
-            [['channels', 'text', 'dates','description'], 'string'],
-            [['client_id', 'status'], 'integer'],
+            [['id', 'mid', 'Expr1', 'datetime', 'status'], 'required'],
+            [['id', 'mid', 'astatus', 'Expr1', 'client_id', 'status'], 'integer'],
+            [['daterent', 'datetime', 'last_up_date'], 'safe'],
+            [['comment', 'channels', 'text', 'dates', 'description'], 'string'],
         ];
-    }
-
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios['create'] = ['channels','test','dates']; 
-        return $scenarios; 
     }
 
     /**
@@ -55,6 +52,11 @@ class MainHub extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'mid' => 'Mid',
+            'daterent' => 'Daterent',
+            'astatus' => 'Astatus',
+            'comment' => 'Comment',
+            'Expr1' => 'Expr1',
             'datetime' => 'Datetime',
             'channels' => 'Channels',
             'text' => 'Text',
@@ -62,15 +64,7 @@ class MainHub extends \yii\db\ActiveRecord
             'client_id' => 'Client ID',
             'status' => 'Status',
             'description' => 'Description',
-            'last_up_date' => 'Last modify',
+            'last_up_date' => 'Last Up Date',
         ];
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDatesHubs()
-    {
-        return $this->hasMany(DatesHub::className(), ['mid' => 'id']);
     }
 }

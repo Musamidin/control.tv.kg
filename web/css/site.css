@@ -147,3 +147,6 @@ span#status {
     font-size: 18px;
     font-weight: bold;
 }
+.modal-dialog {
+    top: 30%;
+}
