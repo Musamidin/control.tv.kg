@@ -22,8 +22,8 @@ $config = [
             'filePermission' => 0755,
             'buckets' => [
                 'tempFiles' => [
-                    'baseSubPath' => 'temp',
-                    'fileSubDirTemplate' => '{^name}/{^^name}',
+                    //'baseSubPath' => 'temp',
+                    //'fileSubDirTemplate' => '{^name}/{^^name}',
                 ],
             ]
         ],
@@ -50,7 +50,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => 'smtp.yandex.ru',

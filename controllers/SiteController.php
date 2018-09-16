@@ -247,20 +247,28 @@ class SiteController extends Controller
 
     public function actionMailer()
     {
-        // $data['channel'] = Yii::$app->request->get('channel');
-        // $retData = Yii::$app->HelperFunc->getDatas($data);
+        $string = '';
+        $bucket = Yii::$app->fileStorage->getBucket('tempFiles');
 
-        // foreach ($retData['mlv'] as $item) {
-        //     $string .= $item['text']."\r\n";
-        // }
-        
+        $data['channel'] = Yii::$app->request->get('channel');
+        $retData = Yii::$app->HelperFunc->getDatas($data);
+
+        foreach ($retData['mlv'] as $item) {
+            $string .= $item['text']."\r\n";
+        }
+        $bucket->saveFileContent(date('Y-m-d').'.txt', $string);
+
           $msg = Yii::$app->mailer->compose()
           ->setFrom('sales@myservice.kg')
           ->setTo('musa@cs.kg')
           ->setSubject('Тема сообщения')
-          ->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
-          //->setTextBody('Текст сообщения')
-          //->attach('D:\Root_Admin_Mullbury2.txt')
+          ->setTextBody('Текст сообщения')
+          ->attach('D:\send.txt')
+          ->send();
+          //'D:\OpenServer\domains\control.tv.kg\web\files\tempFiles\\'.date('Y-m-d').'.txt'
+          //\Yii::$app->basePath."\web\files\\tempFiles\\"test.txt
+          //->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
+          
           
           return $msg; //print_r($data);
     }
