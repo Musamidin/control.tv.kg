@@ -127,14 +127,14 @@ class HelperFunc extends Component
         }
    }
 
-   public function getDatas()
+   public function getDatas($par)
    {
         $data = [];
         try{
 
-            $data['count'] = ExportView::find()->filterWhere(['status'=> 1])->count();
+            $data['count'] = ExportView::find()->where(['status'=> 1,'channels'=> $par['channel']])->count();
               $data['mlv'] = ExportView::find()
-              ->filterWhere(['=','status',1])
+              ->where(['status'=> 1,'channels'=> $par['channel']])
               ->asArray()
               ->orderBy(['last_up_date'=>SORT_DESC])
               ->all();

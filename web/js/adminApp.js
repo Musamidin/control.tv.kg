@@ -53,8 +53,8 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
 var dates = 0;
 $scope.totacount = 0;
 
-$scope.getDatas = function(){
-  $http.get('/getdatas?dates=' + dates) // +'&pagenum='+pnum
+$scope.getDatas = function(channel){
+  $http.get('/getdatas?dates=' + dates+'&channel='+channel) // +'&pagenum='+pnum
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
@@ -68,7 +68,7 @@ $scope.getDatas = function(){
         });
   };
 
-$scope.getDatas();
+$scope.getDatas($('#report-status').val());
 
 
 $scope.onAccept = function(){
@@ -80,6 +80,10 @@ $scope.onReject = function(){
   $('#actionBtn').html('Отвергнуть');
   $('#modal-info').modal({ keyboard: false });
 };
+
+$(document).on('change','#report-status',function(){
+  $scope.getDatas(this.value);
+});
 
 
 });

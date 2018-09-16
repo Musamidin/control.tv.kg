@@ -150,3 +150,7 @@ span#status {
 .modal-dialog {
     top: 30%;
 }
+.icon-style{
+    font-size: 22px;
+    margin-right: 10px;
+}

@@ -14,9 +14,9 @@ $this->title = 'Admin';
           <div class="col-md-5">
           <div class="input-group">
             <select id="report-status" value="" name="reportstatus" class="form-control">
-                <option value="0">Не принятые</option>
-                <option value="1">Принятые</option>
-                <option value="2">Отвергнутые</option>
+                <option value="5 канал">5 канал</option>
+                <option value="Пирамида">Пирамида</option>
+                <option value="Нарын ТВ">Нарын ТВ</option>
               </select>
               <span class="input-group-addon input-sm"></span>
               <input type="text" class="form-control getbydatetime">
@@ -33,8 +33,11 @@ $this->title = 'Admin';
                 Количество: <span>{{totacount}}</span>
             </div>
             <div class="col-md-6">
-              <a href="/download">
+              <a href="/download" title="Скачать" class="icon-style">
                 <span class="glyphicon glyphicon-save"></span>
+              </a>
+              <a href="javascript:void(0)" title="Отправить на ТК" class="icon-style">
+                <span class="glyphicon glyphicon-send"></span>
               </a>
             </div>    
           </div>

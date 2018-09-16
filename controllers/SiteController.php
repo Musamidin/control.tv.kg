@@ -208,8 +208,8 @@ class SiteController extends Controller
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         header('Content-Type: application/json');
         $request = Yii::$app->request;
-        //$token = $request->get('token');
         $data = [];
+        $data['channel'] = $request->get('channel');
         $data['dates'] = $request->get('dates');
          
         //if($token == md5(Yii::$app->session->getId().'opn')){
