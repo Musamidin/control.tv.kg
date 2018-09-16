@@ -257,16 +257,14 @@ class SiteController extends Controller
             $string .= $item['text']."\r\n";
         }
         $bucket->saveFileContent(date('Y-m-d').'.txt', $string);
-
+        $path = \Yii::$app->basePath."\web\\files\\tempFiles\\".date('Y-m-d').".txt";
           $msg = Yii::$app->mailer->compose()
           ->setFrom('sales@myservice.kg')
           ->setTo('musa@cs.kg')
           ->setSubject('Тема сообщения')
           ->setTextBody('Текст сообщения')
-          ->attach('D:\send.txt')
+          ->attach($path)
           ->send();
-          //'D:\OpenServer\domains\control.tv.kg\web\files\tempFiles\\'.date('Y-m-d').'.txt'
-          //\Yii::$app->basePath."\web\files\\tempFiles\\"test.txt
           //->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
           
           
