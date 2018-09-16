@@ -83,6 +83,7 @@ $scope.onReject = function(){
 
 $(document).on('change','#report-status',function(){
   $scope.getDatas(this.value);
+  $('#downld').attr("href","/download?id="+this.value);
 });
 
 

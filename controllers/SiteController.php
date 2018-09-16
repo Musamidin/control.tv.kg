@@ -34,6 +34,9 @@ class SiteController extends Controller
         }elseif($action->id ==='getdata' || $action->id ==='getdatas'){
             $this->enableCsrfValidation = false;
         }
+        // elseif($action->id ==='download'){
+        //     $this->enableCsrfValidation = false;
+        // }
 
         return parent::beforeAction($action);    
     }
@@ -228,16 +231,30 @@ class SiteController extends Controller
 
     public function actionDownload()
     {
+        $data['channel'] = Yii::$app->request->get('id');
         header('Content-Type: text/plain');
         header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
         header('Cache-Control: max-age=0');
 
-        $retData = Yii::$app->HelperFunc->getDatas();
+        $retData = Yii::$app->HelperFunc->getDatas($data);
 
         foreach ($retData['mlv'] as $item) {
             $string .= $item['text']."\r\n";
         }
-        return 'sfsdfsdfsdf';//$string;
+        return $string;
         
+    }
+
+    public function mailer()
+    {
+          $msg = Yii::$app->mailer->compose()
+          ->setFrom('sales@myservice.kg')
+          ->setTo('musa@cs.kg')
+          ->setSubject('Тема сообщения')
+          ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
+          ->attach('D:\Root_Admin_Mullbury2.txt')
+          //->setTextBody('Текст сообщения')
+          ->send();
+          print_r($msg);
     }
 }

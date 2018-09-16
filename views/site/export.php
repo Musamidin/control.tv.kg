@@ -17,6 +17,7 @@ $this->title = 'Admin';
                 <option value="5 канал">5 канал</option>
                 <option value="Пирамида">Пирамида</option>
                 <option value="Нарын ТВ">Нарын ТВ</option>
+                <option value="ЭЛТР">ЭЛТР</option>
               </select>
               <span class="input-group-addon input-sm"></span>
               <input type="text" class="form-control getbydatetime">
@@ -33,10 +34,10 @@ $this->title = 'Admin';
                 Количество: <span>{{totacount}}</span>
             </div>
             <div class="col-md-6">
-              <a href="/download" title="Скачать" class="icon-style">
+              <a id="downld" href="/download?id=5 канал" title="Скачать" class="icon-style">
                 <span class="glyphicon glyphicon-save"></span>
               </a>
-              <a href="javascript:void(0)" title="Отправить на ТК" class="icon-style">
+              <a id="sendmail" href="javascript:void(0)" title="Отправить на ТК" class="icon-style">
                 <span class="glyphicon glyphicon-send"></span>
               </a>
             </div>    
