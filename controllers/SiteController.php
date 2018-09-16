@@ -29,7 +29,7 @@ class SiteController extends Controller
         if (\Yii::$app->getUser()->isGuest && $action->id !== 'login' && $action->id !=='/'){
             Yii::$app->response->redirect(Url::to(['/login']), 301); //Url::to(['login'])
             Yii::$app->end();
-        }elseif($action->id === 'result'){
+        }elseif($action->id === 'result' || $action->id === 'mailer'){
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getdata' || $action->id ==='getdatas'){
             $this->enableCsrfValidation = false;
@@ -245,16 +245,23 @@ class SiteController extends Controller
         
     }
 
-    public function mailer()
+    public function actionMailer()
     {
+        // $data['channel'] = Yii::$app->request->get('channel');
+        // $retData = Yii::$app->HelperFunc->getDatas($data);
+
+        // foreach ($retData['mlv'] as $item) {
+        //     $string .= $item['text']."\r\n";
+        // }
+        
           $msg = Yii::$app->mailer->compose()
           ->setFrom('sales@myservice.kg')
           ->setTo('musa@cs.kg')
           ->setSubject('Тема сообщения')
-          ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
-          ->attach('D:\Root_Admin_Mullbury2.txt')
+          ->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
           //->setTextBody('Текст сообщения')
-          ->send();
-          print_r($msg);
+          //->attach('D:\Root_Admin_Mullbury2.txt')
+          
+          return $msg; //print_r($data);
     }
 }

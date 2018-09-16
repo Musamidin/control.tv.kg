@@ -33,7 +33,7 @@ $this->title = 'Admin';
         </div>
     <br/>
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" ng-if="mainlistview.length > 0">
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>
                 <tr role="row">

@@ -92,6 +92,7 @@ $config = [
                 'getdatas' => 'site/getdatas',
                 'report' => 'site/report',
                 'download' => 'site/download',
+                'mailer' => 'site/mailer',
             ],
         ],
         // 'i18n' => [
