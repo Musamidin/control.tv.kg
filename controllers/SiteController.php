@@ -135,7 +135,7 @@ class SiteController extends Controller
             $filePath = Yii::getAlias(\Yii::$app->basePath.'/web/data/').$fileName;
             if ($userfile->saveAs($filePath)) {
                 
-                $result = Yii::$app->HelperFunc->savedb($fileName);
+                $result = Yii::$app->HelperFunc->savedb($fileName,$userfile->extension);
                 unlink($filePath);
                 $count = MainHub::find()
                 ->filterWhere(['=', 'status', 0])
@@ -231,6 +231,7 @@ class SiteController extends Controller
 
     public function actionDownload()
     {
+        $string = '';
         $data['channel'] = Yii::$app->request->get('id');
         header('Content-Type: text/plain');
         header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
@@ -260,7 +261,7 @@ class SiteController extends Controller
         $path = \Yii::$app->basePath."\web\\files\\tempFiles\\".date('Y-m-d').".txt";
           $msg = Yii::$app->mailer->compose()
           ->setFrom('sales@myservice.kg')
-          ->setTo('musa@cs.kg')
+          ->setTo('avtin@yandex.ru')
           ->setSubject('Тема сообщения')
           ->setTextBody('Текст сообщения')
           ->attach($path)

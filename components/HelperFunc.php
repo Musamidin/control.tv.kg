@@ -12,6 +12,7 @@ use app\models\ExportView;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use app\models\MyReadFilter;
 
 /**
@@ -24,11 +25,14 @@ use app\models\MyReadFilter;
  */
 class HelperFunc extends Component
 {
-    public function savedb($fileName)
+    public function savedb($fileName,$fileType)
     {
         try{
-                    
-            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+             if($fileType == 'xlsx'){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+             }elseif($fileType == 'xls'){
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+             }
             $reader->setReadDataOnly(true);
             //$reader->setLoadSheetsOnly(["sheet1"]);
             //$reader->setReadFilter( new MyReadFilter() );
@@ -40,14 +44,21 @@ class HelperFunc extends Component
                 foreach ($row as $key => $value) {
                     unset($row[$key]);
                     if($key == 'A'){
-                        $row['channels'] = $value;
+                        unset($row[$key]);
+                        $row['phone'] = $value;
                     }elseif($key == 'B'){
                         unset($row[$key]);
-                        $row['text'] = $value;
+                        $row['chid'] = $value;
                     }elseif($key == 'C'){
                         unset($row[$key]);
+                        $row['text'] = $value;
+                    }elseif($key == 'D'){
+                        unset($row[$key]);
                         $row['dates'] = $value;
-                    }                
+                    }elseif($key == 'E'){
+                        unset($row[$key]);
+                        $row['state'] = $value;
+                    }
                 }
                 $rows[] = $row;
             }
@@ -67,11 +78,13 @@ class HelperFunc extends Component
                 // echo '<pre>';
                 // echo $itm['channels'].'|'.$itm['text'].'|'.$itm['dates'].'<br/>';
                 // echo '</pre>';
-                $t .= $itm['channels'].'|'.$itm['text'].'|'.$itm['dates'];
+                $t .= $itm['chid'].'|'.$itm['text'].'|'.$itm['dates'];
                 $mh = new MainHub();
-                $mh->channels = $itm['channels'];
+                $mh->phone = $itm['phone'];
+                $mh->chid = $itm['chid'];
                 $mh->text = $itm['text'];
                 $mh->dates = $itm['dates'];
+                $mh->state = $itm['state'];
                 $mh->client_id = Yii::$app->user->identity->getId();
                 $mh->save();
                 $this->arr_map($itm['dates'],$mh->id);

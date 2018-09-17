@@ -8,7 +8,7 @@ use dosamigos\fileupload\FileUpload;
 
 $this->title = 'Размещение бегущей строки на все ТВ и Радио! «онлайн сервис»';
 ?>
-
+<div class="site-index" ng-controller="AppCtrl">
 <div class="row">
     <div class="col-md-2">
     <?= FileUpload::widget([
@@ -45,7 +45,11 @@ $this->title = 'Размещение бегущей строки на все Т�
     ?>
     </div>
     <div class="col-md-10">
-       <?=Yii::$app->user->identity->role; ?>
     <span id="status">Количество не обработанных записей: <span id="upcount"><?=$upcount ?></span> <a href="javascript:void(0)" id="ts">посмотреть загруженные записи</a></span>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-12"><a href="" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a><a href="" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a></div>    
+</div>
+
 </div>

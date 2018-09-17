@@ -76,8 +76,9 @@ $scope.onAccept = function(){
   $('#modal-info').modal({ keyboard: false });
 };
 
-$scope.onReject = function(){
+$scope.onReject = function(id){
   $('#actionBtn').html('Отвергнуть');
+  $('#actionBtn').attr('data-id',id);
   $('#modal-info').modal({ keyboard: false });
 };
 

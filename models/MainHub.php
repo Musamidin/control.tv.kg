@@ -9,11 +9,13 @@ use Yii;
  *
  * @property int $id
  * @property string $datetime
- * @property string $channels
+ * @property string $phone
+ * @property string $chid
  * @property string $text
  * @property string $dates
  * @property int $client_id
  * @property int $status
+ * @property int $state 
  * @property string $description
  * @property string $last_up_date
  * @property DatesHub[] $datesHubs
@@ -36,15 +38,15 @@ class MainHub extends \yii\db\ActiveRecord
     {
         return [
             [['datetime','last_up_date'], 'safe'],
-            [['channels', 'text', 'dates','description'], 'string'],
-            [['client_id', 'status'], 'integer'],
+            [['text', 'dates','description'], 'string'],
+            [['state','phone','chid','client_id', 'status'], 'integer'],
         ];
     }
 
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios['create'] = ['channels','test','dates']; 
+        $scenarios['create'] = ['phone','chid','text','dates']; 
         return $scenarios; 
     }
 
@@ -56,11 +58,13 @@ class MainHub extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'datetime' => 'Datetime',
-            'channels' => 'Channels',
+            'phone' => 'phone',
+            'chid' => 'chid',
             'text' => 'Text',
             'dates' => 'Dates',
             'client_id' => 'Client ID',
             'status' => 'Status',
+            'state' => 'State',
             'description' => 'Description',
             'last_up_date' => 'Last modify',
         ];
