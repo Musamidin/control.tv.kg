@@ -12,6 +12,9 @@ $scope.pagination = { current: 1 };
 $scope.bystatus = 0;
 
 
+$scope.importbtn = function(){
+	$('#modal-info-add-form').modal({ keyboard: false });
+};
 
 
 });

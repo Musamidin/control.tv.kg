@@ -97,15 +97,42 @@ class HelperFunc extends Component
 
     public function arr_map($data,$id)
     {
-        $arr = explode(',', $data);
-        for($i = 0; $i < count($arr); $i++){
-                $dh = new DatesHub();
-                $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
-                $dh->astatus = 0;
-                $dh->mid = $id;
-                $dh->save();
-                //echo $arr[$i].'<br/>';
-        }
+      if(preg_match("/[\-]+/",$data)){
+
+          $arr = preg_split("/[\-,]+/",$data);
+          $start = new DateTime($arr[0]);
+          $interval = new DateInterval('P1D');
+          $end = new DateTime($arr[1]);
+          $end->add(new DateInterval('P1D'));
+          $period = new DatePeriod($start, $interval, $end);
+
+          foreach ($period as $date) {
+              $dh = new DatesHub();
+              $dh->daterent = $date->format('Y-m-d')
+              //date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
+              $dh->astatus = 0;
+              $dh->mid = $id;
+              $dh->save();
+          }
+
+      }elseif(preg_match("/[\,]+/",$data)){
+
+          $arr = preg_split("/[\-,]+/",$data);
+          for($i = 0; $i < count($arr); $i++){
+                  $dh = new DatesHub();
+                  $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
+                  $dh->astatus = 0;
+                  $dh->mid = $id;
+                  $dh->save();
+                  //echo $arr[$i].'<br/>';
+          }
+      }
+
+      
+
+
+
+
     }
 
    public function getData($param)
@@ -158,5 +185,19 @@ class HelperFunc extends Component
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
    }
+
+  public function find_dates_between( $start_date, $end_date) 
+  {
+      $start = new DateTime($start_date);
+      $interval = new DateInterval('P1D');
+      $end = new DateTime($end_date);
+      $end->add(new DateInterval('P1D'));
+      $period = new DatePeriod($start, $interval, $end);
+
+      foreach ($period as $date) {
+      echo $date->format('d/m/Y') . "<br />";
+      }
+  }
+
 
 }
