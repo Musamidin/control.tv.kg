@@ -9,6 +9,7 @@ use yii\data\Pagination;
 use app\models\MainHub;
 use app\models\DatesHub;
 use app\models\ExportView;
+use app\models\ClientView;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -99,7 +100,7 @@ class HelperFunc extends Component
     {
       if(preg_match("/[\-]+/",$data)){
 
-          $arr = preg_split("/[\-,]+/",$data);
+          $arr = preg_split("/[\-]+/",$data);
           $start = new DateTime($arr[0]);
           $interval = new DateInterval('P1D');
           $end = new DateTime($arr[1]);
@@ -108,7 +109,7 @@ class HelperFunc extends Component
 
           foreach ($period as $date) {
               $dh = new DatesHub();
-              $dh->daterent = $date->format('Y-m-d')
+              $dh->daterent = $date->format('Y-m-d');
               //date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
               $dh->astatus = 0;
               $dh->mid = $id;
@@ -117,7 +118,7 @@ class HelperFunc extends Component
 
       }elseif(preg_match("/[\,]+/",$data)){
 
-          $arr = preg_split("/[\-,]+/",$data);
+          $arr = preg_split("/[\,]+/",$data);
           for($i = 0; $i < count($arr); $i++){
                   $dh = new DatesHub();
                   $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
@@ -167,6 +168,37 @@ class HelperFunc extends Component
         }
    }
 
+   public function getUserData($param)
+   {
+        $data = [];
+        try{
+          if($param['sts'] == 0){
+              $data['count'] = clientView::find()->filterWhere(['=','status',$param['sts']])->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+              $data['mlv'] = clientView::find()
+              ->filterWhere(['=','status',0])
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['datetime'=>SORT_DESC])
+              ->all();
+          }else{
+            $data['count'] = clientView::find()->filterWhere(['status'=> $param['sts']])->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['mlv'] = clientView::find()
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->filterWhere(['status'=> $param['sts']])
+            ->asArray()
+            ->orderBy(['datetime'=>SORT_DESC])
+            ->all();
+          }
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
    public function getDatas($par)
    {
         $data = [];

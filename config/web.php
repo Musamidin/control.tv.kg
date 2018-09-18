@@ -93,6 +93,7 @@ $config = [
                 'report' => 'site/report',
                 'download' => 'site/download',
                 'mailer' => 'site/mailer',
+                'getuserdata' => 'site/getuserdata',
             ],
         ],
         // 'i18n' => [

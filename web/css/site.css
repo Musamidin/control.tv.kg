@@ -171,3 +171,7 @@ span.codex {
     font-size: 15px;
 }
 .sim{color: #efff00;font-size: 16px;}
+#load-ing{display: none;}
+.form-group.has-success label {
+    color: white !important;
+}

@@ -33,10 +33,9 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getdata' || $action->id ==='getdatas'){
             $this->enableCsrfValidation = false;
+        }elseif($action->id ==='getuserdata'){
+            $this->enableCsrfValidation = false;
         }
-        // elseif($action->id ==='download'){
-        //     $this->enableCsrfValidation = false;
-        // }
 
         return parent::beforeAction($action);    
     }
@@ -93,8 +92,9 @@ class SiteController extends Controller
         $count = MainHub::find()
                 ->filterWhere(['=', 'status', 0])
                 ->count();
+        $mainhub = new MainHub();        
         $model = new UploadForm();
-        return $this->render('index',['model'=>$model,'upcount'=>$count]);
+        return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub]);
     }
     public function actionAbout()
     {
@@ -140,7 +140,7 @@ class SiteController extends Controller
                 $count = MainHub::find()
                 ->filterWhere(['=', 'status', 0])
                 ->count();
-
+                //sleep(2);
                 return Json::encode([
                     'files' => [
                         [
@@ -205,6 +205,28 @@ class SiteController extends Controller
      //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       //}
     }
+    public function actionGetuserdata()
+    {
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        header('Content-Type: application/json');
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $data = [];
+        $data['sts'] = $request->get('sts');
+        $data['page'] = $request->get('page');
+        $data['shpcount'] = 15;
+         
+        //if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getUserData($data);
+          
+          return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                          );
+     // }else{
+     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      //}
+    }    
 
     public function actionGetdatas()
     {
