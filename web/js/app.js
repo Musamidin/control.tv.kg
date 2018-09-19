@@ -11,6 +11,7 @@ $scope.pagination = { current: 1 };
 $scope.bystatus = 0;
 $scope.tvlist = null;
 $scope.data = {};
+$scope.chdata ={};
 
 $scope.pageChanged = function(newPage) {
          $scope.getUserData(newPage,$scope.mainlistPerPage,$scope.bystatus);
@@ -49,8 +50,25 @@ $scope.getTvList = function(){
 
 $scope.addformaction = function(){
 	$scope.data['token'] = $('#token').val();
+	$http({
+	  method: 'POST',
+	  url: '/setdata',
+	  data: $scope.data
+	}).then(function successCallback(response) {
+	    var state = response.data;
+	    if(state.status == 0){
+	      $('#mainhub-dates').datepicker('update','');
+	      //$('#statisticModal').modal({ keyboard: false });
+	      //$scope.init1 = function(){ };
+	      //$scope.datas = response.data.data;
+	    }else{
+	      alert(state.msg);
+	    }
+	  }, function errorCallback(response) {
+	        //console.log(response);
+	});
 	console.log($scope.data);
-	//$('#mainhub-dates').datepicker('update','');
+	//
 	$scope.data = [];
 	console.log($scope.data);
 };
@@ -105,7 +123,41 @@ $scope.importbtn = function(){
 };
 
 
+//select all checkboxes
+$(document).on('change', '.select_all', function(){
+	$(".checkbox").prop('checked', $(this).prop("checked"));
+	if($('.checkbox:checked').length > 0){
+    	$('#removebtn').show();
+    }else if($('.checkbox:checked').length <= 0){
+    	$('#removebtn').hide();
+    }
+});
 
+$(document).on('change', '.checkbox', function(){
+    if($(this).prop("checked") == false){
+        $(".select_all").prop('checked', false);
+        $('#removebtn').hide();
+    }
+    if($(this).prop("checked") == true){
+        $(".select_all").prop('checked', true);
+        $('#removebtn').show();
+    }
+    if($('.checkbox:checked').length > 0){
+    	$('#removebtn').show();
+    }
+    if($('.checkbox:checked').length == $('.checkbox').length ){
+        $(".select_all").prop('checked', true);
+      	if($('.checkbox:checked').length > 0){
+    		$('#removebtn').show();
+    	}
+    }
+});
+
+$scope.removedata = function(){
+	for(var i = 0; i < $('.checkbox:checked').length; i++){
+		//console.log( $('.checkbox:checked')[i].value );
+	}
+};
 
 $("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
 

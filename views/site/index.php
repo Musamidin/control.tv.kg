@@ -24,16 +24,16 @@ $this->title = 'Размещение бегущей строки на все Т�
      <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plug"></i>API Keys</a>
     </div>    
 </div>
-
-
     <br/>
     <div class="row">
         <div class="col-md-12" ng-if="mainlistview.length > 0">
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>
                 <tr role="row">
-                    <th class="sorting" aria-label="checkbox"><input type="checkbox"/></th>
-                    <th class="sorting" aria-label="ID">ID</th>
+                    <th class="sorting" aria-label="checkbox">
+                    <input type="checkbox" class="select_all"/>
+                    </th>
+                    <!--th class="sorting" aria-label="ID">ID</th-->
                     <th class="sorting" aria-label="Дата">Дата</th>
                     <th class="sorting" aria-label="Моб. номер">Моб. номер</th>
                     <th class="sorting" aria-label="Телеканал">Телеканал</th>
@@ -41,13 +41,14 @@ $this->title = 'Размещение бегущей строки на все Т�
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
                     <th class="sorting" aria-label="Статус">Статус</th>
                     <th class="sorting" aria-label="Описание">Описание</th>
-                    <th class="sorting" aria-label="Действие">Действие</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr role="row" class="odd" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
-                  <td><input type="checkbox"/></td>
-                  <td>{{ml.mhid}}</td>
+                  <td>
+                  <input class="checkbox" type="checkbox" name="remove[]" ng-model="chdata" value="{{ml.mhid}}" />
+                  </td>
+                  <!--td>{{ml.mhid}}</td-->
                   <td>{{ml.datetime}}</td>
                   <td>{{ml.phone}}</td>
                   <td>{{ml.chname}}</td>
@@ -55,25 +56,14 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>{{ml.daterent}}</td>
                   <td>{{ml.status}}</td>
                   <td>{{ml.description}}</td>
-                  <td>
-                  <div class="btn-group">
-                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                      Действие <span class="caret"></span>
-                   </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="javascript:void(0)" ng-click="onAccept(ml.id)"><span class="fa fa-check"></span>&nbsp;Принять</a></li>
-                      <li class="divider"></li>
-                      <li><a href="javascript:void(0)" ng-click="onReject(ml.id)"><span class="fa fa-close"></span>&nbsp;Отвергнуть</a></li>
-                      
-                    </ul>
-               </div>
-               </td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                <th rowspan="1" colspan="1"><input type="checkbox"/></th>
-                <th rowspan="1" colspan="1">ID</th>
+                <th rowspan="1" colspan="1">
+                    <input type="checkbox" class="select_all"/>
+                </th>
+                <!--th rowspan="1" colspan="1">ID</th-->
                 <th rowspan="1" colspan="1">Дата</th>
                 <th rowspan="1" colspan="1">Моб. номер</th>
                 <th rowspan="1" colspan="1">Телеканал</th>
@@ -81,17 +71,12 @@ $this->title = 'Размещение бегущей строки на все Т�
                 <th rowspan="1" colspan="1">Дата проката</th>
                 <th rowspan="1" colspan="1">Статус</th>
                 <th rowspan="1" colspan="1">Описание</th>
-                <th rowspan="1" colspan="1">Действие</th>
                 </tfoot>
               </table>
               <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">
     </dir-pagination-controls>
         </div>
     </div>
-
-
-
-
 <div class="modal modal-info fade in" id="modal-info-add-import">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -241,7 +226,8 @@ $this->title = 'Размещение бегущей строки на все Т�
 
 </div>
 
-
+<a style="display:none;" id="removebtn" ng-click="removedata()" class="btn btn-block btn-social btn-bitbucket">
+    <i class="fa fa-bitbucket"></i>Удалить</a>
 </div>
 <style type="text/css">
 .modal-info .modal-header, .modal-info .modal-footer {
