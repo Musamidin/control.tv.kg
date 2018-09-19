@@ -33,7 +33,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getdata' || $action->id ==='getdatas'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='getuserdata'){
+        }elseif($action->id ==='getuserdata' || $action->id ==='gettvlist'){
             $this->enableCsrfValidation = false;
         }
 
@@ -250,7 +250,20 @@ class SiteController extends Controller
      //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       //}
     }
-
+    public function actionGettvlist()
+    {
+        //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        header('Content-Type: application/json');
+        $request = Yii::$app->request;
+        //if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getTvlist();
+          
+          return json_encode(['status'=>0,
+                              'data'=>['tvlist' => $retData['tvlist']],'msg'=>'OK']);
+     // }else{
+     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      //}
+    }
     public function actionDownload()
     {
         $string = '';

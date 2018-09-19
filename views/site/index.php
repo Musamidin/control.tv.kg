@@ -194,9 +194,10 @@ $this->title = 'Размещение бегущей строки на все Т�
               </div>
               <div class="modal-body">
                 <?php $form = ActiveForm::begin([
-                                      'id' => 'mainForm',
-                                      'options' => ['name' => 'mainForm']
+                                      'id' => 'addForm',
+                                      'options' => ['name' => 'addForm']
                                     ]); ?>
+                  <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>                  
                   <div class="row">
                       <div class="col-md-4">
                           <?= $form->field($mainhub, 'phone',['options'=>
@@ -211,27 +212,27 @@ $this->title = 'Размещение бегущей строки на все Т�
                             ])->dropDownList([],
                             ['prompt' => 'Телеканалы...',
                             'ng-model' => 'data.chid',
-                            'ng-options'=> 'typedlr.id as typedlr.name for typedlr in typeOfDeliveryar'
+                            'ng-options'=> 'tvls.id as tvls.channel_name for tvls in tvlist track by tvls.id'
                             ])->label(false); ?>
                       </div>
                       <div class="col-md-4">
                         <?=$form->field($mainhub, 'dates',['options'=>
                             ['tag' => 'div','class'=> 'form-group field-mainhub-dates has-feedback required'],
                             'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
-                            ])->textInput(['autofocus' => false,'placeholder'=>'дд/мм/гггг','title'=>'дд/мм/гггг','ng-model'=>'formData.dates'])->label(false);
+                            ])->textInput(['autofocus' => false,'placeholder'=>'дд/мм/гггг','title'=>'дд/мм/гггг','ng-model'=>'data.dates'])->label(false);
                         ?>
                       </div>
                   </div>
                   <div class="row">
                       <div class="col-md-12">
-                          <?= $form->field($mainhub, 'text')->textarea(['autofocus' => false,'placeholder'=>'Текст объявлений','ng-model'=>'data.text'])->label('Комментарии'); ?>
+                          <?= $form->field($mainhub, 'text')->textarea(['autofocus' => false,'placeholder'=>'Текст объявления','ng-model'=>'data.text'])->label('Текст объявления'); ?>
                       </div>
                   </div>
                 <?php ActiveForm::end(); ?>  
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Отменить</button>
-                <button type="button" class="btn btn-outline">Добавить</button>
+                <button type="button" class="btn btn-outline" ng-click="addformaction()">Добавить</button>
               </div>
             </div>
             <!-- /.modal-content -->

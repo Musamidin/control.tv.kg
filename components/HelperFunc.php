@@ -10,7 +10,7 @@ use app\models\MainHub;
 use app\models\DatesHub;
 use app\models\ExportView;
 use app\models\ClientView;
-
+use app\models\Channels;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
@@ -217,7 +217,23 @@ class HelperFunc extends Component
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
    }
+   public function getTvlist()
+   {
+        $data = [];
+        try{
+              $data['tvlist'] = Channels::find()
+              ->select('id, channel_name')
+              ->where(['status'=> 0])
+              ->asArray()
+              ->orderBy(['channel_name'=>SORT_DESC])
+              ->all();
 
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
   public function find_dates_between( $start_date, $end_date) 
   {
       $start = new DateTime($start_date);

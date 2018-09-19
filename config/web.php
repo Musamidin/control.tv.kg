@@ -94,6 +94,7 @@ $config = [
                 'download' => 'site/download',
                 'mailer' => 'site/mailer',
                 'getuserdata' => 'site/getuserdata',
+                'gettvlist' => 'site/gettvlist',
             ],
         ],
         // 'i18n' => [
