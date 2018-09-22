@@ -7,23 +7,8 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
 $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
-$scope.tvlist = null;
+
 $scope.data = {};
-
-$scope.getTvList = function(){
-  $http.get('/gettvlist') // +'&pagenum='+pnum
-        .then(function(result) {
-          var respdata = eval(result.data);
-          if(respdata.status == 0){
-                $scope.tvlist = eval(respdata.data.tvlist);
-          } else if(respdata.status > 0){
-              alert(respdata.msg);
-          }
-        }, function errorCallback(response) {
-            //console.log(response);
-        });
-  };
-
 
 $scope.pageChanged = function(newPage) {
          $scope.getData(newPage,$scope.mainlistPerPage,$('#report-status').val());
@@ -142,28 +127,11 @@ $scope.onAction = function(item){
 }).controller("AdminExportAppCtrl", function($scope,$http){
 /**NO CONFLICT**/
 $.fn.bootstrapBtn = $.fn.button.noConflict();
-var dates = 0;
+//var dates = 0;
 $scope.totacount = 0;
-$scope.tvlist = null;
 
-$scope.getTvList = function(){
-  $http.get('/gettvlist') // +'&pagenum='+pnum
-        .then(function(result) {
-          var respdata = eval(result.data);
-          if(respdata.status == 0){
-                $scope.tvlist = eval(respdata.data.tvlist);
-          } else if(respdata.status > 0){
-              alert(respdata.msg);
-          }
-        }, function errorCallback(response) {
-            //console.log(response);
-        });
-  };
-
-$scope.getTvList();
-
-$scope.getDatas = function(channel){
-  $http.get('/getdatas?dates=' + dates+'&channel='+channel) // +'&pagenum='+pnum
+$scope.getDatas = function(chid,dates,token){
+  $http.get('/getdatas?dates=' + dates+'&chid='+chid+'&token='+token) // +'&pagenum='+pnum
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
@@ -177,7 +145,7 @@ $scope.getDatas = function(channel){
         });
   };
 
-$scope.getDatas('5 канал'); //$('#report-status').val()
+$scope.getDatas($('#report-status').val(),$('.getbydatetime').val(),$('#token').val());
 
 
 $scope.onAccept = function(){
@@ -193,13 +161,17 @@ $scope.onReject = function(id){
 
 
 $(document).on('change','#report-status',function(){
-  $scope.getDatas(this.value);
-  $('#downld').attr("href","/download?id="+this.value);
+  var option = $(this).find('option:selected').attr('data-eml');
+  console.log(option);
+  $scope.getDatas(this.value,$('.getbydatetime').val(),$('#token').val());
+  $('#downld').attr("href","/download?chid="+this.value
+    + "&dates="+ $('.getbydatetime').val()
+    +"&token="+ $('#token').val());
 });
 
 $(document).on('click','#sendmail',function(){
 
-    $http.get('/mailer?channel='+$('#report-status').val()) // +'&pagenum='+pnum
+    $http.get('/mailer?chid='+$('#report-status').val()+ '&token='+$('#token').val()+'&dates='+$('.getbydatetime').val()+'&email='+ $('#report-status').find('option:selected').attr('data-eml')) // +'&pagenum='+pnum
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
@@ -224,6 +196,10 @@ $('.getbydatetime').datepicker({
 }).on('hide', function(e) {
   console.log(e.currentTarget.value);
   //console.log(moment(e.dates[1]).format('YYYY-MM-DD') );
+  $scope.getDatas($('#report-status').val(),e.currentTarget.value,$('#token').val());
+  $('#downld').attr("href","/download?chid="+$('#report-status').val()
+    +"&dates="+$('.getbydatetime').val()
+    +"&token="+ $('#token').val());
 });
 
 

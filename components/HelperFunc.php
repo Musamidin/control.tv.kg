@@ -150,11 +150,6 @@ class HelperFunc extends Component
           }
       }
 
-      
-
-
-
-
     }
 
    public function getData($param)
@@ -217,17 +212,21 @@ class HelperFunc extends Component
    public function getDatas($par)
    {
         $data = [];
-        try{
-
-            $data['count'] = ExportView::find()->where(['status'=> 1,'channels'=> $par['channel']])->count();
+      try{
+              $data['count'] = ExportView::find()
+              ->where(['IN','daterent',$par['dates']])
+              ->andWhere(['chid'=> $par['chid']])
+              ->count();
               $data['mlv'] = ExportView::find()
-              ->where(['status'=> 1,'channels'=> $par['channel']])
+              ->where(['IN','daterent',$par['dates']])
+              ->andWhere(['chid'=> $par['chid']])
               ->asArray()
-              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->orderBy(['daterent'=>SORT_DESC])
               ->all();
 
-          return $data;
-        }catch(Exception $e){
+        return $data;
+
+      }catch(Exception $e){
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
@@ -237,7 +236,7 @@ class HelperFunc extends Component
         $data = [];
         try{
               $data['tvlist'] = Channels::find()
-              ->select('id, channel_name')
+              ->select('id, channel_name,email')
               ->where(['status'=> 0])
               ->asArray()
               ->orderBy(['id'=>SORT_ASC])

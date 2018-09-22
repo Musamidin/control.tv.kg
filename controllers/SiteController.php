@@ -181,8 +181,9 @@ class SiteController extends Controller
     public function actionExport()
     {
         if(Yii::$app->user->identity->role == 1){
+            $retData = Yii::$app->HelperFunc->getTvlist();
             $this->layout = 'admin';
-            return $this->render('export');
+            return $this->render('export',['tvlist'=> $retData]);
         }else{
             return $this->redirect('/');
         }
@@ -239,10 +240,21 @@ class SiteController extends Controller
         header('Content-Type: application/json');
         $request = Yii::$app->request;
         $data = [];
-        $data['channel'] = $request->get('channel');
-        $data['dates'] = $request->get('dates');
-         
-        //if($token == md5(Yii::$app->session->getId().'opn')){
+        $darr = [];
+        $data['chid'] = $request->get('chid');
+        //$data['dates'] = $request->get('dates');
+        $data['token'] = $request->get('token');
+        if(!empty($request->get('dates'))){
+            $dmas = explode(',', $request->get('dates'));
+            for($i=0; $i<count($dmas); $i++){
+                array_push($darr,$dmas[$i]);
+            }
+            $data['dates'] = $darr;
+        }else{
+            $data['dates'] = date('Y-m-d',strtotime('+1 days'));
+        }
+
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getDatas($data);
           
           return json_encode(['status'=>0,
@@ -251,9 +263,9 @@ class SiteController extends Controller
                                 'count'=>$retData['count']],
                             'msg'=>'OK']
                           );
-     // }else{
-     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-      //}
+      }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
     }
     public function actionGettvlist()
     {
@@ -344,44 +356,79 @@ class SiteController extends Controller
 
     public function actionDownload()
     {
+        $request = Yii::$app->request;
         $string = '';
-        $data['channel'] = Yii::$app->request->get('id');
+        $darr = [];
+        $data = [];
+        $data['chid'] = $request->get('chid');
+        $data['token'] = $request->get('token');
         header('Content-Type: text/plain');
         header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
         header('Cache-Control: max-age=0');
+        if($data['token'] === md5(Yii::$app->session->getId().'opn'))
+        {
+            if(!empty($request->get('dates'))){
+                $dmas = explode(',', $request->get('dates'));
+                for($i=0; $i<count($dmas); $i++){
+                    array_push($darr,$dmas[$i]);
+                }
+                $data['dates'] = $darr;
+            }else{
+                $data['dates'] = date('Y-m-d',strtotime('+1 days'));
+            }
 
-        $retData = Yii::$app->HelperFunc->getDatas($data);
+            $retData = Yii::$app->HelperFunc->getDatas($data);
 
-        foreach ($retData['mlv'] as $item) {
-            $string .= $item['text']."\r\n";
+            foreach ($retData['mlv'] as $item) {
+                $string .= $item['text']."\r\n";
+            }
+            return $string;
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
-        return $string;
-        
     }
 
     public function actionMailer()
     {
-        $string = '';
-        $bucket = Yii::$app->fileStorage->getBucket('tempFiles');
+        $request = Yii::$app->request;
+        if($request->get('token') === md5(Yii::$app->session->getId().'opn'))
+        {
+            $msg = 0;
+            $data = [];
+            $darr = [];
+            $string = '';
+            $bucket = Yii::$app->fileStorage->getBucket('tempFiles');
 
-        $data['channel'] = Yii::$app->request->get('channel');
-        $retData = Yii::$app->HelperFunc->getDatas($data);
+            $data['chid'] = $request->get('chid');
+            if(!empty($request->get('dates'))){
+                $dmas = explode(',', $request->get('dates'));
+                for($i=0; $i<count($dmas); $i++){
+                    array_push($darr,$dmas[$i]);
+                }
+                $data['dates'] = $darr;
+            }else{
+                $data['dates'] = date('Y-m-d',strtotime('+1 days'));
+            }
+            $retData = Yii::$app->HelperFunc->getDatas($data);
 
-        foreach ($retData['mlv'] as $item) {
-            $string .= $item['text']."\r\n";
+            foreach ($retData['mlv'] as $item) {
+                $string .= $item['text']."\r\n";
+            }
+            $bucket->saveFileContent(date('Y-m-d').'.txt', $string);
+            $path = \Yii::$app->basePath."\web\\files\\tempFiles\\".date('Y-m-d').".txt";
+              if(!empty($request->get('email'))){
+                  $msg = Yii::$app->mailer->compose()
+                  ->setFrom('sales@myservice.kg')
+                  ->setTo($request->get('email'))
+                  ->setSubject('Тема сообщения')
+                  ->setTextBody('Текст сообщения')
+                  ->attach($path)
+                  ->send();
+              //->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
+            }
+              return $msg; //print_r($data);
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
-        $bucket->saveFileContent(date('Y-m-d').'.txt', $string);
-        $path = \Yii::$app->basePath."\web\\files\\tempFiles\\".date('Y-m-d').".txt";
-          $msg = Yii::$app->mailer->compose()
-          ->setFrom('sales@myservice.kg')
-          ->setTo('avtin@yandex.ru')
-          ->setSubject('Тема сообщения')
-          ->setTextBody('Текст сообщения')
-          ->attach($path)
-          ->send();
-          //->setHtmlBody('<b>текст сообщения в формате HTML</b>')->send();
-          
-          
-          return $msg; //print_r($data);
     }
 }

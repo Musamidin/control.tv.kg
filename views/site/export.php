@@ -13,8 +13,11 @@ $this->title = 'Admin';
           </div>
           <div class="col-md-5">
           <div class="input-group">
-            <select id="report-status" value="" name="reportstatus" class="form-control" >
-            <option ng-repeat="x in tvlist">{{x}}</option>
+            <select id="report-status" value="" name="reportstatus" class="form-control">
+
+            <? foreach($tvlist['tvlist'] as $item): ?>
+            <option data-eml="<?=$item['email']?>" value="<?=$item['id']?>"><?=$item['channel_name']?></option>
+            <? endforeach; ?>
               </select>
               <span class="input-group-addon input-sm"></span>
               <input type="text" class="form-control getbydatetime">
@@ -31,7 +34,7 @@ $this->title = 'Admin';
                 Количество: <span>{{totacount}}</span>
             </div>
             <div class="col-md-6">
-              <a id="downld" href="/download?id=5 канал" title="Скачать" class="icon-style">
+              <a id="downld" href="/download?chid=1&dates=&token=<?=md5(Yii::$app->session->getId().'opn') ?>" title="Скачать" class="icon-style">
                 <span class="glyphicon glyphicon-save"></span>
               </a>
               <a id="sendmail" href="javascript:void(0)" title="Отправить на ТК" class="icon-style">
@@ -47,14 +50,14 @@ $this->title = 'Admin';
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>
                 <tr role="row">
-                    <th class="sorting" aria-label="Текст">Текст</th>
-                    <th class="sorting" aria-label="Дата проката">Дата проката</th>
+                  <th class="sorting" aria-label="Дата проката">Дата проката</th>
+                  <th class="sorting" aria-label="Текст">Текст</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr role="row" class="odd" ng-repeat="ml in mainlistview">
-                  <td>{{ml.text}}</td>
                   <td>{{ml.daterent}}</td>
+                  <td>{{ml.text}}</td>
                 </tr>
                 </tbody>
               </table>
