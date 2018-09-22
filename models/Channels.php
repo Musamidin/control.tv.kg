@@ -16,7 +16,7 @@ use Yii;
  * @property string $agency_price
  * @property string $display_quantity
  * @property string $coverage
- *
+ * @property string $email
  * @property MainHub[] $mainHubs
  */
 class Channels extends \yii\db\ActiveRecord
@@ -35,7 +35,7 @@ class Channels extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['channel_name', 'display_quantity', 'coverage'], 'string'],
+            [['channel_name', 'display_quantity', 'coverage','email'], 'string'],
             [['status'], 'integer'],
             [['datetime'], 'safe'],
             [['tk_price', 'owner_price', 'agency_price'], 'number'],
@@ -57,6 +57,7 @@ class Channels extends \yii\db\ActiveRecord
             'agency_price' => 'Agency Price',
             'display_quantity' => 'Display Quantity',
             'coverage' => 'Coverage',
+            'email' => 'E-mail',
         ];
     }
 

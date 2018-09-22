@@ -14,6 +14,7 @@ $this->title = 'Admin';
           <div class="col-md-5">
           <div class="input-group">
             <select id="report-status" value="" name="reportstatus" class="form-control">
+                <option value="-1">Все</option>
                 <option value="0">Не принятые</option>
                 <option value="1">Принятые</option>
                 <option value="2">Отвергнутые</option>
@@ -37,44 +38,46 @@ $this->title = 'Admin';
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>
                 <tr role="row">
-                    <th class="sorting" aria-label="ID"><input type="checkbox"/></th>
-                    <th class="sorting" aria-label="ID">ID</th>
+                    <th class="sorting" aria-label="select-all-chbx"><input type="checkbox" class="select-all-chbx"/></th>
+                    <th class="sorting" aria-label="ID">№</th>
+                    <th class="sorting" aria-label="Дата">Дата</th>
                     <th class="sorting" aria-label="Заказчик">Заказчик</th>
                     <th class="sorting" aria-label="Текст">Текст</th>
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
-                    <th class="sorting" aria-label="Действие">Действие</th>
+                    <th class="sorting" aria-label="Статус">Статус</th>
+                    <th class="sorting" aria-label="Примечание">Примечание</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr role="row" class="odd" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
-                  <td><input type="checkbox"/></td>
+                  <td>
+                    <input ng-if="ml.status == '0'" class="checkbox" type="checkbox" name="remove[]" ng-model="chdata" value="{{ml.id}}" />
+                  </td>
                   <td>{{ml.id}}</td>
-                  <td>{{ml.client_id}}</td>
+                  <td>{{ml.datetime | formatDatetime}}</td>
+                  <td>{{ml.order}}</td>
                   <td>{{ml.text}}</td>
                   <td>{{ml.dates}}</td>
                   <td>
-                  <div class="btn-group">
-                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                      Действие <span class="caret"></span>
-                   </button>
-                    <ul class="dropdown-menu">
-                      <li><a href="javascript:void(0)" ng-click="onAccept(ml.id)"><span class="fa fa-check"></span>&nbsp;Принять</a></li>
-                      <li class="divider"></li>
-                      <li><a href="javascript:void(0)" ng-click="onReject(ml.id)"><span class="fa fa-close"></span>&nbsp;Отвергнуть</a></li>
-                      
-                    </ul>
-               </div>
-               </td>
+                    <div ng-switch="ml.status">
+                        <span ng-switch-when="0" class="label label-info">В обработке</span>
+                        <span ng-switch-when="1" class="label label-success">Принято</span>
+                        <span ng-switch-when="2" class="label label-danger">Отвергнуто</span>
+                    </div>
+                  </td>
+                  <td>{{ml.description}}</td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                <th rowspan="1" colspan="1"><input type="checkbox"/></th>
-                <th rowspan="1" colspan="1">ID</th>
+                <th rowspan="1" colspan="1"><input type="checkbox" class="select-all-chbx"/></th>
+                <th rowspan="1" colspan="1">№</th>
+                <th rowspan="1" colspan="1">Дата</th>
                 <th rowspan="1" colspan="1">Заказчик</th>
                 <th rowspan="1" colspan="1">Текст</th>
                 <th rowspan="1" colspan="1">Дата проката</th>
-                <th rowspan="1" colspan="1">Действие</th>
+                <th rowspan="1" colspan="1">Статус</th>
+                <th rowspan="1" colspan="1">Примечание</th>
                 </tfoot>
               </table>
               <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">
@@ -82,6 +85,20 @@ $this->title = 'Admin';
         </div>
     </div>
 
+    <div class="lg-btn row">
+      <div class="col-md-12 text-right">
+          <div class="btn-group">
+            <button class="btn btn-info btn-lg dropdown-toggle" type="button" data-toggle="dropdown">
+              Действие <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:void(0)" ng-click="onAccept()"><span class="fa fa-check"></span>&nbsp;Принять</a></li>
+              <li class="divider"></li>
+              <li><a href="javascript:void(0)" ng-click="onReject()"><span class="fa fa-close"></span>&nbsp;Отвергнуть</a></li>
+            </ul>
+          </div>
+      </div>
+    </div>
 
 
 <div class="modal modal-info fade in" id="modal-info">
@@ -90,16 +107,16 @@ $this->title = 'Admin';
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Коментария к дествию</h4>
+                <h4 class="modal-title">Коментария к действию</h4>
               </div>
               <div class="modal-body">
                 <div class="form-group">
-                  <textarea class="form-control" rows="3" placeholder="Введите ..."></textarea>
+                  <textarea id="comment" class="form-control" rows="3" placeholder="Введите ..."></textarea>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-outline" id="actionBtn">Принять</button>
+                <button type="button" class="btn btn-outline" ng-click="onAction($event)" data-id="0" id="actionBtn">Принять</button>
               </div>
             </div>
             <!-- /.modal-content -->

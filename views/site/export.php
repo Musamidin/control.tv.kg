@@ -13,11 +13,8 @@ $this->title = 'Admin';
           </div>
           <div class="col-md-5">
           <div class="input-group">
-            <select id="report-status" value="" name="reportstatus" class="form-control">
-                <option value="5 канал">5 канал</option>
-                <option value="Пирамида">Пирамида</option>
-                <option value="Нарын ТВ">Нарын ТВ</option>
-                <option value="ЭЛТР">ЭЛТР</option>
+            <select id="report-status" value="" name="reportstatus" class="form-control" >
+            <option ng-repeat="x in tvlist">{{x}}</option>
               </select>
               <span class="input-group-addon input-sm"></span>
               <input type="text" class="form-control getbydatetime">

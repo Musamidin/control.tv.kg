@@ -95,6 +95,9 @@ $config = [
                 'mailer' => 'site/mailer',
                 'getuserdata' => 'site/getuserdata',
                 'gettvlist' => 'site/gettvlist',
+                'setdata' => 'site/setdata',
+                'remove' => 'site/remove',
+                'onaction' => 'site/onaction',
             ],
         ],
         // 'i18n' => [

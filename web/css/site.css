@@ -207,3 +207,16 @@ input[type=checkbox], input[type=radio] {
     height: 20px;
     cursor: pointer;
 }
+.paddTop25{
+    padding-top: 25px;
+}
+.paddTop20{
+    padding-top: 20px;
+}
+.lg-btn{
+    position: fixed;
+    bottom: 180px;
+    z-index: 10;
+    right: 240px;
+    display: none;
+}

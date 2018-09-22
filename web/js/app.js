@@ -50,27 +50,28 @@ $scope.getTvList = function(){
 
 $scope.addformaction = function(){
 	$scope.data['token'] = $('#token').val();
+	$scope.data['sts'] = 0;
+	$scope.data['page'] = 1;
+	$scope.data['shpcount'] = 15;
 	$http({
 	  method: 'POST',
 	  url: '/setdata',
 	  data: $scope.data
 	}).then(function successCallback(response) {
-	    var state = response.data;
+	    var state = eval(response.data);
 	    if(state.status == 0){
 	      $('#mainhub-dates').datepicker('update','');
-	      //$('#statisticModal').modal({ keyboard: false });
-	      //$scope.init1 = function(){ };
-	      //$scope.datas = response.data.data;
+	      // //$('#statisticModal').modal({ keyboard: false });
+	        $scope.mainlistview = state.data.mainlistview;
+            $scope.totalmainlist = state.data.count;
+            $scope.data = [];
+            $('#addstate').html('(Запись успешно добавлен!)').css('color','#8fff00');
 	    }else{
-	      alert(state.msg);
+	    	$('#addstate').html(state.message).css('color','red');
 	    }
 	  }, function errorCallback(response) {
 	        //console.log(response);
 	});
-	console.log($scope.data);
-	//
-	$scope.data = [];
-	console.log($scope.data);
 };
 
 
@@ -111,13 +112,15 @@ $('#mainhub-dates').datepicker({
 /********END DATE PICKER****************/
 
 $scope.addform = function(){
-	$("#status-response").html('');
+	$("#status-response, #addstate").html('');
+	//$('#addstate').html('');
 	$scope.getTvList();
 	//console.log($scope.tvlist);
 	$('#modal-info-add-form').modal({ keyboard: false });
 };
 
 $scope.importbtn = function(){
+	$scope.getTvList();
 	$("#status-response").html('');
 	$('#modal-info-add-import').modal({ keyboard: false });
 };
@@ -154,13 +157,67 @@ $(document).on('change', '.checkbox', function(){
 });
 
 $scope.removedata = function(){
+	var ids = [];
 	for(var i = 0; i < $('.checkbox:checked').length; i++){
+		ids.push($('.checkbox:checked')[i].value);
 		//console.log( $('.checkbox:checked')[i].value );
 	}
+
+	$scope.data['token'] = $('#token').val();
+	$scope.data['sts'] = 0;
+	$scope.data['page'] = 1;
+	$scope.data['shpcount'] = 15;
+	$scope.data['ids'] = ids;
+	$http({
+	  method: 'POST',
+	  url: '/remove',
+	  data: $scope.data
+	}).then(function successCallback(response) {
+	    var state = eval(response.data);
+	    if(state.status == 0){
+	        $scope.mainlistview = state.data.mainlistview;
+            $scope.totalmainlist = state.data.count;
+
+            $(".select_all").prop('checked', false);
+			$('#removebtn').hide();
+
+	    }else{
+	    	alert('Error!');
+	    }
+	  }, function errorCallback(response) {
+	        //console.log(response);
+	});
+
+
+
+
 };
 
 $("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
 
 
+}).filter("status", function()
+{	
+	var retval = '';
+			return function(input){
+				switch(Number(input)){
+					case 0 : { retval = 'В обработке'; } break;
+					case 1 : { retval = 'Принято'; } break;
+					case 2 : { retval = 'Отвергнуто'; } break;
+					default : { retval = ''; } break;
+				}
+				return retval;
+			}
+}).filter("formatDatetime", function ()
+{
+    return function (input) {
+      if(jQuery.isEmptyObject(input) == false){
+				var dt = input.slice(0, -4).split('-');
+				var td = dt[2].split(' ');
+        return td[0]+'.'+dt[1]+'.'+dt[0]+' '+td[1];
+      }else{
+        return '';
+      }
+    }
 });
 

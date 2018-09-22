@@ -38,7 +38,8 @@ class AdminAsset extends AssetBundle
         'js/select2.min.js',
         'js/jquery.mask.min.js',
         'js/jquery/jquery-ui.min.js',
-        'js/jquery.table2excel.min.js'
+        'js/jquery.table2excel.min.js',
+        'js/moment.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

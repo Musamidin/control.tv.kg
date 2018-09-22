@@ -5,16 +5,20 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use yii\data\Pagination;
+use DateTime;
 
 use app\models\MainHub;
+use app\models\AdminModerView;
 use app\models\DatesHub;
 use app\models\ExportView;
 use app\models\ClientView;
 use app\models\Channels;
+use app\models\ClientsDataView;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use app\models\MyReadFilter;
+
 
 /**
  * This command echoes the first argument that you have entered.
@@ -64,31 +68,46 @@ class HelperFunc extends Component
                 $rows[] = $row;
             }
 
-            return $this->save($rows);
+            return $this->save($rows,false);
                     
         }catch(Exception $e){
             return $e;
         }
     }
-    public function save($data)
+    public function save($data,$single = false)
     {
         try{
             $t = '';
-            foreach($data as $itm) {
+            if($single == true){
 
-                // echo '<pre>';
-                // echo $itm['channels'].'|'.$itm['text'].'|'.$itm['dates'].'<br/>';
-                // echo '</pre>';
-                $t .= $itm['chid'].'|'.$itm['text'].'|'.$itm['dates'];
-                $mh = new MainHub();
-                $mh->phone = $itm['phone'];
-                $mh->chid = $itm['chid'];
-                $mh->text = $itm['text'];
-                $mh->dates = $itm['dates'];
-                $mh->state = $itm['state'];
-                $mh->client_id = Yii::$app->user->identity->getId();
-                $mh->save();
-                $this->arr_map($itm['dates'],$mh->id);
+                    $t .= $data['chid'].'|'.$data['text'].'|'.$data['dates'];
+                    $mh = new MainHub();
+                    $mh->phone = $data['phone'];
+                    $mh->chid = $data['chid'];
+                    $mh->text = $data['text'];
+                    $mh->dates = $data['dates'];
+                    $mh->state = $data['state'];
+                    $mh->client_id = Yii::$app->user->identity->getId();
+                    $mh->save();
+                    $this->arr_map($data['dates'],$mh->id);
+
+            }else{
+                foreach($data as $itm) {
+
+                    // echo '<pre>';
+                    // echo $itm['channels'].'|'.$itm['text'].'|'.$itm['dates'].'<br/>';
+                    // echo '</pre>';
+                    $t .= $itm['chid'].'|'.$itm['text'].'|'.$itm['dates'];
+                    $mh = new MainHub();
+                    $mh->phone = $itm['phone'];
+                    $mh->chid = $itm['chid'];
+                    $mh->text = $itm['text'];
+                    $mh->dates = $itm['dates'];
+                    $mh->state = $itm['state'];
+                    $mh->client_id = Yii::$app->user->identity->getId();
+                    $mh->save();
+                    $this->arr_map($itm['dates'],$mh->id);
+                }  
             }
             return $t;
          }catch(Exception $e){
@@ -101,11 +120,13 @@ class HelperFunc extends Component
       if(preg_match("/[\-]+/",$data)){
 
           $arr = preg_split("/[\-]+/",$data);
-          $start = new DateTime($arr[0]);
-          $interval = new DateInterval('P1D');
-          $end = new DateTime($arr[1]);
-          $end->add(new DateInterval('P1D'));
-          $period = new DatePeriod($start, $interval, $end);
+          $dts = date('Y-m-d',strtotime(str_replace('/', '-', $arr[0])));
+          $dte = date('Y-m-d',strtotime(str_replace('/', '-', $arr[1])));
+          $start = new DateTime($dts);
+          $interval = new \DateInterval('P1D');
+          $end = new DateTime($dte);
+          $end->add(new \DateInterval('P1D'));
+          $period = new \DatePeriod($start, $interval, $end);
 
           foreach ($period as $date) {
               $dh = new DatesHub();
@@ -140,27 +161,30 @@ class HelperFunc extends Component
    {
         $data = [];
         try{
-          if($param['sts'] == 0){
-              $data['count'] = MainHub::find()->filterWhere(['=','status',$param['sts']])->count();
-              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-              $data['mlv'] = MainHub::find()
-              ->filterWhere(['=','status',0])
-              ->offset($pagination->offset)
-              ->limit($pagination->limit)
-              ->asArray()
-              ->orderBy(['last_up_date'=>SORT_DESC])
-              ->all();
-          }else{
-            $data['count'] = MainHub::find()->filterWhere(['status'=> $param['sts']])->count();
-            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-            $data['mlv'] = MainHub::find()
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->filterWhere(['status'=> $param['sts']])
-            ->asArray()
-            ->orderBy(['last_up_date'=>SORT_DESC])
-            ->all();
-          }
+            if($param['sts'] == -1){
+                $data['count'] = AdminModerView::find()->filterWhere(['!=','status',88])->count();
+                $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+                $data['mlv'] = AdminModerView::find()
+                ->offset($pagination->offset)
+                ->limit($pagination->limit)
+                ->filterWhere(['!=','status',88])
+                ->asArray()
+                ->orderBy(['id'=>SORT_ASC])
+                ->all();
+            }else{
+                $data['count'] = AdminModerView::find()->filterWhere(['status'=> $param['sts']])->count();
+                $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+                $data['mlv'] = AdminModerView::find()
+                ->offset($pagination->offset)
+                ->limit($pagination->limit)
+                ->filterWhere(['status'=> $param['sts']])
+                ->asArray()
+                ->orderBy(['id'=>SORT_ASC])
+                ->all();
+            }
+
+
+          
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -172,27 +196,18 @@ class HelperFunc extends Component
    {
         $data = [];
         try{
-          if($param['sts'] == 0){
-              $data['count'] = clientView::find()->filterWhere(['=','status',$param['sts']])->count();
+            $data['count'] = ClientsDataView::find()
+            ->where(['status'=>$param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
+            ->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-              $data['mlv'] = clientView::find()
-              ->filterWhere(['=','status',0])
+              $data['mlv'] = ClientsDataView::find()
+              ->where(['status'=> $param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
               ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['datetime'=>SORT_DESC])
               ->all();
-          }else{
-            $data['count'] = clientView::find()->filterWhere(['status'=> $param['sts']])->count();
-            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-            $data['mlv'] = clientView::find()
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->filterWhere(['status'=> $param['sts']])
-            ->asArray()
-            ->orderBy(['datetime'=>SORT_DESC])
-            ->all();
-          }
+
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -225,7 +240,7 @@ class HelperFunc extends Component
               ->select('id, channel_name')
               ->where(['status'=> 0])
               ->asArray()
-              ->orderBy(['channel_name'=>SORT_DESC])
+              ->orderBy(['id'=>SORT_ASC])
               ->all();
 
           return $data;
@@ -234,6 +249,33 @@ class HelperFunc extends Component
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
    }
+
+   public function update($data)
+   {
+        try{
+            if(MainHub::updateAll(['status'=> 88],['IN', 'id',$data['ids']])){
+                return true;
+            }
+             
+        }catch(Exception $ex){
+            return $ex->errorInfo;
+        }
+
+   }
+
+   public function updateStatus($data)
+   {
+        try{
+            if(MainHub::updateAll(['status'=> $data['status'],'description'=> $data['description']],['IN', 'id',$data['ids']])){
+                return true;
+            }
+             
+        }catch(Exception $ex){
+            return $ex->errorInfo;
+        }
+
+   }
+
   public function find_dates_between( $start_date, $end_date) 
   {
       $start = new DateTime($start_date);

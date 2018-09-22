@@ -12,18 +12,35 @@ $this->title = 'Размещение бегущей строки на все Т�
 ?>
 <div class="site-index" ng-controller="AppCtrl">
 <div class="row">
-    <div class="col-md-2">sss
-    </div>
-    <div class="col-md-10">
-    <span id="status">Количество не обработанных записей: <span id="upcount">{{totalmainlist}}</span> <a href="javascript:void(0)" id="ts">посмотреть загруженные записи</a></span>
-    </div>
+    <div class="col-md-12"></div>
 </div>
+<br/>
 <div class="row">
-    <div class="col-md-12"><a ng-click="addform()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a>
-    <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>
-     <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plug"></i>API Keys</a>
-    </div>    
+    <div class="col-md-4">
+        <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
+        <a ng-click="addform()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a>
+        <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>
+        <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plug"></i>API Keys</a>        
+    </div>
+    <div class="col-md-5 paddTop20">
+        <div class="input-group">
+        <select id="report-status" value="" name="reportstatus" class="form-control">
+            <option value="0">Не принятые</option>
+            <option value="1">Принятые</option>
+            <option value="2">Отвергнутые</option>
+            </select>
+            <span class="input-group-addon input-sm"></span>
+            <input type="text" class="form-control getbydatetime">
+            <span class="input-group-addon rep-dpicker">
+            <i class="glyphicon glyphicon-calendar"></i>
+            </span>
+        </div>
+    </div>
+    <div class="col-md-3 paddTop25">
+            Количество: <span>{{totalmainlist}}</span>
+    </div>
 </div>
+<br/>
     <br/>
     <div class="row">
         <div class="col-md-12" ng-if="mainlistview.length > 0">
@@ -35,7 +52,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                     </th>
                     <!--th class="sorting" aria-label="ID">ID</th-->
                     <th class="sorting" aria-label="Дата">Дата</th>
-                    <th class="sorting" aria-label="Моб. номер">Моб. номер</th>
+                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" class="sorting" aria-label="Моб. номер">Моб. номер</th>
                     <th class="sorting" aria-label="Телеканал">Телеканал</th>
                     <th class="sorting" aria-label="Текст">Текст</th>
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
@@ -46,15 +63,20 @@ $this->title = 'Размещение бегущей строки на все Т�
                 <tbody>
                 <tr role="row" class="odd" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
                   <td>
-                  <input class="checkbox" type="checkbox" name="remove[]" ng-model="chdata" value="{{ml.mhid}}" />
+                  <input ng-if="ml.status == '0'" class="checkbox" type="checkbox" name="remove[]" ng-model="chdata" value="{{ml.id}}" />
                   </td>
-                  <!--td>{{ml.mhid}}</td-->
-                  <td>{{ml.datetime}}</td>
-                  <td>{{ml.phone}}</td>
+                  <td>{{ml.datetime | formatDatetime}}</td>
+                  <td ng-if="<?=Yii::$app->user->identity->role?> === 0">{{ml.phone}}</td>
                   <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
-                  <td>{{ml.daterent}}</td>
-                  <td>{{ml.status}}</td>
+                  <td>{{ml.dates}}</td>
+                  <td>
+                    <div ng-switch="ml.status">
+                        <span ng-switch-when="0" class="label label-info">В обработке</span>
+                        <span ng-switch-when="1" class="label label-success">Принято</span>
+                        <span ng-switch-when="2" class="label label-danger">Отвергнуто</span>
+                    </div>
+                  </td>
                   <td>{{ml.description}}</td>
                 </tr>
                 </tbody>
@@ -65,7 +87,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                 </th>
                 <!--th rowspan="1" colspan="1">ID</th-->
                 <th rowspan="1" colspan="1">Дата</th>
-                <th rowspan="1" colspan="1">Моб. номер</th>
+                <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="1">Моб. номер</th>
                 <th rowspan="1" colspan="1">Телеканал</th>
                 <th rowspan="1" colspan="1">Текст</th>
                 <th rowspan="1" colspan="1">Дата проката</th>
@@ -137,12 +159,8 @@ $this->title = 'Размещение бегущей строки на все Т�
                             <li><span class="required">Все поля обязательны для заполнения</span></li>
                             <li>Поле phone заполняется в формате: 772030317</li>
                             <li>Поле chid - это ID телеканала
-                                <ul>
-                                    <li>1 - 5 канал</li>
-                                    <li>2 - Пирамида</li>
-                                    <li>3 - ЭЛТР</li>
-                                    <li>4 - Нарын ТВ</li>
-                                    <li>5 - СТВ</li>
+                                <ul ng-repeat="tvl in tvlist">
+                                    <li>{{tvl.id}} - {{tvl.channel_name}}</li>
                                 </ul>
                             </li>
                             <li>Поле text - текс объявления</li>
@@ -175,14 +193,13 @@ $this->title = 'Размещение бегущей строки на все Т�
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title">Добавить запись</h4>
+                <h4 class="modal-title">Добавить запись <span id="addstate"></span></h4>
               </div>
               <div class="modal-body">
                 <?php $form = ActiveForm::begin([
                                       'id' => 'addForm',
                                       'options' => ['name' => 'addForm']
                                     ]); ?>
-                  <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>                  
                   <div class="row">
                       <div class="col-md-4">
                           <?= $form->field($mainhub, 'phone',['options'=>

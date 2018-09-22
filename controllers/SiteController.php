@@ -35,6 +35,10 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getuserdata' || $action->id ==='gettvlist'){
             $this->enableCsrfValidation = false;
+        }elseif($action->id ==='setdata' || $action->id ==='remove'){
+            $this->enableCsrfValidation = false;
+        }elseif($action->id ==='onaction'){
+            $this->enableCsrfValidation = false;
         }
 
         return parent::beforeAction($action);    
@@ -61,6 +65,7 @@ class SiteController extends Controller
                 'actions' => [
                     'logout' => ['POST'],
                     'result' => ['POST','FILES'],
+                    'setdata' => ['POST'],
                 ],
             ],
         ];
@@ -106,7 +111,7 @@ class SiteController extends Controller
     {
         $model = new LoginForm();
         if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
-            if(Yii::$app->user->identity->role == 0){
+            if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
                 return $this->redirect('/');
             }elseif(Yii::$app->user->identity->role == 1){
                 return $this->redirect('/admin');
@@ -264,6 +269,79 @@ class SiteController extends Controller
      //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       //}
     }
+    public function actionSetdata()
+    {
+        $data = Yii::$app->request->post();
+        $data['state'] = 0;
+        $retData = null;        
+        
+        header('Content-Type: application/json');
+        
+        if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
+            if(Yii::$app->HelperFunc->save($data,true)){
+                $retData = Yii::$app->HelperFunc->getUserData($data);
+                
+                return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                        );                
+            }
+     }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
+        return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
+     }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }
+
+    public function actionRemove()
+    {
+        $data = Yii::$app->request->post();
+        $data['state'] = 0;
+        $retData = null;        
+        
+        header('Content-Type: application/json');
+        
+        if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
+            if(Yii::$app->HelperFunc->update($data)){
+                $retData = Yii::$app->HelperFunc->getUserData($data);
+                return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                        );
+            }else{
+                return json_encode(array('status'=>1,'message'=>'Ошибка при удаления записи'));
+            }
+     }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
+        return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
+     }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }
+    public function actionOnaction()
+    {
+        $data = Yii::$app->request->post();
+        $data['state'] = 0;
+        $retData = null;        
+        
+        header('Content-Type: application/json');
+        
+        if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
+            if(Yii::$app->HelperFunc->updateStatus($data)){
+                $retData = Yii::$app->HelperFunc->getData($data);
+                return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                        );
+            }else{
+                return json_encode(array('status'=>1,'message'=>'Ошибка при удаления записи'));
+            }
+     }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
+        return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
+     }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }    
+
     public function actionDownload()
     {
         $string = '';
