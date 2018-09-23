@@ -107,7 +107,7 @@ class HelperFunc extends Component
 
                     $mh = new MainHub();
                     $mh->attributes = $itm;
-                    if($mh->validate()){
+                    //if($mh->validate()){
                         $mh->phone = $itm['phone'];
                         $mh->chid = $itm['chid'];
                         $mh->text = $itm['text'];
@@ -115,15 +115,17 @@ class HelperFunc extends Component
                         $mh->state = 0;//$itm['state'];
                         $mh->client_id = Yii::$app->user->identity->getId();
                         if($mh->save()){
-                          if($this->arr_map($data['dates'],$mh->id) == true){
-                             return $mh->id;
-                          }else{
-                            return 'Error! dates is incorrect!';
-                          }
-                        }else{
-                          return false;
+                          $this->arr_map($data['dates'],$mh->id);
+                          // if($this->arr_map($data['dates'],$mh->id) == true){
+                          //    return $mh->id;
+                          // }else{
+                          //   return 'Error! dates is incorrect!';
+                          // }
                         }
-                    }else{ return false; }
+                        // else{
+                        //   return false;
+                        // }
+                    //}else{ return false; }
                 }
             }
          }catch(Exception $e){
