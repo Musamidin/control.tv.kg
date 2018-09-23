@@ -82,44 +82,49 @@ class HelperFunc extends Component
             if($single == true){
 
                     $mh = new MainHub();
-                    $mh->phone = $data['phone'];
-                    $mh->chid = $data['chid'];
-                    $mh->text = $data['text'];
-                    $mh->dates = $data['dates'];
-                    $mh->state = 0;
-                    $mh->client_id = Yii::$app->user->identity->getId();
-                    if($mh->save()){
-                      if($this->arr_map($data['dates'],$mh->id) == true){
-                         return $mh->id;
-                      }else{
-                        return 'Error! dates is incorrect!';
-                      }
-                    }else{
-                      return false;
-                    }
-                    
+                    $mh->attributes = $data;
+                    if($mh->validate()){
+                        $mh->phone = $data['phone'];
+                        $mh->chid = $data['chid'];
+                        $mh->text = $data['text'];
+                        $mh->dates = $data['dates'];
+                        $mh->state = 0;
+                        $mh->client_id = Yii::$app->user->identity->getId();
+                        if($mh->save()){
+                          if($this->arr_map($data['dates'],$mh->id) == true){
+                             return $mh->id;
+                          }else{
+                            return 'Error! dates is incorrect!';
+                          }
+                        }else{
+                          return false;
+                        }
+                    }else{ return false; }
 
             }else{
 
                 foreach($data as $itm) {
 
                     $mh = new MainHub();
-                    $mh->phone = $itm['phone'];
-                    $mh->chid = $itm['chid'];
-                    $mh->text = $itm['text'];
-                    $mh->dates = $itm['dates'];
-                    $mh->state = 0;//$itm['state'];
-                    $mh->client_id = Yii::$app->user->identity->getId();
-                    if($mh->save()){
-                      if($this->arr_map($data['dates'],$mh->id) == true){
-                         return $mh->id;
-                      }else{
-                        return 'Error! dates is incorrect!';
-                      }
-                    }else{
-                      return false;
-                    }
-                }  
+                    $mh->attributes = $itm;
+                    if($mh->validate()){
+                        $mh->phone = $itm['phone'];
+                        $mh->chid = $itm['chid'];
+                        $mh->text = $itm['text'];
+                        $mh->dates = $itm['dates'];
+                        $mh->state = 0;//$itm['state'];
+                        $mh->client_id = Yii::$app->user->identity->getId();
+                        if($mh->save()){
+                          if($this->arr_map($data['dates'],$mh->id) == true){
+                             return $mh->id;
+                          }else{
+                            return 'Error! dates is incorrect!';
+                          }
+                        }else{
+                          return false;
+                        }
+                    }else{ return false; }
+                }
             }
          }catch(Exception $e){
             return $e;
