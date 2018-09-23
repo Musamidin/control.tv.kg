@@ -98,6 +98,9 @@ $config = [
                 'setdata' => 'site/setdata',
                 'remove' => 'site/remove',
                 'onaction' => 'site/onaction',
+                'ontvxml' => 'api/ontvxml',
+                'ontvjson' => 'api/ontvjson',
+                ['class' => 'yii\rest\UrlRule','controller' => 'api','pluralize'=>false],
             ],
         ],
         // 'i18n' => [

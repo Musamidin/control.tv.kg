@@ -48,6 +48,12 @@ $scope.getTvList = function(){
         });
   };
 
+$(document).on('change', '#report-status', function(){
+	$scope.getUserData(1,$scope.mainlistPerPage,this.value);
+	if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }	
+});
+
+
 $scope.addformaction = function(){
 	$scope.data['token'] = $('#token').val();
 	$scope.data['sts'] = 0;

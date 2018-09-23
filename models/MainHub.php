@@ -41,15 +41,16 @@ class MainHub extends \yii\db\ActiveRecord
             [['text', 'dates','description'], 'string'],
             [['state','phone','chid','client_id', 'status'], 'integer'],
             [[ 'phone'], 'match', 'pattern' => '/^[0-9]{9}$/'],
+            [['text', 'dates','phone','chid'],'required'],
         ];
     }
 
-    public function scenarios()
-    {
-        $scenarios = parent::scenarios();
-        $scenarios['create'] = ['phone','chid','text','dates']; 
-        return $scenarios; 
-    }
+    // public function scenarios()
+    // {
+    //     $scenarios = parent::scenarios();
+    //     $scenarios['create'] = ['phone','chid','text','dates']; 
+    //     return $scenarios; 
+    // }
 
     /**
      * {@inheritdoc}

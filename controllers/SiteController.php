@@ -130,6 +130,7 @@ class SiteController extends Controller
 
     public function actionResult()
     {
+        $result = null;
         $model = new UploadForm();
 
         $userfile = UploadedFile::getInstance($model, 'userfile');
@@ -139,8 +140,12 @@ class SiteController extends Controller
             $fileName = $uid . '.' . $userfile->extension;
             $filePath = Yii::getAlias(\Yii::$app->basePath.'/web/data/').$fileName;
             if ($userfile->saveAs($filePath)) {
-                
                 $result = Yii::$app->HelperFunc->savedb($fileName,$userfile->extension);
+                if($result){
+                    $result = 'OK';
+                }else{
+                    $result = $result;
+                }
                 unlink($filePath);
                 $count = MainHub::find()
                 ->filterWhere(['=', 'status', 0])
@@ -284,13 +289,12 @@ class SiteController extends Controller
     public function actionSetdata()
     {
         $data = Yii::$app->request->post();
-        $data['state'] = 0;
         $retData = null;        
         
         header('Content-Type: application/json');
         
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
-            if(Yii::$app->HelperFunc->save($data,true)){
+            if(Yii::$app->HelperFunc->save($data,true) != false){
                 $retData = Yii::$app->HelperFunc->getUserData($data);
                 
                 return json_encode(['status'=>0,
