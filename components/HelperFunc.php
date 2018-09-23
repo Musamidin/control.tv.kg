@@ -107,7 +107,7 @@ class HelperFunc extends Component
 
                     $mh = new MainHub();
                     $mh->attributes = $itm;
-                    //if($mh->validate()){
+                    if($mh->validate()){
                         $mh->phone = $itm['phone'];
                         $mh->chid = $itm['chid'];
                         $mh->text = $itm['text'];
@@ -125,7 +125,8 @@ class HelperFunc extends Component
                         // else{
                         //   return false;
                         // }
-                    //}else{ return false; }
+                    }
+                        //else{ return false; }
                 }
             }
          }catch(Exception $e){
