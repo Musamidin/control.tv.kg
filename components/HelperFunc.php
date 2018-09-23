@@ -115,7 +115,7 @@ class HelperFunc extends Component
                         $mh->state = 0;//$itm['state'];
                         $mh->client_id = Yii::$app->user->identity->getId();
                         if($mh->save()){
-                          $this->arr_map($data['dates'],$mh->id);
+                          $this->arr_map($itm['dates'],$mh->id);
                           // if($this->arr_map($data['dates'],$mh->id) == true){
                           //    return $mh->id;
                           // }else{
