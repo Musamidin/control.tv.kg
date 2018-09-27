@@ -131,7 +131,6 @@ $scope.importbtn = function(){
 	$('#modal-info-add-import').modal({ keyboard: false });
 };
 
-
 //select all checkboxes
 $(document).on('change', '.select_all', function(){
 	$(".checkbox").prop('checked', $(this).prop("checked"));

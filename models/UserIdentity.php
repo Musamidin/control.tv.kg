@@ -2,7 +2,12 @@
 
 namespace app\models;
 
-class UserIdentity extends User implements \yii\web\IdentityInterface
+use Yii;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+
+class UserIdentity extends User implements IdentityInterface
 {
 
     /**
@@ -63,6 +68,34 @@ class UserIdentity extends User implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password === md5($password);
+        return $this->password === md5($password);//Yii::$app->security->generatePasswordHash($password);
     }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = md5($password);//Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * Generates new password reset token
+     */
+    public function generateToken()
+    {
+        $this->access_token = md5($password.time());
+        //Yii::$app->security->generatePasswordHash($password.'sec');//Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
 }

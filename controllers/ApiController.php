@@ -68,19 +68,20 @@ class ApiController extends ActiveController
             'class' => AccessControl::className(),
             'only' => [
                 'update',
-                'delete',
+                //'delete',
                 'view',
                 'index',
             ],
             'rules' => [
                 [
                     'actions' => [
-                        'update',
-                        'delete',
-                        'view',
-                        'index',
-                        'ontvxml',
+                        // 'update',
+                        // 'delete',
+                        // 'view',
+                        //'index',
+                        'ontvxml' => ['POST'],
                         'ontvjson' => ['POST'],
+                        'getstatusjson' => ['POST'],
                     ],
                     'allow' => true,
                     'roles' => ['@'],
@@ -91,14 +92,15 @@ class ApiController extends ActiveController
         $behaviors['verbFilter'] = [
             'class' => VerbFilter::className(),
             'actions' => [
-                'signup' => ['POST'],
-                'login' => ['POST'],
-                'update' => ['PUT'],
-                'delete' => ['DELETE'],
-                'view' => ['GET'],
-                'index' => ['GET'],
+                // 'signup' => ['POST'],
+                // 'login' => ['POST'],
+                // 'update' => ['PUT'],
+                // 'delete' => ['DELETE'],
+                // 'view' => ['GET'],
+                // 'index' => ['GET'],
                 'ontvxml' => ['POST'],
                 'ontvjson' => ['POST'],
+                'getstatusjson' => ['POST'],
             ],
         ];
 
@@ -191,4 +193,17 @@ class ApiController extends ActiveController
 
         
     }
+    public function actionGetstatusjson()
+    {
+        \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
+        $response = MainHub::find()
+        ->select(['status','description'])
+        ->where(['id'=> Yii::$app->request->post('id')])
+        ->andWhere(['client_id'=>Yii::$app->user->identity->getId()])
+        ->one();
+        if($response)
+            return $response;
+        else
+            return ['status'=>-1, 'description'=>'record not found!'];
+    }    
 }

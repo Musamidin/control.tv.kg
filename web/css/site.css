@@ -220,3 +220,10 @@ input[type=checkbox], input[type=radio] {
     right: 240px;
     display: none;
 }
+.api-box{
+    border: 1px solid silver;
+    padding: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}

@@ -14,7 +14,7 @@ use app\models\LoginForm;
 use app\models\ContactForm;
 use yii\web\UploadedFile;
 use app\models\MainHub;
-
+use app\models\ChangePassword;
 use app\models\Filestore;
 use app\models\UploadForm;
 
@@ -94,12 +94,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $count = MainHub::find()
-                ->filterWhere(['=', 'status', 0])
-                ->count();
-        $mainhub = new MainHub();        
-        $model = new UploadForm();
-        return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub]);
+        if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
+            $count = MainHub::find()
+                    ->filterWhere(['=', 'status', 0])
+                    ->count();
+            $mainhub = new MainHub();        
+            $model = new UploadForm();
+            return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub]);
+        }elseif(Yii::$app->user->identity->role == 1){
+            return $this->redirect('/admin');
+        }
     }
     public function actionAbout()
     {
@@ -172,8 +176,37 @@ class SiteController extends Controller
 
     public function actionReport()
     {
-        return $this->render('report');
+        if(Yii::$app->user->identity->role != 1){
+            return $this->render('report');
+        }else{
+            return $this->redirect('/');
+        }
     }
+
+    public function actionUseraccount()
+    {
+        if(Yii::$app->user->identity->role != 1){
+
+            $model = new ChangePassword();
+            if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
+
+                return $this->render('useraccount', [
+                'model' => $model,
+                'status' => 'Ваш пароль успешно изменен так же изменился ключ для API',
+                'accesstoken' => Yii::$app->user->identity->access_token,
+                ]);
+            }
+            return $this->render('useraccount', [
+                'model' => $model,
+                'accesstoken' => Yii::$app->user->identity->access_token,
+            ]);
+            //return $this->render('useraccount');
+
+        }else{
+            return $this->redirect('/');
+        }
+    }
+
     public function actionAdmin()
     {
         if(Yii::$app->user->identity->role == 1){

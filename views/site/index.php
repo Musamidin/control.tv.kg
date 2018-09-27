@@ -19,8 +19,7 @@ $this->title = 'Размещение бегущей строки на все Т�
     <div class="col-md-4">
         <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
         <a ng-click="addform()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a>
-        <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>
-        <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plug"></i>API Keys</a>        
+        <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>       
     </div>
     <div class="col-md-5 paddTop20">
         <div class="input-group">
