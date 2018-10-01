@@ -8,6 +8,7 @@ $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
+$scope.total = null;
 $scope.bystatus = 0;
 $scope.tvlist = null;
 $scope.data = {};
@@ -18,12 +19,13 @@ $scope.pageChanged = function(newPage) {
   };
 
 $scope.getUserData = function(pageNum,showPageCount,sts){
-  $http.get('/getuserdata?page=' + pageNum +'&shpcount='+ showPageCount+'&sts='+ sts) // +'&pagenum='+pnum
+  $http.get('/getuserdata?page=' + pageNum +'&shpcount='+ showPageCount+'&sts='+ sts+'&token='+ $('#token').val()) // +'&pagenum='+pnum
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
                 $scope.mainlistview = eval(respdata.data.mainlistview);
                 $scope.totalmainlist = eval(respdata.data.count);
+                $scope.total = eval(respdata.data.total);
           } else if(respdata.status > 0){
               alert(respdata.msg);
           }
@@ -224,5 +226,14 @@ $("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
         return '';
       }
     }
+}).filter("fixedto", function()
+{
+	return function(input){
+    if(jQuery.isEmptyObject(input) == false){
+		    return parseFloat(input).toFixed(2);
+    }else{
+      return parseFloat(0).toFixed(2);
+    }
+	}
 });
 

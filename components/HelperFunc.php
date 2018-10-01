@@ -12,6 +12,7 @@ use app\models\AdminModerView;
 use app\models\DatesHub;
 use app\models\ExportView;
 use app\models\ClientView;
+use app\models\UserDataView;
 use app\models\Channels;
 use app\models\ClientsDataView;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -77,10 +78,8 @@ class HelperFunc extends Component
     }
     public function save($data,$single = false)
     {
-        try{
-
             if($single == true){
-
+                try{
                     $mh = new MainHub();
                     $mh->attributes = $data;
                     if($mh->validate()){
@@ -90,54 +89,49 @@ class HelperFunc extends Component
                         $mh->dates = $data['dates'];
                         $mh->state = 0;
                         $mh->client_id = Yii::$app->user->identity->getId();
+                        $mh->cday = $this->getCoutDays($data['dates']);
                         if($mh->save()){
-                          if($this->arr_map($data['dates'],$mh->id) == true){
-                             return $mh->id;
-                          }else{
-                            return 'Error! dates is incorrect!';
-                          }
+                            $this->arr_map($data['dates'],$mh->id);
+                            return true;
                         }else{
-                          return false;
+                            return false; //['error'=> 'save false'];
                         }
-                    }else{ return false; }
+                    }else{ return false; } //['error'=> 'validate false']; } 
+                }catch(Exception $ex){
+                    return $ex;
+                }
 
             }else{
-
-                foreach($data as $itm) {
-
-                    $mh = new MainHub();
-                    $mh->attributes = $itm;
-                    if($mh->validate()){
-                        $mh->phone = $itm['phone'];
-                        $mh->chid = $itm['chid'];
-                        $mh->text = $itm['text'];
-                        $mh->dates = $itm['dates'];
-                        $mh->state = 0;//$itm['state'];
-                        $mh->client_id = Yii::$app->user->identity->getId();
-                        if($mh->save()){
-                          $this->arr_map($itm['dates'],$mh->id);
-                          // if($this->arr_map($data['dates'],$mh->id) == true){
-                          //    return $mh->id;
-                          // }else{
-                          //   return 'Error! dates is incorrect!';
-                          // }
-                        }
-                        // else{
-                        //   return false;
-                        // }
-                    }
-                        //else{ return false; }
+                try{
+                    foreach($data as $itm) {
+                        $mh = new MainHub();
+                        $mh->attributes = $itm;
+                        if($mh->validate()){
+                            $mh->phone = $itm['phone'];
+                            $mh->chid = $itm['chid'];
+                            $mh->text = $itm['text'];
+                            $mh->dates = $itm['dates'];
+                            $mh->state = 0;//$itm['state'];
+                            $mh->client_id = Yii::$app->user->identity->getId();
+                            $mh->cday = $this->getCoutDays($itm['dates']);
+                            if($mh->save()){
+                                $this->arr_map($itm['dates'],$mh->id);
+                                return true;
+                            }else{
+                                return false;
+                            }
+                        }else{ return false; }
+                    }  
+                }catch(Exception $exc){
+                    return $exc;
                 }
-            }
-         }catch(Exception $e){
-            return $e;
-         }   
+
+            }   
     }
 
     public function arr_map($data,$id)
     {
       $response = null;
-
       if(preg_match("/[\-]+/",$data)){
         try{
           $arr = preg_split("/[\-]+/",$data);
@@ -149,21 +143,16 @@ class HelperFunc extends Component
           $end->add(new \DateInterval('P1D'));
           $period = new \DatePeriod($start, $interval, $end);
 
-          foreach ($period as $date) {
+            foreach ($period as $date) {
               $dh = new DatesHub();
               $dh->daterent = $date->format('Y-m-d');
               //date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
               $dh->astatus = 0;
               $dh->mid = $id;
-              if($dh->save()){
-                $response = true;
-              }else{
-                $response = false;
-                break;
-              }
-          }
+              $dh->save();
+            }
         }catch(Exception $e){
-          $response = $e;
+          return $e;
         }
 
       }elseif(preg_match("/[\,]+/",$data)){
@@ -174,18 +163,21 @@ class HelperFunc extends Component
                   $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $arr[$i])));
                   $dh->astatus = 0;
                   $dh->mid = $id;
-                  if($dh->save()){
-                    $response = true;
-                  }else{
-                    $response = false;
-                    break;
-                  }
+                  $dh->save();
           }
         }catch(Exception $e){
-          $response = $e;
-        }  
+          return $e;
+        }
+      }else{
+        if(!empty($data)){
+            $dh = new DatesHub();
+            $dh->daterent = date('Y-m-d',strtotime(str_replace('/', '-', $data)));
+            $dh->astatus = 0;
+            $dh->mid = $id;
+            $dh->save();
+
+        }else{ return false; }
       }
-      return $response;
     }
 
    public function getData($param)
@@ -225,18 +217,19 @@ class HelperFunc extends Component
    {
         $data = [];
         try{
-            $data['count'] = ClientsDataView::find()
+            $data['count'] = UserDataView::find()
             ->where(['status'=>$param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
             ->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-              $data['mlv'] = ClientsDataView::find()
+              $data['mlv'] = UserDataView::find()
               ->where(['status'=> $param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
               ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['datetime'=>SORT_DESC])
               ->all();
-
+              $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM userDataView WHERE client_id =".Yii::$app->user->identity->getId()." AND status = ".$param['sts']."");
+              $data['totalsumm'] = $command->queryAll();
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -321,6 +314,31 @@ class HelperFunc extends Component
       echo $date->format('d/m/Y') . "<br />";
       }
   }
+
+  public function getCoutDays($dates)
+  {
+
+        if(preg_match("/[\-]+/",$dates)){
+            try{
+                $arr = preg_split("/[\-]+/",$dates);
+                $datetime1 = new DateTime( date('Y-m-d',strtotime(str_replace('/', '-', $arr[0]))) );
+                $datetime2 = new DateTime( date('Y-m-d',strtotime(str_replace('/', '-', $arr[1]))) );
+                $interval = $datetime1->diff($datetime2);
+                return IntVal($interval->d)+1;
+            }catch(Exception $ex){
+                return $ex;
+            }
+        }elseif(preg_match("/[\,]+/",$dates)){
+            try{
+                $arr = preg_split("/[\,]+/",$dates);
+                return count($arr);
+            }catch(Exception $e){
+                return $e;
+            }
+        }else{
+            return !empty($dates);
+        }
+    }
 
 
 }

@@ -210,8 +210,8 @@ input[type=checkbox], input[type=radio] {
 .paddTop25{
     padding-top: 25px;
 }
-.paddTop20{
-    padding-top: 20px;
+.paddTop8{
+    padding-top: 8px;
 }
 .lg-btn{
     position: fixed;
@@ -226,4 +226,13 @@ input[type=checkbox], input[type=radio] {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     border-radius: 10px;
+}
+.sum-box{
+    padding-top: 4px;
+    border: 1px solid #337ab7;
+    border-radius: 10px;
+}
+span.summ {
+    font-weight: bold;
+    margin-left: 3px;
 }

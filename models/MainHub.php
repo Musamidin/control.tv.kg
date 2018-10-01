@@ -13,6 +13,7 @@ use Yii;
  * @property string $chid
  * @property string $text
  * @property string $dates
+ * @property int $cday
  * @property int $client_id
  * @property int $status
  * @property int $state 
@@ -39,7 +40,7 @@ class MainHub extends \yii\db\ActiveRecord
         return [
             [['datetime','last_up_date'], 'safe'],
             [['text', 'dates','description'], 'string'],
-            [['state','phone','chid','client_id', 'status'], 'integer'],
+            [['state','phone','chid','client_id', 'status','cday'], 'integer'],
             [[ 'phone'], 'match', 'pattern' => '/^[0-9]{9}$/'],
             [['text', 'dates','phone','chid'],'required'],
         ];
@@ -64,6 +65,7 @@ class MainHub extends \yii\db\ActiveRecord
             'chid' => 'chid',
             'text' => 'Text',
             'dates' => 'Dates',
+            'cday' => 'count days',
             'client_id' => 'Client ID',
             'status' => 'Status',
             'state' => 'State',

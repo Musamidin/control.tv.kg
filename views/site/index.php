@@ -16,12 +16,12 @@ $this->title = 'Размещение бегущей строки на все Т�
 </div>
 <br/>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
         <a ng-click="addform()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a>
         <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>       
     </div>
-    <div class="col-md-5 paddTop20">
+    <div class="col-md-5 paddTop8">
         <div class="input-group">
         <select id="report-status" value="" name="reportstatus" class="form-control">
             <option value="0">Не принятые</option>
@@ -35,8 +35,15 @@ $this->title = 'Размещение бегущей строки на все Т�
             </span>
         </div>
     </div>
-    <div class="col-md-3 paddTop25">
-            Количество: <span>{{totalmainlist}}</span>
+    <div class="col-md-4 sum-box">
+        <div class="row">
+        <div class="col-md-4">Количество: <span class="summ">{{totalmainlist}}</span></div>
+        <div class="col-md-4">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
+        </div>
+        <div class="row">
+        <div class="col-md-4">Кол. сим.: <span class="summ">{{total[0].allcs}}</span></div>
+        <div class="col-md-4">Сумма: <span class="summ">{{total[0].allsumm | fixedto}}</span></div>
+        </div>
     </div>
 </div>
 <br/>
@@ -55,8 +62,11 @@ $this->title = 'Размещение бегущей строки на все Т�
                     <th class="sorting" aria-label="Телеканал">Телеканал</th>
                     <th class="sorting" aria-label="Текст">Текст</th>
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
-                    <th class="sorting" aria-label="Статус">Статус</th>
+                    <th class="sorting" aria-label="Кол. день">Кол. день</th>
+                    <th class="sorting" aria-label="Кол. сим.">Кол. сим.</th>
+                    <th class="sorting" aria-label="Сумма">Сумма</th>
                     <th class="sorting" aria-label="Описание">Описание</th>
+                    <th class="sorting" aria-label="Статус">Статус</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -69,6 +79,10 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
                   <td>{{ml.dates}}</td>
+                  <td>{{ml.cday}}</td>
+                  <td>{{ml.simcount}}</td>
+                  <td>{{ml.summ | fixedto}}</td>
+                  <td>{{ml.description}}</td>
                   <td>
                     <div ng-switch="ml.status">
                         <span ng-switch-when="0" class="label label-info">В обработке</span>
@@ -76,22 +90,16 @@ $this->title = 'Размещение бегущей строки на все Т�
                         <span ng-switch-when="2" class="label label-danger">Отвергнуто</span>
                     </div>
                   </td>
-                  <td>{{ml.description}}</td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                <th rowspan="1" colspan="1">
-                    <input type="checkbox" class="select_all"/>
-                </th>
-                <!--th rowspan="1" colspan="1">ID</th-->
-                <th rowspan="1" colspan="1">Дата</th>
-                <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="1">Моб. номер</th>
-                <th rowspan="1" colspan="1">Телеканал</th>
-                <th rowspan="1" colspan="1">Текст</th>
-                <th rowspan="1" colspan="1">Дата проката</th>
-                <th rowspan="1" colspan="1">Статус</th>
-                <th rowspan="1" colspan="1">Описание</th>
+                    <th rowspan="1" colspan="5">Итого:</th>
+                    <th rowspan="1" colspan="1"></th>
+                    <th rowspan="1" colspan="1"></th>
+                    <th rowspan="1" colspan="1"></th>
+                    <th rowspan="1" colspan="2"></th>
+                </tr>
                 </tfoot>
               </table>
               <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">

@@ -260,16 +260,16 @@ class SiteController extends Controller
         $data['page'] = $request->get('page');
         $data['shpcount'] = 15;
          
-        //if($token == md5(Yii::$app->session->getId().'opn')){
+        if($token == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getUserData($data);
           
           return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total'=>$retData['totalsumm'] ],
                             'msg'=>'OK']
                           );
-     // }else{
-     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-      //}
+     }else{
+      return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
     }    
 
     public function actionGetdatas()
@@ -327,14 +327,15 @@ class SiteController extends Controller
         header('Content-Type: application/json');
         
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
-            if(Yii::$app->HelperFunc->save($data,true) != false){
+            $saveresp = Yii::$app->HelperFunc->save($data,true);
+            if($saveresp === true){
                 $retData = Yii::$app->HelperFunc->getUserData($data);
                 
                 return json_encode(['status'=>0,
                             'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
                             'msg'=>'OK']
                         );                
-            }
+            }else{ return json_encode(['error' => $saveresp]); }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
         return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
      }else{
