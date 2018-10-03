@@ -94,13 +94,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
         if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
             $count = MainHub::find()
                     ->filterWhere(['=', 'status', 0])
                     ->count();
             $mainhub = new MainHub();        
             $model = new UploadForm();
-            return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub]);
+            return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub,'tvlist'=>$tvlist]);
         }elseif(Yii::$app->user->identity->role == 1){
             return $this->redirect('/admin');
         }
@@ -112,7 +113,8 @@ class SiteController extends Controller
     }
     
     public function actionLogin()
-    {
+    {   
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
         $model = new LoginForm();
         if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
             if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
@@ -231,36 +233,25 @@ class SiteController extends Controller
     {
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         header('Content-Type: application/json');
-        $request = Yii::$app->request;
-        $token = $request->get('token');
-        $data = [];
-        $data['sts'] = $request->get('sts');
-        $data['page'] = $request->get('page');
-        $data['shpcount'] = 15;
-         
-        //if($token == md5(Yii::$app->session->getId().'opn')){
+        $data = Yii::$app->request->get();
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getData($data);
           
           return json_encode(['status'=>0,
                             'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
                             'msg'=>'OK']
                           );
-     // }else{
-     //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-      //}
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
     }
     public function actionGetuserdata()
     {
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         header('Content-Type: application/json');
         $request = Yii::$app->request;
-        $token = $request->get('token');
-        $data = [];
-        $data['sts'] = $request->get('sts');
-        $data['page'] = $request->get('page');
-        $data['shpcount'] = 15;
-         
-        if($token == md5(Yii::$app->session->getId().'opn')){
+        $data = $request->get();
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getUserData($data);
           
           return json_encode(['status'=>0,
@@ -270,7 +261,7 @@ class SiteController extends Controller
      }else{
       return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
-    }    
+    }
 
     public function actionGetdatas()
     {
@@ -323,7 +314,6 @@ class SiteController extends Controller
     {
         $data = Yii::$app->request->post();
         $retData = null;        
-        
         header('Content-Type: application/json');
         
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
@@ -332,13 +322,14 @@ class SiteController extends Controller
                 $retData = Yii::$app->HelperFunc->getUserData($data);
                 
                 return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total' => $retData['totalsumm']],
                             'msg'=>'OK']
                         );                
             }else{ return json_encode(['error' => $saveresp]); }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
         return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
-     }else{
+     }
+     else{
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
     }
@@ -346,7 +337,7 @@ class SiteController extends Controller
     public function actionRemove()
     {
         $data = Yii::$app->request->post();
-        $data['state'] = 0;
+        //$data['state'] = 0;
         $retData = null;        
         
         header('Content-Type: application/json');
@@ -355,7 +346,7 @@ class SiteController extends Controller
             if(Yii::$app->HelperFunc->update($data)){
                 $retData = Yii::$app->HelperFunc->getUserData($data);
                 return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total' => $retData['totalsumm']],
                             'msg'=>'OK']
                         );
             }else{

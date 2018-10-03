@@ -10,16 +10,24 @@ $scope.pagination = { current: 1 };
 
 $scope.total = null;
 $scope.bystatus = 0;
+$scope.bytv = 0;
 $scope.tvlist = null;
 $scope.data = {};
 $scope.chdata ={};
+var dateft = moment(new Date()).format('YYYY-MM-DD');
+$scope.dfdt = dateft +' / '+ dateft;
 
 $scope.pageChanged = function(newPage) {
-         $scope.getUserData(newPage,$scope.mainlistPerPage,$scope.bystatus);
+         $scope.getUserData(newPage,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
   };
 
-$scope.getUserData = function(pageNum,showPageCount,sts){
-  $http.get('/getuserdata?page=' + pageNum +'&shpcount='+ showPageCount+'&sts='+ sts+'&token='+ $('#token').val()) // +'&pagenum='+pnum
+$scope.getUserData = function(pageNum,showPageCount,sts,daterange,bytv){
+  $http.get('/getuserdata?page=' 
+  			+ pageNum +'&shpcount='
+  			+ showPageCount+'&sts='+ sts+'&daterange='
+  			+daterange+'&token='
+  			+ $('#token').val()+'&bytv='
+  			+bytv)
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
@@ -33,8 +41,10 @@ $scope.getUserData = function(pageNum,showPageCount,sts){
             //console.log(response);
         });
   };
+    
 
-$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus);
+
+$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
 
 $scope.getTvList = function(){
   $http.get('/gettvlist') // +'&pagenum='+pnum
@@ -51,16 +61,23 @@ $scope.getTvList = function(){
   };
 
 $(document).on('change', '#report-status', function(){
-	$scope.getUserData(1,$scope.mainlistPerPage,this.value);
+	$scope.bystatus = this.value;
+	$scope.getUserData(1,$scope.mainlistPerPage,this.value,$scope.dfdt,$scope.bytv);
 	if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }	
 });
 
+$(document).on('change', '#sortbytv', function(){
+	$scope.bytv = this.value;
+	$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value);
+	if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }	
+});
 
 $scope.addformaction = function(){
 	$scope.data['token'] = $('#token').val();
-	$scope.data['sts'] = 0;
+	$scope.data['sts'] = $scope.bystatus;
 	$scope.data['page'] = 1;
 	$scope.data['shpcount'] = 15;
+	$scope.data['daterange'] = $scope.dfdt;
 	$http({
 	  method: 'POST',
 	  url: '/setdata',
@@ -72,7 +89,9 @@ $scope.addformaction = function(){
 	      // //$('#statisticModal').modal({ keyboard: false });
 	        $scope.mainlistview = state.data.mainlistview;
             $scope.totalmainlist = state.data.count;
-            $scope.data = [];
+            $scope.total = state.data.total;
+            $scope.pagination.current = 1;
+            document.getElementById("addForm").reset();
             $('#addstate').html('(Запись успешно добавлен!)').css('color','#8fff00');
 	    }else{
 	    	$('#addstate').html(state.message).css('color','red');
@@ -82,6 +101,37 @@ $scope.addformaction = function(){
 	});
 };
 
+/**********START DATE PICKER RANG***************/
+	var now = new Date();
+    $('.getbydatetime').daterangepicker({
+    	//"autoUpdateInput": false,
+    	 "locale": {
+        "format": "YYYY-MM-DD", //MM/DD/YYYY
+        "separator": " / ",
+        "applyLabel": "Принять",
+        "cancelLabel": "Отмена",
+        "fromLabel": "С",
+        "toLabel": "По",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+        "monthNames": ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+        "firstDay": 1
+    },
+    	"startDate": now,
+    	alwaysShowCalendars: false,
+    	//"dateLimit": { "days": 31 } //only 31 day can select 
+    }, function(start, end, label) {
+    	var df = moment(start).format('YYYY-MM-DD');
+    	var dt = moment(end).format('YYYY-MM-DD');
+    	var dfdt = df+'/'+dt;
+    	//console.log( $('.getbydatetime').val() );
+    	$scope.dfdt = dfdt;
+    	$scope.getUserData( 1,$scope.mainlistPerPage,$('#report-status').val(),dfdt,$scope.bytv );
+
+		//console.log(  +' / '+ );
+    	}
+    );
 
 /**********START DATE PICKER***************/
 //$('#clients-date_of_issue').mask("99/99/9999", {placeholder: 'Дата выдачи (пасспорт) д/м/г'});
@@ -118,7 +168,6 @@ $('#mainhub-dates').datepicker({
 }).on('hide', function() { });
 
 /********END DATE PICKER****************/
-
 $scope.addform = function(){
 	$("#status-response, #addstate").html('');
 	//$('#addstate').html('');
@@ -171,10 +220,11 @@ $scope.removedata = function(){
 	}
 
 	$scope.data['token'] = $('#token').val();
-	$scope.data['sts'] = 0;
+	$scope.data['sts'] = $scope.bystatus;
 	$scope.data['page'] = 1;
 	$scope.data['shpcount'] = 15;
 	$scope.data['ids'] = ids;
+	$scope.data['daterange'] = $scope.dfdt;
 	$http({
 	  method: 'POST',
 	  url: '/remove',
@@ -184,7 +234,8 @@ $scope.removedata = function(){
 	    if(state.status == 0){
 	        $scope.mainlistview = state.data.mainlistview;
             $scope.totalmainlist = state.data.count;
-
+            $scope.total = state.data.total;
+            $scope.pagination.current = 1;
             $(".select_all").prop('checked', false);
 			$('#removebtn').hide();
 
@@ -235,5 +286,27 @@ $("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
       return parseFloat(0).toFixed(2);
     }
 	}
+}).filter('tSumm', function() {
+        return function(data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
+			var sum = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                sum += parseFloat(data[i][key]);
+            }
+            return sum;
+        };
+}).filter('tSumms', function() {
+        return function(data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
+			var sum = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                sum += parseFloat(data[i][key]);
+            }
+            return sum.toFixed(2);
+        };
 });
 

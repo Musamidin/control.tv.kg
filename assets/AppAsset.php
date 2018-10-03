@@ -27,6 +27,7 @@ class AppAsset extends AssetBundle
         '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         'css/bootstrap-datepicker.min.css',
         'css/select2.min.css',
+        'css/daterangepicker.css'
     ];
     public $js = [
         'js/angular.min1.6.4.js',
@@ -39,7 +40,8 @@ class AppAsset extends AssetBundle
         'js/jquery.mask.min.js',
         'js/jquery/jquery-ui.min.js',
         'js/jquery.table2excel.min.js',
-        'js/moment.js'
+        'js/moment.js',
+        'js/daterangepicker.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

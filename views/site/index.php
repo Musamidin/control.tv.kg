@@ -16,18 +16,25 @@ $this->title = 'Размещение бегущей строки на все Т�
 </div>
 <br/>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 btn-box">
         <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
         <a ng-click="addform()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-plus"></i>Добавить</a>
         <a ng-click="importbtn()" href="javascript:void(0)" class="btn btn-app"><i class="fa fa-file-excel-o"></i>Импорт Excel</a>       
     </div>
-    <div class="col-md-5 paddTop8">
+    <div class="col-md-5 filt-box paddTop8">
         <div class="input-group">
+        <select id="sortbytv" name="sortbytv" class="form-control">
+            <option value="0">Телеканалы...</option>
+            <? foreach($tvlist['tvlist'] as $tl): ?>
+                <option value="<?=$tl['id']; ?>"><?=$tl['channel_name']; ?></option>
+            <? endforeach; ?>
+        </select>
+        <span class="input-group-addon input-sm"></span>
         <select id="report-status" value="" name="reportstatus" class="form-control">
             <option value="0">Не принятые</option>
             <option value="1">Принятые</option>
             <option value="2">Отвергнутые</option>
-            </select>
+        </select>
             <span class="input-group-addon input-sm"></span>
             <input type="text" class="form-control getbydatetime">
             <span class="input-group-addon rep-dpicker">
@@ -35,14 +42,14 @@ $this->title = 'Размещение бегущей строки на все Т�
             </span>
         </div>
     </div>
-    <div class="col-md-4 sum-box">
+    <div class="col-md-4 sum-box text-center">
         <div class="row">
-        <div class="col-md-4">Количество: <span class="summ">{{totalmainlist}}</span></div>
-        <div class="col-md-4">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
+        <div class="col-md-6">Количество: <span class="summ">{{totalmainlist}}</span></div>
+        <div class="col-md-6">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
         </div>
         <div class="row">
-        <div class="col-md-4">Кол. сим.: <span class="summ">{{total[0].allcs}}</span></div>
-        <div class="col-md-4">Сумма: <span class="summ">{{total[0].allsumm | fixedto}}</span></div>
+        <div class="col-md-6">Кол. сим.: <span class="summ">{{total[0].allcs}}</span></div>
+        <div class="col-md-6">Сумма: <span class="summ">{{total[0].allsumm | fixedto}}</span></div>
         </div>
     </div>
 </div>
@@ -94,10 +101,11 @@ $this->title = 'Размещение бегущей строки на все Т�
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th rowspan="1" colspan="5">Итого:</th>
-                    <th rowspan="1" colspan="1"></th>
-                    <th rowspan="1" colspan="1"></th>
-                    <th rowspan="1" colspan="1"></th>
+                    <th rowspan="1" colspan="6">Итого:</th>
+                    <!--th rowspan="1" colspan="1"></th-->
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'cday' }}</th>
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'simcount' }}</th>
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumms: 'summ' }}</th>
                     <th rowspan="1" colspan="2"></th>
                 </tr>
                 </tfoot>

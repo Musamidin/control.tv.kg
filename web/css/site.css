@@ -236,3 +236,14 @@ span.summ {
     font-weight: bold;
     margin-left: 3px;
 }
+.col-md-3.btn-box {
+    width: 18%;
+    padding: 0 5px;
+}
+.col-md-5.filt-box {
+    width: 57%;
+    padding: 10px 5px;
+}
+.col-md-4.sum-box {
+    width: 25%;
+}

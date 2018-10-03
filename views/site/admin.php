@@ -5,33 +5,54 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $this->title = 'Admin';
+
+$tvlist = Yii::$app->HelperFunc->getTvlist();
+$clients = Yii::$app->HelperFunc->getClients();
 ?>
 <div class="site-index" ng-controller="AdminIndexAppCtrl">
-        <div class="row">
-          <div class="col-md-2">
-            <input type="hidden" id="token" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
-          </div>
-          <div class="col-md-5">
+  <br/>
+  <div class="row">
+      <div class="col-md-7 paddTop8">
+          <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
           <div class="input-group">
-            <select id="report-status" value="" name="reportstatus" class="form-control">
-                <option value="-1">Все</option>
-                <option value="0">Не принятые</option>
-                <option value="1">Принятые</option>
-                <option value="2">Отвергнутые</option>
-              </select>
+          <select id="sortbycli" name="sortbycli" class="form-control">
+              <option value="0">Агенты</option>
+              <? foreach($clients as $cli): ?>
+                  <option value="<?=$cli['id']; ?>"><?=$cli['name']; ?></option>
+              <? endforeach; ?>
+          </select>
+          <span class="input-group-addon input-sm"></span>
+          <select id="sortbytv" name="sortbytv" class="form-control">
+              <option value="0">Телеканалы...</option>
+              <? foreach($tvlist['tvlist'] as $tl): ?>
+                  <option value="<?=$tl['id']; ?>"><?=$tl['channel_name']; ?></option>
+              <? endforeach; ?>
+          </select>
+          <span class="input-group-addon input-sm"></span>
+          <select id="report-status" value="" name="reportstatus" class="form-control">
+              <option value="-1">Все</option>
+              <option value="0">Не принятые</option>
+              <option value="1">Принятые</option>
+              <option value="2">Отвергнутые</option>
+          </select>
               <span class="input-group-addon input-sm"></span>
               <input type="text" class="form-control getbydatetime">
               <span class="input-group-addon rep-dpicker">
-                <i class="glyphicon glyphicon-calendar"></i>
+              <i class="glyphicon glyphicon-calendar"></i>
               </span>
-        </div>
-        </div>
-        <div class="col-md-1 text-center">
-        </div>
-        <div class="col-md-4">
-                Количество: <span>{{totalmainlist}}</span>
-        </div>
-        </div>
+          </div>
+      </div>
+      <div class="col-md-5 text-center">
+          <div class="row">
+          <div class="col-md-6">Количество: <span class="summ">{{totalmainlist}}</span></div>
+          <div class="col-md-6">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
+          </div>
+          <div class="row">
+          <div class="col-md-6">Кол. сим.: <span class="summ">{{total[0].allcs}}</span></div>
+          <div class="col-md-6">Сумма: <span class="summ">{{total[0].allsumm | fixedto}}</span></div>
+          </div>
+      </div>
+  </div>
     <br/>
     <div class="row">
         <div class="col-md-12" ng-if="mainlistview.length > 0">

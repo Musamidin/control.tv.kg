@@ -19,7 +19,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use app\models\MyReadFilter;
-
+use app\models\User;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -184,28 +184,33 @@ class HelperFunc extends Component
    {
         $data = [];
         try{
-            if($param['sts'] == -1){
-                $data['count'] = AdminModerView::find()->filterWhere(['!=','status',88])->count();
-                $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-                $data['mlv'] = AdminModerView::find()
-                ->offset($pagination->offset)
-                ->limit($pagination->limit)
-                ->filterWhere(['!=','status',88])
-                ->asArray()
-                ->orderBy(['id'=>SORT_DESC])
-                ->all();
-            }else{
-                $data['count'] = AdminModerView::find()->filterWhere(['status'=> $param['sts']])->count();
-                $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-                $data['mlv'] = AdminModerView::find()
-                ->offset($pagination->offset)
-                ->limit($pagination->limit)
-                ->filterWhere(['status'=> $param['sts']])
-                ->asArray()
-                ->orderBy(['id'=>SORT_DESC])
-                ->all();
-            }
-          
+            $da = explode('/', $param['daterange']);
+            $df = trim($da[0]).'T00:00:00';
+            $dt = trim($da[1]).'T23:59:59';
+            $sts = (intval($param['sts']) === 0) ? [] : ['status' => $param['sts']];
+            $bytv = (intval($param['bytv']) === 0) ? [] : ['chid' => $param['bytv']];
+            $sortbycli = (intval($param['sortbycli']) === 0) ? [] : ['client_id' => $param['sortbycli']];
+
+            $data['count'] = AdminModerView::find()
+            ->where(['!=','status',88])
+            ->andWhere($bytv)
+            ->andWhere($sortbycli)
+            ->andWhere(['BETWEEN','datetime',$df,$dt])
+            ->andWhere($sts)
+            ->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['mlv'] = AdminModerView::find()
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->where(['!=','status',88])
+            ->andWhere($bytv)
+            ->andWhere($sortbycli)
+            ->andWhere(['BETWEEN','datetime',$df,$dt])
+            ->andWhere($sts)
+            ->asArray()
+            ->orderBy(['id'=>SORT_DESC])
+            ->all();
+            
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -217,18 +222,27 @@ class HelperFunc extends Component
    {
         $data = [];
         try{
+            $da = explode('/', $param['daterange']);
+            $df = trim($da[0]).'T00:00:00';
+            $dt = trim($da[1]).'T23:59:59';
+            $bytv = (intval($param['bytv']) === 0) ? [] : ['chid'=>$param['bytv']];
             $data['count'] = UserDataView::find()
             ->where(['status'=>$param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
+            ->andWhere($bytv)
+            ->andWhere(['BETWEEN','datetime',$df,$dt])
             ->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
               $data['mlv'] = UserDataView::find()
               ->where(['status'=> $param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
+              ->andWhere($bytv)
+              ->andWhere(['BETWEEN','datetime',$df,$dt])
               ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['datetime'=>SORT_DESC])
               ->all();
-              $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM userDataView WHERE client_id =".Yii::$app->user->identity->getId()." AND status = ".$param['sts']."");
+              $bytvs = ($param['bytv'] == 0) ? '' : 'AND chid = '.$param['bytv'];
+              $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM userDataView WHERE client_id =".Yii::$app->user->identity->getId()." AND status = ".$param['sts']." AND datetime BETWEEN '".$df."' AND '".$dt."' {$bytvs}");
               $data['totalsumm'] = $command->queryAll();
           return $data;
         }catch(Exception $e){
@@ -270,6 +284,21 @@ class HelperFunc extends Component
               ->all();
 
           return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
+   public function getClients()
+   {
+        try{
+              return User::find()
+              ->select('id, name')
+              ->where(['status'=> 0])
+              ->asArray()
+              ->orderBy(['id'=>SORT_ASC])
+              ->all();
+
         }catch(Exception $e){
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);

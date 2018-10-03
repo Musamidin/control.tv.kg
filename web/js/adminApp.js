@@ -8,19 +8,33 @@ $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
+$scope.bystatus = 0;
+$scope.bytv = 0;
+$scope.sortbycli = 0;
+
+var dateft = moment(new Date()).format('YYYY-MM-DD');
+$scope.dfdt = dateft +' / '+ dateft;
+
 $scope.data = {};
 
 $scope.pageChanged = function(newPage) {
          $scope.getData(newPage,$scope.mainlistPerPage,$('#report-status').val());
   };
 
-$scope.getData = function(pageNum,showPageCount,sts){
-  $http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount+'&sts='+ sts) // +'&pagenum='+pnum
+$scope.getData = function(pageNum,showPageCount,sts,daterange,bytv,sortbycli){
+  $http.get('/getdata?page=' 
+    + pageNum +'&shpcount='
+    + showPageCount+'&sts='
+    + sts+'&token='
+    + $('#token').val()+'&daterange='
+    + daterange+'&bytv='
+    + bytv+'&sortbycli='+ sortbycli)
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
                 $scope.mainlistview = eval(respdata.data.mainlistview);
                 $scope.totalmainlist = eval(respdata.data.count);
+                $scope.total = eval(respdata.data.total);
           } else if(respdata.status > 0){
               alert(respdata.msg);
           }
@@ -29,7 +43,41 @@ $scope.getData = function(pageNum,showPageCount,sts){
         });
   };
 
-$scope.getData(1,$scope.mainlistPerPage,$('#report-status').val());
+$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,$scope.sortbycli);
+
+
+/**********START DATE PICKER RANG***************/
+  var now = new Date();
+    $('.getbydatetime').daterangepicker({
+      //"autoUpdateInput": false,
+       "locale": {
+        "format": "YYYY-MM-DD", //MM/DD/YYYY
+        "separator": " / ",
+        "applyLabel": "Принять",
+        "cancelLabel": "Отмена",
+        "fromLabel": "С",
+        "toLabel": "По",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+        "monthNames": ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+        "firstDay": 1
+    },
+      "startDate": now,
+      alwaysShowCalendars: false,
+      //"dateLimit": { "days": 31 } //only 31 day can select 
+    }, function(start, end, label) {
+      var df = moment(start).format('YYYY-MM-DD');
+      var dt = moment(end).format('YYYY-MM-DD');
+      var dfdt = df+'/'+dt;
+      //console.log( $('.getbydatetime').val() );
+      $scope.dfdt = dfdt;
+      $scope.getUserData( 1,$scope.mainlistPerPage,$('#report-status').val(),dfdt,$scope.bytv );
+
+    //console.log(  +' / '+ );
+      }
+    );
+
 
 
 $scope.onAccept = function(){
@@ -48,12 +96,20 @@ $scope.onReject = function(){
 
 
 $(document).on('change', '#report-status', function(){
-  if(this.value == 0 || this.value == -1){
-    $('.select-all-chbx').show();
-  }else{
-    $('.select-all-chbx').hide();
-  }
-  $scope.getData(1,$scope.mainlistPerPage,this.value);
+  $scope.bystatus = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,this.value,$scope.dfdt,$scope.bytv,$scope.sortbycli);
+  if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }  
+});
+
+$(document).on('change', '#sortbytv', function(){
+  $scope.bytv = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value,$scope.sortbycli);
+  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
+});
+$(document).on('change', '#sortbycli', function(){
+  $scope.bytv = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value,$scope.sortbycli);
+  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
 });
 
 //select all checkboxes
@@ -215,4 +271,35 @@ $('.getbydatetime').datepicker({
         return '';
       }
     }
+}).filter("fixedto", function()
+{
+  return function(input){
+    if(jQuery.isEmptyObject(input) == false){
+        return parseFloat(input).toFixed(2);
+    }else{
+      return parseFloat(0).toFixed(2);
+    }
+  }
+}).filter('tSumm', function() {
+        return function(data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
+      var sum = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                sum += parseFloat(data[i][key]);
+            }
+            return sum;
+        };
+}).filter('tSumms', function() {
+        return function(data, key) {
+            if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
+                return 0;
+            }
+      var sum = 0;
+            for (var i = data.length - 1; i >= 0; i--) {
+                sum += parseFloat(data[i][key]);
+            }
+            return sum.toFixed(2);
+        };
 });
