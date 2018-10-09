@@ -74,10 +74,6 @@ $(document).on('change', '#sortbytv', function(){
 
 $scope.addformaction = function(){
 	$scope.data['token'] = $('#token').val();
-	$scope.data['sts'] = $scope.bystatus;
-	$scope.data['page'] = 1;
-	$scope.data['shpcount'] = 15;
-	$scope.data['daterange'] = $scope.dfdt;
 	$http({
 	  method: 'POST',
 	  url: '/setdata',
@@ -86,10 +82,7 @@ $scope.addformaction = function(){
 	    var state = eval(response.data);
 	    if(state.status == 0){
 	      $('#mainhub-dates').datepicker('update','');
-	      // //$('#statisticModal').modal({ keyboard: false });
-	        $scope.mainlistview = state.data.mainlistview;
-            $scope.totalmainlist = state.data.count;
-            $scope.total = state.data.total;
+         	$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
             $scope.pagination.current = 1;
             document.getElementById("addForm").reset();
             $('#addstate').html('(Запись успешно добавлен!)').css('color','#8fff00');
@@ -220,11 +213,8 @@ $scope.removedata = function(){
 	}
 
 	$scope.data['token'] = $('#token').val();
-	$scope.data['sts'] = $scope.bystatus;
-	$scope.data['page'] = 1;
-	$scope.data['shpcount'] = 15;
 	$scope.data['ids'] = ids;
-	$scope.data['daterange'] = $scope.dfdt;
+
 	$http({
 	  method: 'POST',
 	  url: '/remove',
@@ -232,9 +222,7 @@ $scope.removedata = function(){
 	}).then(function successCallback(response) {
 	    var state = eval(response.data);
 	    if(state.status == 0){
-	        $scope.mainlistview = state.data.mainlistview;
-            $scope.totalmainlist = state.data.count;
-            $scope.total = state.data.total;
+         	$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
             $scope.pagination.current = 1;
             $(".select_all").prop('checked', false);
 			$('#removebtn').hide();

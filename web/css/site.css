@@ -247,3 +247,22 @@ span.summ {
 .col-md-4.sum-box {
     width: 25%;
 }
+.col-lg-12.pswd-box {
+    border: 1px solid steelblue;
+    padding: 0px 10px 15px 10px;
+}
+.col-lg-7.wiki-box {
+    margin-left: 10px;
+    width: 57%;
+    border: 1px solid steelblue;
+    padding: 0px 10px 15px 10px;
+}
+.row.sett-box {
+    margin-top: 30px;
+}
+.header-tit{
+    border-bottom: 2px solid red;
+    padding-bottom: 2px;
+    margin: 7px 0;
+}
+.imgsize{ border: 1px solid silver; }

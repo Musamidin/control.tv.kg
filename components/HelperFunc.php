@@ -187,7 +187,7 @@ class HelperFunc extends Component
             $da = explode('/', $param['daterange']);
             $df = trim($da[0]).'T00:00:00';
             $dt = trim($da[1]).'T23:59:59';
-            $sts = (intval($param['sts']) === 0) ? [] : ['status' => $param['sts']];
+            $sts = (intval($param['sts']) === -1) ? [] : ['status' => $param['sts']];
             $bytv = (intval($param['bytv']) === 0) ? [] : ['chid' => $param['bytv']];
             $sortbycli = (intval($param['sortbycli']) === 0) ? [] : ['client_id' => $param['sortbycli']];
 
@@ -211,6 +211,13 @@ class HelperFunc extends Component
             ->orderBy(['id'=>SORT_DESC])
             ->all();
             
+            $str_bytv = (intval($param['bytv']) === 0) ? '' : 'AND chid = '.$param['bytv'];
+            $str_sts = (intval($param['sts']) === -1) ? 'AND status <> 88' : 'AND status = '.$param['sts'];
+            $str_sortbycli = (intval($param['sortbycli']) === 0) ? '' : 'AND client_id = '.$param['sortbycli'];
+
+              $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM adminModerView WHERE [datetime] BETWEEN '".$df."' AND '".$dt."' {$str_bytv} {$str_sts} {$str_sortbycli}");
+            $data['totalsumm'] = $command->queryAll();
+
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -228,22 +235,25 @@ class HelperFunc extends Component
             $bytv = (intval($param['bytv']) === 0) ? [] : ['chid'=>$param['bytv']];
             $data['count'] = UserDataView::find()
             ->where(['status'=>$param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
-            ->andWhere($bytv)
             ->andWhere(['BETWEEN','datetime',$df,$dt])
+            ->andWhere($bytv)
             ->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
               $data['mlv'] = UserDataView::find()
               ->where(['status'=> $param['sts'],'client_id'=> Yii::$app->user->identity->getId()])
-              ->andWhere($bytv)
               ->andWhere(['BETWEEN','datetime',$df,$dt])
+              ->andWhere($bytv)
               ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['datetime'=>SORT_DESC])
               ->all();
-              $bytvs = ($param['bytv'] == 0) ? '' : 'AND chid = '.$param['bytv'];
+              $bytvs = (intval($param['bytv']) === 0) ? '' : 'AND chid = '.$param['bytv'];
+
               $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM userDataView WHERE client_id =".Yii::$app->user->identity->getId()." AND status = ".$param['sts']." AND datetime BETWEEN '".$df."' AND '".$dt."' {$bytvs}");
+
               $data['totalsumm'] = $command->queryAll();
+
           return $data;
         }catch(Exception $e){
             return $e->errorInfo;
@@ -295,6 +305,7 @@ class HelperFunc extends Component
               return User::find()
               ->select('id, name')
               ->where(['status'=> 0])
+              ->andWhere(['<>','role',1])
               ->asArray()
               ->orderBy(['id'=>SORT_ASC])
               ->all();

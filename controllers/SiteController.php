@@ -204,8 +204,21 @@ class SiteController extends Controller
             ]);
             //return $this->render('useraccount');
 
-        }else{
-            return $this->redirect('/');
+        }elseif(Yii::$app->user->identity->role == 1){
+            $this->layout = 'admin';
+            $model = new ChangePassword();
+            if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
+
+                return $this->render('useraccount', [
+                'model' => $model,
+                'status' => 'Ваш пароль успешно изменен так же изменился ключ для API',
+                'accesstoken' => Yii::$app->user->identity->access_token,
+                ]);
+            }
+            return $this->render('useraccount', [
+                'model' => $model,
+                'accesstoken' => Yii::$app->user->identity->access_token,
+            ]);
         }
     }
 
@@ -238,7 +251,7 @@ class SiteController extends Controller
           $retData = Yii::$app->HelperFunc->getData($data);
           
           return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total'=>$retData['totalsumm']],
                             'msg'=>'OK']
                           );
         }else{
@@ -312,19 +325,12 @@ class SiteController extends Controller
     }
     public function actionSetdata()
     {
-        $data = Yii::$app->request->post();
-        $retData = null;        
+        $data = Yii::$app->request->post();      
         header('Content-Type: application/json');
-        
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
             $saveresp = Yii::$app->HelperFunc->save($data,true);
-            if($saveresp === true){
-                $retData = Yii::$app->HelperFunc->getUserData($data);
-                
-                return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total' => $retData['totalsumm']],
-                            'msg'=>'OK']
-                        );                
+            if($saveresp === true){                
+                return json_encode(['status'=>0,'msg'=>'OK']);           
             }else{ return json_encode(['error' => $saveresp]); }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
         return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
@@ -336,19 +342,12 @@ class SiteController extends Controller
 
     public function actionRemove()
     {
-        $data = Yii::$app->request->post();
-        //$data['state'] = 0;
-        $retData = null;        
-        
+        $data = Yii::$app->request->post();     
         header('Content-Type: application/json');
         
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
             if(Yii::$app->HelperFunc->update($data)){
-                $retData = Yii::$app->HelperFunc->getUserData($data);
-                return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total' => $retData['totalsumm']],
-                            'msg'=>'OK']
-                        );
+                return json_encode(['status'=>0,'msg'=>'OK']);
             }else{
                 return json_encode(array('status'=>1,'message'=>'Ошибка при удаления записи'));
             }
@@ -361,18 +360,14 @@ class SiteController extends Controller
     public function actionOnaction()
     {
         $data = Yii::$app->request->post();
-        $data['state'] = 0;
         $retData = null;        
         
         header('Content-Type: application/json');
         
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
             if(Yii::$app->HelperFunc->updateStatus($data)){
-                $retData = Yii::$app->HelperFunc->getData($data);
-                return json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
-                            'msg'=>'OK']
-                        );
+                //$retData = Yii::$app->HelperFunc->getData($data);
+                return json_encode(['status'=>0,'msg'=>'OK']);
             }else{
                 return json_encode(array('status'=>1,'message'=>'Ошибка при удаления записи'));
             }

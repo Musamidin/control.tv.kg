@@ -42,7 +42,7 @@ $clients = Yii::$app->HelperFunc->getClients();
               </span>
           </div>
       </div>
-      <div class="col-md-5 text-center">
+      <div class="col-md-5 sum-box text-center">
           <div class="row">
           <div class="col-md-6">Количество: <span class="summ">{{totalmainlist}}</span></div>
           <div class="col-md-6">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
@@ -63,10 +63,14 @@ $clients = Yii::$app->HelperFunc->getClients();
                     <th class="sorting" aria-label="ID">№</th>
                     <th class="sorting" aria-label="Дата">Дата</th>
                     <th class="sorting" aria-label="Заказчик">Заказчик</th>
+                    <th class="sorting" aria-label="Канал">Канал</th>
                     <th class="sorting" aria-label="Текст">Текст</th>
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
+                    <th class="sorting" aria-label="Кол. день">Кол. день</th>
+                    <th class="sorting" aria-label="Кол. сим.">Кол. сим.</th>
+                    <th class="sorting" aria-label="Сумма">Сумма</th>
+                    <th class="sorting" aria-label="Описание">Описание</th>
                     <th class="sorting" aria-label="Статус">Статус</th>
-                    <th class="sorting" aria-label="Примечание">Примечание</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -77,8 +81,13 @@ $clients = Yii::$app->HelperFunc->getClients();
                   <td>{{ml.id}}</td>
                   <td>{{ml.datetime | formatDatetime}}</td>
                   <td>{{ml.order}}</td>
+                  <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
                   <td>{{ml.dates}}</td>
+                  <td>{{ml.cday}}</td>
+                  <td>{{ml.simcount}}</td>
+                  <td>{{ml.summ | fixedto}}</td>
+                  <td>{{ml.description}}</td>
                   <td>
                     <div ng-switch="ml.status">
                         <span ng-switch-when="0" class="label label-info">В обработке</span>
@@ -86,19 +95,16 @@ $clients = Yii::$app->HelperFunc->getClients();
                         <span ng-switch-when="2" class="label label-danger">Отвергнуто</span>
                     </div>
                   </td>
-                  <td>{{ml.description}}</td>
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                <th rowspan="1" colspan="1"><input type="checkbox" class="select-all-chbx"/></th>
-                <th rowspan="1" colspan="1">№</th>
-                <th rowspan="1" colspan="1">Дата</th>
-                <th rowspan="1" colspan="1">Заказчик</th>
-                <th rowspan="1" colspan="1">Текст</th>
-                <th rowspan="1" colspan="1">Дата проката</th>
-                <th rowspan="1" colspan="1">Статус</th>
-                <th rowspan="1" colspan="1">Примечание</th>
+                    <th rowspan="1" colspan="7">Итого:</th>
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'cday' }}</th>
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'simcount' }}</th>
+                    <th rowspan="1" colspan="1">{{ mainlistview | tSumms: 'summ' }}</th>
+                    <th rowspan="1" colspan="2"></th>
+                </tr>
                 </tfoot>
               </table>
               <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">

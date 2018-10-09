@@ -101,8 +101,9 @@ $this->title = 'Размещение бегущей строки на все Т�
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th rowspan="1" colspan="6">Итого:</th>
-                    <!--th rowspan="1" colspan="1"></th-->
+
+                    <th ng-if="<?=Yii::$app->user->identity->role?> === 2" rowspan="1" colspan="5">Итого:</th>
+                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="6">Итого:</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'cday' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'simcount' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumms: 'summ' }}</th>

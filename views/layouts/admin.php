@@ -30,7 +30,7 @@ AdminAsset::register($this);
     <?php
     NavBar::begin([
         'brandLabel' => 'Online TV Маркет', //Yii::$app->name
-        'brandUrl' => Yii::$app->homeUrl,
+        'brandUrl' => '/',
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
@@ -39,7 +39,7 @@ AdminAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Главная', 'url' => ['/admin']],
-            //['label' => 'About', 'url' => ['/about']],
+            ['label' => 'Настройки', 'url' => ['/useraccount']],
             ['label' => 'Выгрузка', 'url' => ['/export']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', Url::to(['/login'])]

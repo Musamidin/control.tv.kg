@@ -18,7 +18,8 @@ $scope.dfdt = dateft +' / '+ dateft;
 $scope.data = {};
 
 $scope.pageChanged = function(newPage) {
-         $scope.getData(newPage,$scope.mainlistPerPage,$('#report-status').val());
+         //$scope.getData(newPage,$scope.mainlistPerPage,$('#report-status').val());
+         $scope.getData(newPage,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,$scope.sortbycli);
   };
 
 $scope.getData = function(pageNum,showPageCount,sts,daterange,bytv,sortbycli){
@@ -72,7 +73,7 @@ $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,
       var dfdt = df+'/'+dt;
       //console.log( $('.getbydatetime').val() );
       $scope.dfdt = dfdt;
-      $scope.getUserData( 1,$scope.mainlistPerPage,$('#report-status').val(),dfdt,$scope.bytv );
+      $scope.getData($scope.pagination.current,$scope.mainlistPerPage,$scope.bystatus,dfdt,$scope.bytv,$scope.sortbycli );
 
     //console.log(  +' / '+ );
       }
@@ -107,8 +108,8 @@ $(document).on('change', '#sortbytv', function(){
   if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
 });
 $(document).on('change', '#sortbycli', function(){
-  $scope.bytv = this.value;
-  $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value,$scope.sortbycli);
+  $scope.sortbycli = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,this.value);
   if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
 });
 
@@ -152,9 +153,6 @@ $scope.onAction = function(item){
   
   $scope.data['token'] = $('#token').val();
   $scope.data['description'] = $('#comment').val();
-  $scope.data['sts'] = 0;
-  $scope.data['page'] = 1;
-  $scope.data['shpcount'] = 15;
   $scope.data['ids'] = ids;
   $scope.data['status'] = actionId;
   $http({
@@ -164,8 +162,7 @@ $scope.onAction = function(item){
   }).then(function successCallback(response) {
       var state = eval(response.data);
       if(state.status == 0){
-          $scope.mainlistview = state.data.mainlistview;
-          $scope.totalmainlist = state.data.count;
+          $scope.getData($scope.pagination.current,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,$scope.sortbycli );
           $('#modal-info').modal('hide');
           $(".select-all-chbx").prop('checked', false);
           $('.lg-btn').hide();
