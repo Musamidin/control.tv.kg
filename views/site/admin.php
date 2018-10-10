@@ -45,7 +45,7 @@ $clients = Yii::$app->HelperFunc->getClients();
       <div class="col-md-5 sum-box text-center">
           <div class="row">
           <div class="col-md-6">Количество: <span class="summ">{{totalmainlist}}</span></div>
-          <div class="col-md-6">Кол. деней: <span class="summ">{{total[0].allcd}}</span></div>
+          <div class="col-md-6">Кол. дней: <span class="summ">{{total[0].allcd}}</span></div>
           </div>
           <div class="row">
           <div class="col-md-6">Кол. сим.: <span class="summ">{{total[0].allcs}}</span></div>
