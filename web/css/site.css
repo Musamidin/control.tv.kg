@@ -266,3 +266,9 @@ span.summ {
     margin: 7px 0;
 }
 .imgsize{ border: 1px solid silver; }
+.export-excel{    
+    font-size: 22px;
+    margin-bottom: 5px;
+    display: block;
+    width: 23px;
+}

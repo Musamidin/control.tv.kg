@@ -48,7 +48,7 @@ class HelperFunc extends Component
             $rows = [];
             foreach ($data as $row) {
                 foreach ($row as $key => $value) {
-                    unset($row[$key]);
+                    //unset($row[$key]);
                     if($key == 'A'){
                         unset($row[$key]);
                         $row['phone'] = $value;
@@ -92,7 +92,7 @@ class HelperFunc extends Component
                         $mh->cday = $this->getCoutDays($data['dates']);
                         if($mh->save()){
                             $this->arr_map($data['dates'],$mh->id);
-                            return true;
+                            //return true;
                         }else{
                             return false; //['error'=> 'save false'];
                         }
@@ -116,7 +116,7 @@ class HelperFunc extends Component
                             $mh->cday = $this->getCoutDays($itm['dates']);
                             if($mh->save()){
                                 $this->arr_map($itm['dates'],$mh->id);
-                                return true;
+                                //return true;
                             }else{
                                 return false;
                             }
@@ -225,6 +225,82 @@ class HelperFunc extends Component
         }
    }
 
+   public function getDownData($param)
+   {
+        $data = [];
+        try{
+            $da = explode('/', $param['daterange']);
+            $df = trim($da[0]).'T00:00:00';
+            $dt = trim($da[1]).'T23:59:59';
+            $sts = (intval($param['sts']) === -1) ? [] : ['status' => $param['sts']];
+            $bytv = (intval($param['bytv']) === 0) ? [] : ['chid' => $param['bytv']];
+            $sortbycli = (intval($param['sortbycli']) === 0) ? [] : ['client_id' => $param['sortbycli']];
+
+            // $data['count'] = AdminModerView::find()
+            // ->where(['!=','status',88])
+            // ->andWhere($bytv)
+            // ->andWhere($sortbycli)
+            // ->andWhere(['BETWEEN','datetime',$df,$dt])
+            // ->andWhere($sts)
+            // ->count();
+
+            $data['mlv'] = AdminModerView::find()
+            ->where(['!=','status',88])
+            ->andWhere($bytv)
+            ->andWhere($sortbycli)
+            ->andWhere(['BETWEEN','datetime',$df,$dt])
+            ->andWhere($sts)
+            ->asArray()
+            ->orderBy(['id'=>SORT_DESC])
+            ->all();
+            
+            // $str_bytv = (intval($param['bytv']) === 0) ? '' : 'AND chid = '.$param['bytv'];
+            // $str_sts = (intval($param['sts']) === -1) ? 'AND status <> 88' : 'AND status = '.$param['sts'];
+            // $str_sortbycli = (intval($param['sortbycli']) === 0) ? '' : 'AND client_id = '.$param['sortbycli'];
+
+            //   $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM adminModerView WHERE [datetime] BETWEEN '".$df."' AND '".$dt."' {$str_bytv} {$str_sts} {$str_sortbycli}");
+            // $data['totalsumm'] = $command->queryAll();
+
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
+
+   public function getUserDownData($pdata)
+   {
+        $data = [];
+        try{
+            $da = explode('/', $pdata['daterange']);
+            $df = trim($da[0]).'T00:00:00';
+            $dt = trim($da[1]).'T23:59:59';
+            $bytv = (intval($pdata['bytv']) === 0) ? [] : ['chid'=>$pdata['bytv']];
+            // $data['count'] = UserDataView::find()
+            // ->where(['status'=>$pdata['sts'],'client_id'=> Yii::$app->user->identity->getId()])
+            // ->andWhere(['BETWEEN','datetime',$df,$dt])
+            // ->andWhere($bytv)
+            // ->count();
+
+              $data['mlv'] = UserDataView::find()
+              ->where(['status'=> $pdata['sts'],'client_id'=> Yii::$app->user->identity->getId()])
+              ->andWhere(['BETWEEN','datetime',$df,$dt])
+              ->andWhere($bytv)
+              ->asArray()
+              ->orderBy(['datetime'=>SORT_DESC])
+              ->all();
+              // $bytvs = (intval($pdata['bytv']) === 0) ? '' : 'AND chid = '.$pdata['bytv'];
+
+              // $command=Yii::$app->db->createCommand("SELECT SUM(simcount) as allcs, SUM(cday) as allcd, SUM(summ) as allsumm FROM userDataView WHERE client_id =".Yii::$app->user->identity->getId()." AND status = ".$pdata['sts']." AND datetime BETWEEN '".$df."' AND '".$dt."' {$bytvs}");
+
+              // $data['totalsumm'] = $command->queryAll();
+
+          return $data;
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
    public function getUserData($param)
    {
         $data = [];

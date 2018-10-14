@@ -23,7 +23,8 @@
         "linslin/yii2-curl": "*",
         "kartik-v/yii2-widget-fileinput": "@dev",
         "2amigos/yii2-file-upload-widget": "~1.0",
-        "yii2tech/file-storage": "^1.1"
+        "yii2tech/file-storage": "^1.1",
+        "phpoffice/phpspreadsheet": "^1.4"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

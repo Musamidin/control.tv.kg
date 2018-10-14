@@ -60,16 +60,21 @@ $scope.getTvList = function(){
         });
   };
 
+
 $(document).on('change', '#report-status', function(){
 	$scope.bystatus = this.value;
 	$scope.getUserData(1,$scope.mainlistPerPage,this.value,$scope.dfdt,$scope.bytv);
-	if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }	
+	if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }
+	$('#expt-excel').attr("href","/exptexcel?token="+$('#token').val()
+    + "&daterange="+ $scope.dfdt+"&bytv="+ $scope.bytv+'&sts='+this.value);
 });
 
 $(document).on('change', '#sortbytv', function(){
 	$scope.bytv = this.value;
 	$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value);
-	if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }	
+	if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }
+	$('#expt-excel').attr("href","/exptexcel?token="+$('#token').val()
+    + "&daterange="+ $scope.dfdt+"&bytv="+ this.value +'&sts='+$scope.bystatus);
 });
 
 $scope.addformaction = function(){
@@ -120,8 +125,9 @@ $scope.addformaction = function(){
     	var dfdt = df+'/'+dt;
     	//console.log( $('.getbydatetime').val() );
     	$scope.dfdt = dfdt;
-    	$scope.getUserData( 1,$scope.mainlistPerPage,$('#report-status').val(),dfdt,$scope.bytv );
-
+    	$scope.getUserData( 1,$scope.mainlistPerPage,$scope.bystatus,dfdt,$scope.bytv );
+    	$('#expt-excel').attr("href","/exptexcel?token="+$('#token').val()
+    + "&daterange="+ dfdt +"&bytv="+ $scope.bytv+'&sts='+$scope.bystatus);
 		//console.log(  +' / '+ );
     	}
     );

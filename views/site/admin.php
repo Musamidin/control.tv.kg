@@ -55,6 +55,13 @@ $clients = Yii::$app->HelperFunc->getClients();
   </div>
     <br/>
     <div class="row">
+        <div class="col-md-12" ng-if="mainlistview.length > 0"><!-- -->
+            <a id="exptexcel" class="export-excel" href="/exptexceladm?token=<?=md5(Yii::$app->session->getId().'opn'); ?>&daterange=<?=date('Y-m-d')?> / <?=date('Y-m-d')?>&bytv=0&sts=0&sortbycli=0">
+                <i class="fa fa-file-excel-o"></i>
+            </a>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-12" ng-if="mainlistview.length > 0">
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>

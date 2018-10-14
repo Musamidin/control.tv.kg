@@ -54,7 +54,13 @@ $this->title = 'Размещение бегущей строки на все Т�
     </div>
 </div>
 <br/>
-    <br/>
+    <div class="row">
+        <div ng-if="mainlistview.length > 0" class="col-md-12">
+            <a id="expt-excel" class="export-excel" href="/exptexcel?token=<?=md5(Yii::$app->session->getId().'opn'); ?>&daterange=<?=date('Y-m-d')?> / <?=date('Y-m-d')?>&bytv=0&sts=0">
+                <i class="fa fa-file-excel-o"></i>
+            </a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12" ng-if="mainlistview.length > 0">
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
@@ -63,7 +69,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                     <th class="sorting" aria-label="checkbox">
                     <input type="checkbox" class="select_all"/>
                     </th>
-                    <!--th class="sorting" aria-label="ID">ID</th-->
+                    <th class="sorting" aria-label="№">№</th>
                     <th class="sorting" aria-label="Дата">Дата</th>
                     <th ng-if="<?=Yii::$app->user->identity->role?> === 0" class="sorting" aria-label="Моб. номер">Моб. номер</th>
                     <th class="sorting" aria-label="Телеканал">Телеканал</th>
@@ -81,6 +87,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>
                   <input ng-if="ml.status == '0'" class="checkbox" type="checkbox" name="remove[]" ng-model="chdata" value="{{ml.id}}" />
                   </td>
+                  <td>{{ml.id}}</td>
                   <td>{{ml.datetime | formatDatetime}}</td>
                   <td ng-if="<?=Yii::$app->user->identity->role?> === 0">{{ml.phone}}</td>
                   <td>{{ml.chname}}</td>
@@ -102,8 +109,8 @@ $this->title = 'Размещение бегущей строки на все Т�
                 <tfoot>
                 <tr>
 
-                    <th ng-if="<?=Yii::$app->user->identity->role?> === 2" rowspan="1" colspan="5">Итого:</th>
-                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="6">Итого:</th>
+                    <th ng-if="<?=Yii::$app->user->identity->role?> === 2" rowspan="1" colspan="6">Итого:</th>
+                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="7">Итого:</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'cday' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'simcount' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumms: 'summ' }}</th>

@@ -75,7 +75,8 @@ $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,
       $scope.dfdt = dfdt;
       $scope.getData($scope.pagination.current,$scope.mainlistPerPage,$scope.bystatus,dfdt,$scope.bytv,$scope.sortbycli );
 
-    //console.log(  +' / '+ );
+      $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+    + "&daterange="+ dfdt +"&bytv="+ $scope.bytv+'&sts='+$scope.bystatus+'&sortbycli='+$scope.sortbycli);
       }
     );
 
@@ -99,18 +100,24 @@ $scope.onReject = function(){
 $(document).on('change', '#report-status', function(){
   $scope.bystatus = this.value;
   $scope.getData(1,$scope.mainlistPerPage,this.value,$scope.dfdt,$scope.bytv,$scope.sortbycli);
-  if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }  
+  if(this.value > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }
+  $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+    + "&daterange="+ $scope.dfdt +"&bytv="+ $scope.bytv+'&sts='+this.value+'&sortbycli='+$scope.sortbycli);
 });
 
 $(document).on('change', '#sortbytv', function(){
   $scope.bytv = this.value;
   $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,this.value,$scope.sortbycli);
-  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
+  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }
+  $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+    + "&daterange="+ $scope.dfdt +"&bytv="+ this.value+'&sts='+$scope.bystatus+'&sortbycli='+$scope.sortbycli);
 });
 $(document).on('change', '#sortbycli', function(){
   $scope.sortbycli = this.value;
   $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,this.value);
-  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); } 
+  if($('#report-status').val() > 0){ $('.select_all').hide(); }else{ $('.select_all').show(); }
+  $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+    + "&daterange="+ $scope.dfdt +"&bytv="+ $scope.bytv+'&sts='+$scope.bystatus+'&sortbycli='+this.value);
 });
 
 //select all checkboxes

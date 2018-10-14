@@ -17,6 +17,9 @@ use app\models\MainHub;
 use app\models\ChangePassword;
 use app\models\Filestore;
 use app\models\UploadForm;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 use app\componets\HelperFunc;
 
@@ -37,7 +40,9 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='setdata' || $action->id ==='remove'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='onaction'){
+        }elseif($action->id ==='onaction' || $action->id ==='exptexcel'){
+            $this->enableCsrfValidation = false;
+        }elseif($action->id ==='exptexceladm'){
             $this->enableCsrfValidation = false;
         }
 
@@ -377,6 +382,112 @@ class SiteController extends Controller
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
     }    
+
+    public function actionExptexceladm()
+    {
+        $req = Yii::$app->request;
+        $data = $req->get();
+        if($data['token'] === md5(Yii::$app->session->getId().'opn'))
+        {
+            // $styleArray = [
+            //     'font' => ['bold' => true],
+            //     'text-align'=> 'center',
+            //     'borders' => [
+            //         'allBorders' => [
+            //             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+            //             'color' => ['argb' => '#000000'],
+            //         ],
+            //     ],    
+            // ];
+        $headers = ['№','Дата','Заказчик','Телеканал','Текст','Дата проката','Кол. день','Кол. сим.','Сумма','Описание','Статус'];
+        //$abc = ['A','B','C','D','E','F','G','H','I','J','K'];
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        // $sheet->getStyle('A1:K1')->applyFromArray($styleArray);
+        //     for($i = 0; $i < count($abc); $i++){
+        //       $sheet->getColumnDimension($abc[$i])->setAutoSize(true);
+        //     }
+
+        $rows = [];
+        $retData = Yii::$app->HelperFunc->getDownData($data);
+        foreach ($retData['mlv'] as $row) {
+            foreach ($row as $key => $value) {
+                if($key == 'chid'){
+                    unset($row[$key]);
+                }elseif($key == 'client_id'){
+                    unset($row[$key]);
+                }elseif($key == 'phone'){
+                    unset($row[$key]);
+                }elseif($key == 'state'){
+                    unset($row[$key]);
+                }else{
+                  $row[$key] = $value;  
+                }
+            }
+            $rows[] = $row;
+        }
+
+        $sheet->fromArray($headers,NULL,'A1');
+        $sheet->fromArray($rows,NULL,'A2');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="report-'.date('d.m.Y H:i:s').'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        // echo '<pre>';
+        // print_r($rows);
+        // echo '</pre>';
+        }else{
+            return json_encode(array('status'=>$req->get(),'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionExptexcel()
+    {
+        $req = Yii::$app->request;
+        $data = $req->get();
+        if($data['token'] === md5(Yii::$app->session->getId().'opn'))
+        {
+        if(Yii::$app->user->identity->role != 0){
+        $headers = ['№','Дата','Телеканал','Текст','Дата проката','Кол. день','Кол. сим.','Сумма','Описание','Статус'];
+        }else{
+        $headers = ['№','Дата','Моб. номер','Телеканал','Текст','Дата проката','Кол. день','Кол. сим.','Сумма','Описание','Статус'];
+        }
+        $rows = [];
+        $retData = Yii::$app->HelperFunc->getUserDownData($data);
+        foreach ($retData['mlv'] as $row) {
+            foreach ($row as $key => $value) {
+                if($key == 'chid'){
+                    unset($row[$key]);
+                }elseif($key == 'client_id'){
+                    unset($row[$key]);
+                }elseif($key == 'phone'){
+                    if(Yii::$app->user->identity->role != 0){
+                        unset($row[$key]);
+                    }
+                }else{
+                  $row[$key] = $value;  
+                }
+            }
+            $rows[] = $row;
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->fromArray($headers,NULL,'A1');
+        $sheet->fromArray($rows,NULL,'A2');
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="report-'.date('d.m.Y H:i:s').'.xlsx"');
+        header('Cache-Control: max-age=0');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save('php://output');
+        // echo '<pre>';
+        // print_r($rows);
+        // echo '</pre>';
+        }else{
+            return json_encode(array('status'=>$req->get(),'message'=>'Error(Invalid token!)'));
+        }
+
+    }
 
     public function actionDownload()
     {
