@@ -92,11 +92,12 @@ class HelperFunc extends Component
                         $mh->cday = $this->getCoutDays($data['dates']);
                         if($mh->save()){
                             $this->arr_map($data['dates'],$mh->id);
-                            //return true;
+                            return $mh->id;
                         }else{
                             return false; //['error'=> 'save false'];
                         }
-                    }else{ return false; } //['error'=> 'validate false']; } 
+                    }else{ return false; } //['error'=> 'validate false']; }
+                    
                 }catch(Exception $ex){
                     return $ex;
                 }
