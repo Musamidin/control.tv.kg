@@ -10,6 +10,27 @@ $tvlist = Yii::$app->HelperFunc->getTvlist();
 $this->title = 'Изменить пароль';
 ?>
 <div class="site-signup">
+<? if(Yii::$app->user->identity->role == 1): ?>
+    <div class="row sett-box">
+      <div class="col-lg-12 pswd-box">
+        <div class="col-lg-6">
+            <h1>Добавить пользователя</h1>
+            <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
+                <?= $form->field($model, 'oldPassword')->passwordInput()->label('Старый пароль') ?>
+                <?= $form->field($model, 'newPassword')->passwordInput()->label('Новый пароль') ?>
+                <?= $form->field($model, 'retypePassword')->passwordInput()->label('Повторить новый пароль') ?>
+                <div class="form-group">
+                    <?= Html::submitButton('Изменить пароль', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
+                </div>
+                <div><?=isset($status) ? $status : ''; ?></div>
+                <br/>
+                <div class="api-box"><b>Ваш API Key:</b>&nbsp;&nbsp;<?=isset($accesstoken) ? $accesstoken : ''; ?></div>
+            <?php ActiveForm::end(); ?>
+        </div>
+       </div> 
+    </div>
+<? endif; ?>
+    <br/>
     <div class="row sett-box">
       <div class="col-lg-12 pswd-box">
         <div class="col-lg-6">
