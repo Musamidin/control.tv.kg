@@ -16,6 +16,7 @@ var dateft = moment(new Date()).format('YYYY-MM-DD');
 $scope.dfdt = dateft +' / '+ dateft;
 
 $scope.data = {};
+$scope.userlist = {};
 
 $scope.pageChanged = function(newPage) {
          //$scope.getData(newPage,$scope.mainlistPerPage,$('#report-status').val());
@@ -182,7 +183,28 @@ $scope.onAction = function(item){
   });
 
 };
+}).controller("SettingsCtrl", function($scope,$http){
 
+  $scope.getUserList = function(){
+    $http.get('/getuserlist?token='+$('#token').val()) // +'&pagenum='+pnum
+          .then(function(result) {
+            var respdata = eval(result.data);
+            if(respdata.status == 0){
+                  $scope.userlist = eval(respdata.data.userlist);
+            } else if(respdata.status > 0){
+                alert(respdata.msg);
+            }
+          }, function errorCallback(response) {
+              //console.log(response);
+          });
+    };
+
+  $scope.getUserList();
+
+  $scope.onAction = function(data,id){
+    alert(data.id);
+    alert(id);
+  };
 
 }).controller("AdminExportAppCtrl", function($scope,$http){
 /**NO CONFLICT**/
@@ -261,7 +283,6 @@ $('.getbydatetime').datepicker({
     +"&dates="+$('.getbydatetime').val()
     +"&token="+ $('#token').val());
 });
-
 
 
 }).filter("formatDatetime", function ()

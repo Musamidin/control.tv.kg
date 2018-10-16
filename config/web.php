@@ -90,6 +90,7 @@ $config = [
                 'export' => 'site/export',
                 'getdata' => 'site/getdata',
                 'getdatas' => 'site/getdatas',
+                'getuserlist' => 'site/getuserlist',
                 'report' => 'site/report',
                 'useraccount' => 'site/useraccount',
                 'download' => 'site/download',

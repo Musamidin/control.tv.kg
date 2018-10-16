@@ -359,6 +359,23 @@ class HelperFunc extends Component
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
    }
+
+   public function getUserlist()
+   {
+        try{
+              return User::find()
+              ->where(['status'=> 0])
+              //->andWhere(['<>','role',1])
+              ->asArray()
+              ->orderBy(['id'=>SORT_ASC])
+              ->all();
+
+        }catch(Exception $e){
+            return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+   }
+
    public function getTvlist()
    {
         $data = [];

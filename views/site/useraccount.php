@@ -9,23 +9,57 @@ $tvlist = Yii::$app->HelperFunc->getTvlist();
 
 $this->title = 'Изменить пароль';
 ?>
-<div class="site-signup">
+<div class="site-settings">
+<input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
 <? if(Yii::$app->user->identity->role == 1): ?>
-    <div class="row sett-box">
+    <div class="row sett-box" ng-controller="SettingsCtrl">
       <div class="col-lg-12 pswd-box">
-        <div class="col-lg-6">
-            <h1>Добавить пользователя</h1>
-            <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
-                <?= $form->field($model, 'oldPassword')->passwordInput()->label('Старый пароль') ?>
-                <?= $form->field($model, 'newPassword')->passwordInput()->label('Новый пароль') ?>
-                <?= $form->field($model, 'retypePassword')->passwordInput()->label('Повторить новый пароль') ?>
-                <div class="form-group">
-                    <?= Html::submitButton('Изменить пароль', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
-                </div>
-                <div><?=isset($status) ? $status : ''; ?></div>
-                <br/>
-                <div class="api-box"><b>Ваш API Key:</b>&nbsp;&nbsp;<?=isset($accesstoken) ? $accesstoken : ''; ?></div>
-            <?php ActiveForm::end(); ?>
+        <div class="col-lg-12">
+            <h1>Пользователи</h1>
+            <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                <thead>
+                    <tr>
+                        <th>Логин</th>
+                        <th>Имя</th>
+                        <th>Права</th>
+                        <th>Статус</th>
+                        <th>API Key</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="ul in userlist">
+                        <td>{{ul.login}}</td>
+                        <td>{{ul.name}}</td>
+                        <td>
+                            <div ng-switch="ul.role">
+                                <span ng-switch-when="0" class="label label-info">Агент</span>
+                                <span ng-switch-when="1" class="label label-primary ">Администратор</span>
+                                <span ng-switch-when="2" class="label label-warning">Менеджер</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div ng-switch="ul.status">
+                                <span ng-switch-when="0" class="label label-success bg-purple">Работает</span>
+                                <span ng-switch-when="1" class="label label-danger">Отключен</span>
+                            </div>
+                        </td>
+                        <td>{{ul.access_token}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                                  Действие <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                  <li><a href="javascript:void(0)" ng-click="onAction(ul,1)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
+                                  <li class="divider"></li>
+                                  <li><a href="javascript:void(0)" ng-click="onAction(ul,2)"><span class="fa fa-close"></span>&nbsp;Отключить</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
        </div> 
     </div>

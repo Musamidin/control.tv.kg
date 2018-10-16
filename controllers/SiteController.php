@@ -42,7 +42,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='onaction' || $action->id ==='exptexcel'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='exptexceladm'){
+        }elseif($action->id ==='exptexceladm' || $action->id === 'getuserlist'){
             $this->enableCsrfValidation = false;
         }
 
@@ -104,7 +104,7 @@ class SiteController extends Controller
             $count = MainHub::find()
                     ->filterWhere(['=', 'status', 0])
                     ->count();
-            $mainhub = new MainHub();        
+            $mainhub = new MainHub();
             $model = new UploadForm();
             return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub,'tvlist'=>$tvlist]);
         }elseif(Yii::$app->user->identity->role == 1){
@@ -327,6 +327,19 @@ class SiteController extends Controller
      // }else{
      //  return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       //}
+    }
+    public function actionGetuserlist()
+    {
+        header('Content-Type: application/json');
+        $request = Yii::$app->request->get();
+        if($request['token'] == md5(Yii::$app->session->getId().'opn') && Yii::$app->user->identity->role == 1){
+          $retData = Yii::$app->HelperFunc->getUserlist();
+          
+          return json_encode(['status'=>0,
+                              'data'=>['userlist' => $retData],'msg'=>'OK']);
+     }else{
+      return json_encode(array('status'=>3,'message'=>'Error(Invalid token or your access denied!)'));
+      }
     }
     public function actionSetdata()
     {
