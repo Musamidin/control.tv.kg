@@ -41,8 +41,8 @@ class MainHub extends \yii\db\ActiveRecord
             [['datetime','last_up_date'], 'safe'],
             [['text', 'dates','description'], 'string'],
             [['state','phone','chid','client_id', 'status','cday'], 'integer'],
-            [[ 'phone'], 'match', 'pattern' => '/^[0-9]{9}$/'],
-            [['text', 'dates','phone','chid'],'required'],
+            //[[ 'phone'], 'match', 'pattern' => '/^[0-9]{9}$/'],
+            [['text', 'dates','chid'],'required'],
         ];
     }
 
@@ -61,7 +61,7 @@ class MainHub extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'datetime' => 'Datetime',
-            'phone' => 'Мобильный номер',
+            //'phone' => 'Мобильный номер',
             'chid' => 'chid',
             'text' => 'Text',
             'dates' => 'Dates',

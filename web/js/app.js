@@ -103,7 +103,8 @@ $scope.addformaction = function(){
 	var now = new Date();
     $('.getbydatetime').daterangepicker({
     	//"autoUpdateInput": false,
-    	 "locale": {
+    	//"singleDatePicker": false,
+    	"locale": {
         "format": "YYYY-MM-DD", //MM/DD/YYYY
         "separator": " / ",
         "applyLabel": "Принять",
@@ -114,7 +115,8 @@ $scope.addformaction = function(){
         "weekLabel": "W",
         "daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
         "monthNames": ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
-        "firstDay": 1
+        "firstDay": 1,
+
     },
     	"startDate": now,
     	alwaysShowCalendars: false,
@@ -245,7 +247,7 @@ $scope.removedata = function(){
 
 };
 
-$("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
+/*$("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"}); */
 
 
 }).filter("status", function()

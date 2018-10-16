@@ -92,7 +92,7 @@ class UserIdentity extends User implements IdentityInterface
     /**
      * Generates new password reset token
      */
-    public function generateToken()
+    public function generateToken($password)
     {
         $this->access_token = md5($password.time());
         //Yii::$app->security->generatePasswordHash($password.'sec');//Yii::$app->security->generateRandomString() . '_' . time();

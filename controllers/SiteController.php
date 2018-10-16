@@ -285,14 +285,12 @@ class SiteController extends Controller
     {
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         header('Content-Type: application/json');
-        $request = Yii::$app->request;
-        $data = [];
+        $data = Yii::$app->request->get();
+        //$data = [];
         $darr = [];
-        $data['chid'] = $request->get('chid');
-        //$data['dates'] = $request->get('dates');
-        $data['token'] = $request->get('token');
-        if(!empty($request->get('dates'))){
-            $dmas = explode(',', $request->get('dates'));
+        //$data['chid'] = $req['chid'];
+        if(!empty($data['dates'])){
+            $dmas = explode(',', $data['dates']);
             for($i=0; $i<count($dmas); $i++){
                 array_push($darr,$dmas[$i]);
             }
@@ -347,7 +345,7 @@ class SiteController extends Controller
         header('Content-Type: application/json');
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
             $saveresp = Yii::$app->HelperFunc->save($data,true);
-            if($saveresp === true){                
+            if($saveresp > 0){                
                 return json_encode(['status'=>0,'msg'=>'OK']);           
             }else{ return json_encode(['error' => $saveresp]); }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
@@ -429,9 +427,9 @@ class SiteController extends Controller
                     unset($row[$key]);
                 }elseif($key == 'client_id'){
                     unset($row[$key]);
-                }elseif($key == 'phone'){
-                    unset($row[$key]);
                 }elseif($key == 'state'){
+                    unset($row[$key]);
+                }elseif($key == 'phone'){
                     unset($row[$key]);
                 }else{
                   $row[$key] = $value;  
@@ -461,11 +459,8 @@ class SiteController extends Controller
         $data = $req->get();
         if($data['token'] === md5(Yii::$app->session->getId().'opn'))
         {
-        if(Yii::$app->user->identity->role != 0){
         $headers = ['№','Дата','Телеканал','Текст','Дата проката','Кол. день','Кол. сим.','Сумма','Описание','Статус'];
-        }else{
-        $headers = ['№','Дата','Моб. номер','Телеканал','Текст','Дата проката','Кол. день','Кол. сим.','Сумма','Описание','Статус'];
-        }
+        
         $rows = [];
         $retData = Yii::$app->HelperFunc->getUserDownData($data);
         foreach ($retData['mlv'] as $row) {
@@ -475,9 +470,7 @@ class SiteController extends Controller
                 }elseif($key == 'client_id'){
                     unset($row[$key]);
                 }elseif($key == 'phone'){
-                    if(Yii::$app->user->identity->role != 0){
-                        unset($row[$key]);
-                    }
+                    unset($row[$key]);
                 }else{
                   $row[$key] = $value;  
                 }

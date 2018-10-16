@@ -49,7 +49,7 @@ class ChangePassword extends Model
             /* @var $user User */
             $user = Yii::$app->user->identity;
             $user->setPassword($this->newPassword);
-            $user->generateToken();
+            $user->generateToken($this->newPassword);
             $user->generateAuthKey();
             if ($user->save()) {
                 return true;

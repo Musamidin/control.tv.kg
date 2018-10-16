@@ -51,14 +51,11 @@ class HelperFunc extends Component
                     //unset($row[$key]);
                     if($key == 'A'){
                         unset($row[$key]);
-                        $row['phone'] = $value;
+                        $row['chid'] = $value;
                     }elseif($key == 'B'){
                         unset($row[$key]);
-                        $row['chid'] = $value;
-                    }elseif($key == 'C'){
-                        unset($row[$key]);
                         $row['text'] = $value;
-                    }elseif($key == 'D'){
+                    }elseif($key == 'C'){
                         unset($row[$key]);
                         $row['dates'] = $value;
                     }
@@ -83,7 +80,7 @@ class HelperFunc extends Component
                     $mh = new MainHub();
                     $mh->attributes = $data;
                     if($mh->validate()){
-                        $mh->phone = $data['phone'];
+                        //$mh->phone = $data['phone'];
                         $mh->chid = $data['chid'];
                         $mh->text = $data['text'];
                         $mh->dates = $data['dates'];
@@ -108,7 +105,7 @@ class HelperFunc extends Component
                         $mh = new MainHub();
                         $mh->attributes = $itm;
                         if($mh->validate()){
-                            $mh->phone = $itm['phone'];
+                            //$mh->phone = $itm['phone'];
                             $mh->chid = $itm['chid'];
                             $mh->text = $itm['text'];
                             $mh->dates = $itm['dates'];

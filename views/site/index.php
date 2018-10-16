@@ -71,7 +71,6 @@ $this->title = 'Размещение бегущей строки на все Т�
                     </th>
                     <th class="sorting" aria-label="№">№</th>
                     <th class="sorting" aria-label="Дата">Дата</th>
-                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" class="sorting" aria-label="Моб. номер">Моб. номер</th>
                     <th class="sorting" aria-label="Телеканал">Телеканал</th>
                     <th class="sorting" aria-label="Текст">Текст</th>
                     <th class="sorting" aria-label="Дата проката">Дата проката</th>
@@ -89,7 +88,6 @@ $this->title = 'Размещение бегущей строки на все Т�
                   </td>
                   <td>{{ml.id}}</td>
                   <td>{{ml.datetime | formatDatetime}}</td>
-                  <td ng-if="<?=Yii::$app->user->identity->role?> === 0">{{ml.phone}}</td>
                   <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
                   <td>{{ml.dates}}</td>
@@ -108,9 +106,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                 </tbody>
                 <tfoot>
                 <tr>
-
-                    <th ng-if="<?=Yii::$app->user->identity->role?> === 2" rowspan="1" colspan="6">Итого:</th>
-                    <th ng-if="<?=Yii::$app->user->identity->role?> === 0" rowspan="1" colspan="7">Итого:</th>
+                    <th rowspan="1" colspan="6">Итого:</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'cday' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumm: 'simcount' }}</th>
                     <th rowspan="1" colspan="1">{{ mainlistview | tSumms: 'summ' }}</th>
@@ -153,6 +149,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                                                 $("#load-ing").hide();
                                                 $("#upcount").html(obj.files[0].count);
                                                 $("#status-response").html("Файл успешно загружен!");
+                                                window.location.reload();
                                             }else{
                                                 alert("Файл не загружен, обратитесь к администратору софта!");
                                             }
@@ -180,7 +177,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                         <span class="">Шаблон для загрузки файла</span>
                         <ul id="mlist">
                             <li><span class="required">Все поля обязательны для заполнения</span></li>
-                            <li>Поле phone заполняется в формате: 772030317</li>
+                            <!--li>Поле phone заполняется в формате: 772030317</li-->
                             <li>Поле chid - это ID телеканала
                                 <ul ng-repeat="tvl in tvlist">
                                     <li>{{tvl.id}} - {{tvl.channel_name}}</li>
@@ -224,13 +221,11 @@ $this->title = 'Размещение бегущей строки на все Т�
                                       'options' => ['name' => 'addForm']
                                     ]); ?>
                   <div class="row">
-                      <div class="col-md-4">
-                          <?= $form->field($mainhub, 'phone',['options'=>
+                          <? /*= $form->field($mainhub, 'phone',['options'=>
                             ['tag' => 'div','class'=> 'form-group field-mainhub-phone has-feedback required'],
                             'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'XXXXXXXXX','ng-model'=>'data.phone'])->label(false); ?>
-                      </div>
-                      <div class="col-md-4">
+                  ])->textInput(['autofocus' => false,'placeholder'=>'XXXXXXXXX','ng-model'=>'data.phone'])->label(false); */ ?>
+                      <div class="col-md-6">
                           <?= $form->field($mainhub, 'chid',['options'=>
                             ['tag' => 'div','class'=> 'form-group field-mainhub-chid has-feedback required'],
                             'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
@@ -240,7 +235,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                             'ng-options'=> 'tvls.id as tvls.channel_name for tvls in tvlist track by tvls.id'
                             ])->label(false); ?>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-6">
                         <?=$form->field($mainhub, 'dates',['options'=>
                             ['tag' => 'div','class'=> 'form-group field-mainhub-dates has-feedback required'],
                             'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
