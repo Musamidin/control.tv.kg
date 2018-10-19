@@ -90,7 +90,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>{{ml.datetime | formatDatetime}}</td>
                   <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
-                  <td>{{ml.dates}}</td>
+                  <td class="daterent">{{ml.dates}}</td>
                   <td>{{ml.cday}}</td>
                   <td>{{ml.simcount}}</td>
                   <td>{{ml.summ | fixedto}}</td>

@@ -90,7 +90,7 @@ $clients = Yii::$app->HelperFunc->getClients();
                   <td>{{ml.order}}</td>
                   <td>{{ml.chname}}</td>
                   <td>{{ml.text}}</td>
-                  <td>{{ml.dates}}</td>
+                  <td class="daterent">{{ml.dates}}</td>
                   <td>{{ml.cday}}</td>
                   <td>{{ml.simcount}}</td>
                   <td>{{ml.summ | fixedto}}</td>
