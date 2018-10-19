@@ -62,7 +62,7 @@ $this->title = 'Размещение бегущей строки на все Т�
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12" ng-if="mainlistview.length > 0">
+        <div class="col-md-12 grid-box" ng-if="mainlistview.length > 0">
         <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
                 <thead>
                 <tr role="row">

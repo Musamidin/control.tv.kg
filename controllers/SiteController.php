@@ -111,6 +111,7 @@ class SiteController extends Controller
             return $this->redirect('/admin');
         }
     }
+    
     public function actionAbout()
     {
         //$this->layout = 'client';
@@ -504,7 +505,8 @@ class SiteController extends Controller
         $data['chid'] = $request->get('chid');
         $data['token'] = $request->get('token');
         header('Content-Type: text/plain');
-        header('Content-Disposition: attachment;filename="'.date('d.m.Y H:i:s').'.txt"');
+        $fname = empty($request->get('dates')) ? date('Y-m-d',strtotime('+1 days')) : $request->get('dates');
+        header('Content-Disposition: attachment;filename="'.$fname.'.txt"');
         header('Cache-Control: max-age=0');
         if($data['token'] === md5(Yii::$app->session->getId().'opn'))
         {

@@ -279,3 +279,6 @@ td.daterent {
     word-break: break-all;
     word-wrap: break-word;
 }
+.grid-box{
+    overflow: auto;
+}
