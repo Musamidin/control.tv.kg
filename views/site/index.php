@@ -98,7 +98,13 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>
                     <div ng-switch="ml.status">
                         <span ng-switch-when="0" class="label label-info">В обработке</span>
-                        <span ng-switch-when="1" class="label label-success">Принято</span>
+                        <div ng-switch-when="1" class="btn-group">
+                        <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown">Принято <span class="caret"></span>
+                        </button>
+                          <ul class="dropdown-menu">
+                            <li><a href="javascript:void(0)" ng-click="onCallback(ml)"><span class="fa fa-calendar-times-o"></span>&nbsp;Отозвать</a></li>
+                          </ul>
+                        </div>
                         <span ng-switch-when="2" class="label label-danger">Отвергнуто</span>
                     </div>
                   </td>
@@ -260,16 +266,56 @@ $this->title = 'Размещение бегущей строки на все Т�
           <!-- /.modal-dialog -->
 
 </div>
+<!--Modal window callBack-->
+<div class="modal modal-info fade in" id="modal-callback">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Отмена заявки</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div id="mydatepicker"></div>
+                    <input type="hidden" name="callbackdates" id="cbdates">
+                  </div>
+                  <div class="col-md-6">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                      <textarea id="comment" class="form-control" rows="3" placeholder="Введите комментарию ..."></textarea>
+                    </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div id="view-dates"></div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline" ng-click="onAction($event)" data-id="0" id="actionBtn">Принять</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+</div>
+<!--End Modal window callBack-->
 
 <a style="display:none;" id="removebtn" ng-click="removedata()" class="btn btn-block btn-social btn-bitbucket">
     <i class="fa fa-bitbucket"></i>Удалить</a>
 </div>
 <style type="text/css">
+#mydatepicker > .datepicker.datepicker-inline {
+    border: 1px solid white;
+}
 .modal-info .modal-header, .modal-info .modal-footer {
     background-color: #00a7d085 !important;
 }
 .bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body{
-    background-color: #00a7d0 !important;
+    background-color: #1a95d0 !important;
 }
 </style>
 

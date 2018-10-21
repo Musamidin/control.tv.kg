@@ -14,6 +14,8 @@ $scope.bytv = 0;
 $scope.tvlist = null;
 $scope.data = {};
 $scope.chdata ={};
+$scope.minDate = moment(new Date()).format('DD/MM/YYYY');
+$scope.maxDate = moment(new Date()).format('DD/MM/YYYY');
 var dateft = moment(new Date()).format('YYYY-MM-DD');
 $scope.dfdt = dateft +' / '+ dateft;
 
@@ -99,6 +101,66 @@ $scope.addformaction = function(){
 	});
 };
 
+$scope.onCallback = function(obj){
+  $('#mydatepicker').datepicker('destroy');
+  $('#view-dates').html('');
+  $('#cbdates').val('');
+  //console.log(obj);
+  var data = {};
+  data['token'] = $('#token').val();
+  data['id'] = obj.id;
+  data['cid'] = 0;
+    $http({
+      method: 'POST',
+      url: '/getdatestocallback',
+      data: data
+    }).then(function successCallback(response) {
+        var state = eval(response.data);
+        var ts = null;
+        if(state.data.length > 0){
+          ts = state.data.pop();
+          $scope.maxDate = moment(ts.daterent).format('DD/MM/YYYY');
+          $scope.minDate = moment(state.data[0].daterent).format('DD/MM/YYYY');
+          console.log($scope.minDate);
+          /**********START DATE PICKER INLINE***************/
+          $('#mydatepicker').datepicker({
+              format: "dd/mm/yyyy",
+              language: "ru",
+              multidate: true,
+              debug: true,
+              startDate: $scope.minDate,
+              endDate: $scope.maxDate,
+            }).on('changeDate',function(e){
+              var dates = [];
+              for(var i = 0; i < e.dates.length; i++){
+                 dates.push(moment(e.dates[i]).format('YYYY-MM-DD'));
+              }
+              $('#cbdates').val(dates);
+              var str = '';
+              if(dates.length > 0){
+                for(var j = 0; j < dates.length; j++){
+                  str += dates[j]+'<br/>';
+                }
+                $('#view-dates').html(str);
+              }else{
+                $('#view-dates').html(str);
+              }
+              //console.log($scope.maxDate);
+          });
+        }else{
+          $('#mydatepicker').datepicker('destroy');
+          $('#modal-callback').modal('hide');
+        }
+
+      }, function errorCallback(response) {
+            //console.log(response);
+    });
+
+    $('#modal-callback').modal({ keyboard: false });
+
+};
+
+
 /**********START DATE PICKER RANG***************/
 	var now = new Date();
     $('.getbydatetime').daterangepicker({
@@ -134,47 +196,45 @@ $scope.addformaction = function(){
     	}
     );
 
-/**********START DATE PICKER***************/
-//$('#clients-date_of_issue').mask("99/99/9999", {placeholder: 'Дата выдачи (пасспорт) д/м/г'});
-//$.fn.datepicker.defaults.format = "mm/dd/yyyy";
-var forbidden=['2018-09-20','2018-09-21'];
-var Nonbusinessday = ["2018-09-26", "2018-09-27"];
-var Holiday = []; //["2018-09-20", "2018-09-21"];
-
-$('#mainhub-dates').datepicker({
-	beforeShowDay: function(date){
-		var datestring = date.toJSON().substring(0,10);
-		var dofw = new Date().getDay();
-		if(dofw == 3){
-				//Holiday = ["2018-09-20", "2018-09-21"];
-			if (Nonbusinessday.indexOf(datestring) != -1) {
-		        return false;
-		    }
-		        //  else if (Holiday.indexOf(datestring) != -1) {
-		        //                 return false;
-		        // }
-		    else {
-		        return true;
-		    }
-		}
-	},
-	startDate: new Date(),
-	//minDate: new Date().getDate()+1,
-	multidate: true,
-	format: "dd/mm/yyyy",
-	startView: 0,
-	language: "ru",
-	//autoclose: true,
-	orientation: "bottom right"
-}).on('hide', function() { });
-
 /********END DATE PICKER****************/
 $scope.addform = function(){
-	$("#status-response, #addstate").html('');
-	//$('#addstate').html('');
-	$scope.getTvList();
-	//console.log($scope.tvlist);
-	$('#modal-info-add-form').modal({ keyboard: false });
+  	$("#status-response, #addstate").html('');
+    $('#mainhub-dates').val('');
+  	$scope.getTvList();
+
+    // $('#view-dates').html('');
+    // $('#cbdates').val('');
+    //console.log(obj);
+    var data = {};
+    data['token'] = $('#token').val();
+    data['cid'] = 0;
+      $http({
+        method: 'POST',
+        url: '/getdatestocallback',
+        data: data
+      }).then(function successCallback(response) {
+          var state = eval(response.data);
+          //console.log(state);
+          if(state.status == 0){
+              /**********START DATE PICKER***************/
+              $('#mainhub-dates').datepicker({
+                startDate: moment(state.data).format('DD/MM/YYYY'),
+                multidate: true,
+                format: "dd/mm/yyyy",
+                startView: 0,
+                language: "ru",
+                orientation: "bottom right"
+              }).on('hide', function() { });
+          }else{
+            // $('#mydatepicker').datepicker('destroy');
+            // $('#modal-callback').modal('hide');
+          }
+
+        }, function errorCallback(response) {
+              //console.log(response);
+      });
+
+  	$('#modal-info-add-form').modal({ keyboard: false });
 };
 
 $scope.importbtn = function(){

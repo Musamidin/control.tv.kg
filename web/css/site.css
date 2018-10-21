@@ -282,3 +282,13 @@ td.daterent {
 .grid-box{
     overflow: auto;
 }
+div#view-dates {
+    display: block;
+    background: #fde5cc;
+    width: 288px;
+    height: 150px;
+    overflow: auto;
+    color: black;
+    min-height: 150px;
+    padding-left: 5px;
+}

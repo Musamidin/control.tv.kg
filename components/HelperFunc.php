@@ -31,8 +31,9 @@ use app\models\User;
  */
 class HelperFunc extends Component
 {
-    public function savedb($fileName,$fileType)
-    {
+
+  public function savedb($fileName,$fileType)
+  {
         try{
              if($fileType == 'xlsx'){
                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
@@ -72,9 +73,10 @@ class HelperFunc extends Component
         }catch(Exception $e){
             return $e;
         }
-    }
-    public function save($data,$single = false)
-    {
+  }
+
+  public function save($data,$single = false)
+  {
             if($single == true){
                 try{
                     $mh = new MainHub();
@@ -125,10 +127,10 @@ class HelperFunc extends Component
                 }
 
             }   
-    }
+  }
 
-    public function arr_map($data,$id)
-    {
+  public function arr_map($data,$id)
+  {
       $response = null;
       if(preg_match("/[\-]+/",$data)){
         try{
@@ -176,10 +178,10 @@ class HelperFunc extends Component
 
         }else{ return false; }
       }
-    }
+  }
 
-   public function getData($param)
-   {
+  public function getData($param)
+  {
         $data = [];
         try{
             $da = explode('/', $param['daterange']);
@@ -221,10 +223,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
+  }
 
-   public function getDownData($param)
-   {
+  public function getDownData($param)
+  {
         $data = [];
         try{
             $da = explode('/', $param['daterange']);
@@ -264,10 +266,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
+  }
 
-   public function getUserDownData($pdata)
-   {
+  public function getUserDownData($pdata)
+  {
         $data = [];
         try{
             $da = explode('/', $pdata['daterange']);
@@ -298,9 +300,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
-   public function getUserData($param)
-   {
+  }
+
+  public function getUserData($param)
+  {
         $data = [];
         try{
             $da = explode('/', $param['daterange']);
@@ -333,10 +336,11 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
-   public function getDatas($par)
-   {
-        $data = [];
+  }
+
+  public function getDatas($par)
+  {
+      $data = [];
       try{
               $data['count'] = ExportView::find()
               ->where(['IN','daterent',$par['dates']])
@@ -354,11 +358,11 @@ class HelperFunc extends Component
       }catch(Exception $e){
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-        }
-   }
+      }
+  }
 
-   public function getUserlist()
-   {
+  public function getUserlist()
+  {
         try{
               return User::find()
               ->where(['status'=> 0])
@@ -371,10 +375,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
+  }
 
-   public function getTvlist()
-   {
+  public function getTvlist()
+  {
         $data = [];
         try{
               $data['tvlist'] = Channels::find()
@@ -389,9 +393,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
-   public function getClients()
-   {
+  }
+
+  public function getClients()
+  {
         try{
               return User::find()
               ->select('id, name')
@@ -405,10 +410,10 @@ class HelperFunc extends Component
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
-   }
+  }
 
-   public function update($data)
-   {
+  public function update($data)
+  {
         try{
             if(MainHub::updateAll(['status'=> 88],['IN', 'id',$data['ids']])){
                 return true;
@@ -417,11 +422,10 @@ class HelperFunc extends Component
         }catch(Exception $ex){
             return $ex->errorInfo;
         }
+  }
 
-   }
-
-   public function updateStatus($data)
-   {
+  public function updateStatus($data)
+  {
         try{
             if(MainHub::updateAll(['status'=> $data['status'],'description'=> $data['description']],['IN', 'id',$data['ids']])){
                 return true;
@@ -430,8 +434,7 @@ class HelperFunc extends Component
         }catch(Exception $ex){
             return $ex->errorInfo;
         }
-
-   }
+  }
 
   public function find_dates_between( $start_date, $end_date) 
   {
@@ -448,7 +451,6 @@ class HelperFunc extends Component
 
   public function getCoutDays($dates)
   {
-
         if(preg_match("/[\-]+/",$dates)){
             try{
                 $arr = preg_split("/[\-]+/",$dates);
@@ -469,7 +471,47 @@ class HelperFunc extends Component
         }else{
             return !empty($dates);
         }
-    }
+  }
 
+  public function getDatasToCallback($data)
+  {
+      try{
+          return DatesHub::find()
+              ->where(['astatus'=> 0,'mid'=> $data['id']])
+              ->andWhere(['>=','daterent',$this->dpickerblock()])
+              ->asArray()
+              ->orderBy(['daterent'=>SORT_ASC])
+              ->all();
+
+      }catch(Exception $e){
+          return $e->errorInfo;
+          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+      }
+  }
+
+  public function dpickerblock()
+  {
+    $retVal=null;
+    $time = '17:30';
+      if(date("w") == 5 && date("H:i") > $time){ //Если Пятница и время 17-30
+        $retVal = date("Y-m-d", strtotime("+ 4 day"));
+      }elseif(date("w") == 5 && date("H:i") < $time){
+        $retVal = date("Y-m-d", strtotime("+ 1 day"));
+      }
+      if(date("w") == 6){ // Если Суббота
+        $retVal = date("Y-m-d", strtotime("+ 3 day"));
+      }
+      if(date("w") == 0){ // Если Воскресения
+        $retVal = date("Y-m-d", strtotime("+ 2 day"));
+      }
+
+      if((date("w") == 1 || date("w") == 2 || date("w") == 3 || date("w") == 4) && (date("H:i") > $time)){
+        $retVal = date("Y-m-d", strtotime("+ 2 day"));
+      }elseif((date("w") == 1 || date("w") == 2 || date("w") == 3 || date("w") == 4) && (date("H:i") < $time)){
+          $retVal = date("Y-m-d", strtotime("+ 1 day"));
+      }
+      
+    return $retVal;
+  }
 
 }

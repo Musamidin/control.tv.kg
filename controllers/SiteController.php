@@ -44,6 +44,8 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='exptexceladm' || $action->id === 'getuserlist'){
             $this->enableCsrfValidation = false;
+        }elseif($action->id ==='getdatestocallback'){
+            $this->enableCsrfValidation = false;
         }
 
         return parent::beforeAction($action);    
@@ -313,6 +315,25 @@ class SiteController extends Controller
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
     }
+
+    public function actionGetdatestocallback()
+    {
+        header('Content-Type: application/json');
+        $data = Yii::$app->request->post();
+        
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
+           $retData = (intval($data['cid']) == 0) ? Yii::$app->HelperFunc->dpickerblock() : Yii::$app->HelperFunc->getDatasToCallback($data);
+          //$retData = Yii::$app->HelperFunc->getDatasToCallback($data);
+          //return $retData;//Yii::$app->HelperFunc->dpickerblock();
+          return json_encode(['status'=>0,
+                            'data'=>$retData,
+                            'msg'=>'OK']
+                          );
+      }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }
+
     public function actionGettvlist()
     {
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
