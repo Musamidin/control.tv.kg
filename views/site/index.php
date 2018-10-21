@@ -245,7 +245,9 @@ $this->title = 'Размещение бегущей строки на все Т�
                         <?=$form->field($mainhub, 'dates',['options'=>
                             ['tag' => 'div','class'=> 'form-group field-mainhub-dates has-feedback required'],
                             'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
-                            ])->textInput(['autofocus' => false,'placeholder'=>'дд/мм/гггг','title'=>'дд/мм/гггг','ng-model'=>'data.dates'])->label(false);
+                            ])->textInput(['autofocus' => false,'placeholder'=>'дд/мм/гггг','title'=>'дд/мм/гггг',
+                              'ng-model'=>'data.dates',
+                              'autocomplete'=>'off'])->label(false);
                         ?>
                       </div>
                   </div>

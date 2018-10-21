@@ -109,7 +109,7 @@ $scope.onCallback = function(obj){
   var data = {};
   data['token'] = $('#token').val();
   data['id'] = obj.id;
-  data['cid'] = 0;
+  data['cid'] = 1;
     $http({
       method: 'POST',
       url: '/getdatestocallback',
