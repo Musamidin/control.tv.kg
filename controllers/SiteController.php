@@ -44,7 +44,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='exptexceladm' || $action->id === 'getuserlist'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='getdatestocallback'){
+        }elseif($action->id ==='getdatestocallback' || $action->id === 'callbacker'){
             $this->enableCsrfValidation = false;
         }
 
@@ -376,6 +376,21 @@ class SiteController extends Controller
      else{
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
+    }
+
+    public function actionCallbacker()
+    {
+        $data = Yii::$app->request->post();
+        header('Content-Type: application/json');
+        if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
+            $result = Yii::$app->HelperFunc->callback($data);              
+                return json_encode(['status'=>0,'msg'=>$result]); //'OK'           
+
+         }elseif(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
+            return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
+         }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+         }
     }
 
     public function actionRemove()

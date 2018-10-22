@@ -282,11 +282,12 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <div class="col-md-6">
                     <div id="mydatepicker"></div>
                     <input type="hidden" name="callbackdates" id="cbdates">
+                    <input type="hidden" name="rowid" id="rowid">
                   </div>
                   <div class="col-md-6">
                     <div class="col-md-12">
                       <div class="form-group">
-                      <textarea id="comment" class="form-control" rows="3" placeholder="Введите комментарию ..."></textarea>
+                      <textarea id="comment-cback" class="form-control" rows="3" placeholder="Введите комментарию ..."></textarea>
                     </div>
                     </div>
                     <div class="col-md-12">
@@ -297,7 +298,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-outline" ng-click="onAction($event)" data-id="0" id="actionBtn">Принять</button>
+                <button type="button" class="btn btn-outline" ng-click="actionCallback()" id="action-callback-id">Принять</button>
               </div>
             </div>
             <!-- /.modal-content -->

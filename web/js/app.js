@@ -102,6 +102,7 @@ $scope.addformaction = function(){
 };
 
 $scope.onCallback = function(obj){
+  $('#rowid').val(obj.id);
   $('#mydatepicker').datepicker('destroy');
   $('#view-dates').html('');
   $('#cbdates').val('');
@@ -121,7 +122,7 @@ $scope.onCallback = function(obj){
           ts = state.data.pop();
           $scope.maxDate = moment(ts.daterent).format('DD/MM/YYYY');
           $scope.minDate = moment(state.data[0].daterent).format('DD/MM/YYYY');
-          console.log($scope.minDate);
+          //console.log($scope.minDate);
           /**********START DATE PICKER INLINE***************/
           $('#mydatepicker').datepicker({
               format: "dd/mm/yyyy",
@@ -160,6 +161,27 @@ $scope.onCallback = function(obj){
 
 };
 
+$scope.actionCallback = function(){
+    var data = {};
+    data['id'] = $('#rowid').val();
+    data['token'] = $('#token').val();
+    data['comment'] = $('#comment-cback').val();
+    data['daterent'] = $('#cbdates').val();
+    $http({
+      method: 'POST',
+      url: '/callbacker',
+      data: data
+    }).then(function successCallback(response) {
+          var result = eval(response.data);
+          if(result.status == 0){
+            $scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
+            $('#modal-callback').modal('hide');
+          }
+        }, function errorCallback(response) {
+          //console.log(response);
+    });
+
+};
 
 /**********START DATE PICKER RANG***************/
 	var now = new Date();

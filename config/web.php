@@ -92,6 +92,7 @@ $config = [
                 'getdatas' => 'site/getdatas',
                 'getuserlist' => 'site/getuserlist',
                 'getdatestocallback' => 'site/getdatestocallback',
+                'callbacker' => 'site/callbacker',
                 'report' => 'site/report',
                 'useraccount' => 'site/useraccount',
                 'download' => 'site/download',
