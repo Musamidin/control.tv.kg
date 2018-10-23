@@ -514,54 +514,40 @@ class HelperFunc extends Component
     return $retVal;
   }
 
-  public function textupdater($cdates,$str)
+  public function textupdater($dates)
   {
-    $rval = '';
-    $strr = '';
-    $flag = false;
-    $marr = explode(',',$str);
-    $dates = explode(',',$cdates);
-
-      for($i=0; $i < count($dates); $i++){
-        $key = array_search(date('d/m/Y',strtotime($dates[$i])),$marr);
-        if(!empty($key)){ 
-          unset($marr[$key]);
-          $flag = true;
+    $str = '';
+    if(!empty($dates)){
+        foreach ($dates as $item) {
+            $str .= date('d/m/Y',strtotime($item['daterent'])).',';
         }
-      }
-    if($flag == true){
-      for($i=0; $i < count($marr); $i++){
-        $strr .= $marr[$i].',';
-      }
-      $rval = substr($strr,0,-1);
-    }else{
-      $rval = $str;
+    $str = substr($str,0,-1);  
     }
-   return $rval;
+    return $str;
   }
 
   public function callback($data)
   {
-    $str = '';
+    $daterent = '';
     try{
       
-      $mh = MainHub::findOne($data['id']);
       $in = explode(',', $data['daterent']);
       if(!empty($in)){
         for($i = 0; $i < count($in); $i++){
-            $str .= "'".$in[$i]."',";
+            $daterent .= "'".$in[$i]."',";
         }
-        $str = substr($str, 0,-1);
+        $daterent = substr($daterent, 0,-1);
       }
       
-      $cmd1 = Yii::$app->db->createCommand("DELETE dates_hub WHERE mid = ".$data['id']." AND daterent IN(".$str.")");
+      $cmd1 = Yii::$app->db->createCommand("DELETE dates_hub WHERE mid = ".$data['id']." AND daterent IN(".$daterent.")");
       $cmd1->execute();
       
       $count = DatesHub::find()->where(['mid'=>$data['id']])->count();
-      
-      $dates_str = $this->textupdater($data['daterent'],$mh->dates);
+      $dates = DatesHub::find()->select(['daterent'])->where(['mid'=>$data['id']])->all();
+      $strdaterent = $this->textupdater($dates);
 
-      $cmd2 = Yii::$app->db->createCommand("UPDATE main_hub SET cday = {$count},dates = '{$dates_str}' WHERE id = ".$data['id']."");
+
+      $cmd2 = Yii::$app->db->createCommand("UPDATE main_hub SET cday = {$count},dates = '{$strdaterent}' WHERE id = ".$data['id']."");
       $cmd2->execute(); 
       
     }catch(Exception $ex){
