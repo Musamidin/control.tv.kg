@@ -560,7 +560,6 @@ class SiteController extends Controller
             }
 
             $retData = Yii::$app->HelperFunc->getDatas($data);
-
             foreach ($retData['mlv'] as $item) {
                 $string .= $item['text']."\r\n";
             }

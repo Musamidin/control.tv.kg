@@ -255,6 +255,9 @@ $this->title = 'Размещение бегущей строки на все Т�
                       <div class="col-md-12">
                           <?= $form->field($mainhub, 'text')->textarea(['autofocus' => false,'placeholder'=>'Текст объявления','ng-model'=>'data.text'])->label('Текст объявления'); ?>
                       </div>
+                      <div class="col-md-12">
+                          <p>Символов: <span class="sys_count">0</span></p>
+                      </div>
                   </div>
                 <?php ActiveForm::end(); ?>  
               </div>
