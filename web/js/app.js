@@ -93,6 +93,7 @@ $scope.addformaction = function(){
             $scope.pagination.current = 1;
             document.getElementById("addForm").reset();
             $('#addstate').html('(Запись успешно добавлен!)').css('color','#8fff00');
+            $('.sys_count').html(0);
 	    }else{
 	    	$('#addstate').html(state.message).css('color','red');
 	    }
@@ -226,7 +227,8 @@ $scope.actionCallback = function(){
 /********END DATE PICKER****************/
 $scope.addform = function(){
   	$("#status-response, #addstate").html('');
-    $('#mainhub-dates').val('');
+    $('#mainhub-dates,#mainhub-text').val('');
+    $('.sys_count').html(0);
   	$scope.getTvList();
 
     // $('#view-dates').html('');
