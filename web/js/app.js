@@ -247,6 +247,7 @@ $scope.addform = function(){
           if(state.status == 0){
               /**********START DATE PICKER***************/
               $('#mainhub-dates').datepicker({
+              	datesDisabled: state.holidays, 
                 startDate: moment(state.data).format('DD/MM/YYYY'),
                 multidate: true,
                 format: "dd/mm/yyyy",
@@ -265,6 +266,17 @@ $scope.addform = function(){
 
   	$('#modal-info-add-form').modal({ keyboard: false });
 };
+
+ function formatdate(dates){
+ 	var ret = [];
+ 	if(dates.length > 0){
+ 	 	for(var i = 0; i < dates.length; i++){
+ 			arr = dates[i].split('-');
+ 			ret.push(arr[2]+'/'+arr[1]+'/'+arr[0]);
+ 		}	
+ 	}
+ 	return ret; 
+ }
 
 $scope.importbtn = function(){
 	$scope.getTvList();

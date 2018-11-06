@@ -14,6 +14,7 @@ use app\models\ExportView;
 use app\models\ClientView;
 use app\models\UserDataView;
 use app\models\Channels;
+use app\models\Holidays;
 use app\models\ClientsDataView;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -512,6 +513,17 @@ class HelperFunc extends Component
       }
       
     return $retVal;
+  }
+
+  public function holidays()
+  {
+    $hd = Holidays::find()->select('days')->asArray()->orderBy(['id'=>SORT_DESC])->one();
+    if(!empty($hd['days'])){
+        return explode(',', $hd['days']);
+    }else{
+        return [];
+    }
+    
   }
 
   public function textupdater($dates)

@@ -11,80 +11,113 @@ $this->title = 'Изменить пароль';
 ?>
 <div class="site-settings">
 <input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
-<? if(Yii::$app->user->identity->role == 1): ?>
-    <div class="row sett-box" ng-controller="SettingsCtrl">
-      <div class="col-lg-12 pswd-box">
-        <div class="col-lg-12">
-            <h1>Пользователи</h1>
-            <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
-                <thead>
-                    <tr>
-                        <th>Логин</th>
-                        <th>Имя</th>
-                        <th>Права</th>
-                        <th>Статус</th>
-                        <th>API Key</th>
-                        <th>Действие</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="ul in userlist">
-                        <td>{{ul.login}}</td>
-                        <td>{{ul.name}}</td>
-                        <td>
-                            <div ng-switch="ul.role">
-                                <span ng-switch-when="0" class="label label-info">Агент</span>
-                                <span ng-switch-when="1" class="label label-primary ">Администратор</span>
-                                <span ng-switch-when="2" class="label label-warning">Менеджер</span>
-                            </div>
-                        </td>
-                        <td>
-                            <div ng-switch="ul.status">
-                                <span ng-switch-when="0" class="label label-success bg-purple">Работает</span>
-                                <span ng-switch-when="1" class="label label-danger">Отключен</span>
-                            </div>
-                        </td>
-                        <td>{{ul.access_token}}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                                  Действие <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                  <li><a href="javascript:void(0)" ng-click="onAction(ul,1)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
-                                  <li class="divider"></li>
-                                  <li><a href="javascript:void(0)" ng-click="onAction(ul,2)"><span class="fa fa-close"></span>&nbsp;Отключить</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-       </div> 
-    </div>
-<? endif; ?>
-    <br/>
-    <div class="row sett-box">
-      <div class="col-lg-12 pswd-box">
-        <div class="col-lg-6">
-            <h1><?= Html::encode($this->title) ?></h1>
-            <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
-                <?= $form->field($model, 'oldPassword')->passwordInput()->label('Старый пароль') ?>
-                <?= $form->field($model, 'newPassword')->passwordInput()->label('Новый пароль') ?>
-                <?= $form->field($model, 'retypePassword')->passwordInput()->label('Повторить новый пароль') ?>
-                <div class="form-group">
-                    <?= Html::submitButton('Изменить пароль', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
+
+<div class="row sett-box" ng-controller="SettingsCtrl">
+
+
+<script>
+$(function(){
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    //Получить название активной вкладки
+    var activeTab = $(e.target).text();
+    // Получить название предыдущей активной вкладки
+    var previousTab = $(e.relatedTarget).text(); 
+    $(".tab-active span").html(activeTab);
+    $(".tab-previous span").html(previousTab);
+  });
+});
+</script>
+
+    <!-- Вкладки (навигация по панелям) -->
+    <ul class="nav nav-tabs" id="myTabEvents">
+        <? if(Yii::$app->user->identity->role == 1): ?>
+            <li class="active"><a class="tabnav" data-toggle="tab" href="#evPanel1">Пользователи</a></li>
+            <? endif; ?>
+        <li><a class="tabnav" data-toggle="tab" href="#evPanel2">Изменить пароль</a></li>
+        <li><a class="tabnav" data-toggle="tab" href="#evPanel3">Документация API</a></li>
+        <? if(Yii::$app->user->identity->role == 1): ?>
+            <li><a class="tabnav" data-toggle="tab" href="#evPanel4">Нерабочие дни</a></li>
+        <? endif; ?>
+    </ul>
+         
+    <!-- Панели -->
+    <div class="tab-content" id="myTabContent">
+        <? if(Yii::$app->user->identity->role == 1): ?>
+        <!-- Панель 1 -->
+        <div id="evPanel1" class="tab-pane fade in active">
+            <!-- Содержимое панели 1 -->
+            <div class="col-lg-12 tab-box">
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                        <thead>
+                            <tr>
+                                <th>Логин</th>
+                                <th>Имя</th>
+                                <th>Права</th>
+                                <th>Статус</th>
+                                <th>API Key</th>
+                                <th>Действие</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ul in userlist">
+                                <td>{{ul.login}}</td>
+                                <td>{{ul.name}}</td>
+                                <td>
+                                    <div ng-switch="ul.role">
+                                        <span ng-switch-when="0" class="label label-info">Агент</span>
+                                        <span ng-switch-when="1" class="label label-primary ">Администратор</span>
+                                        <span ng-switch-when="2" class="label label-warning">Менеджер</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-switch="ul.status">
+                                        <span ng-switch-when="0" class="label label-success bg-purple">Работает</span>
+                                        <span ng-switch-when="1" class="label label-danger">Отключен</span>
+                                    </div>
+                                </td>
+                                <td>{{ul.access_token}}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                                          Действие <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                          <li><a href="javascript:void(0)" ng-click="onAction(ul,1)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
+                                          <li class="divider"></li>
+                                          <li><a href="javascript:void(0)" ng-click="onAction(ul,2)"><span class="fa fa-close"></span>&nbsp;Отключить</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div><?=isset($status) ? $status : ''; ?></div>
-                <br/>
-                <div class="api-box"><b>Ваш API Key:</b>&nbsp;&nbsp;<?=isset($accesstoken) ? $accesstoken : ''; ?></div>
-            <?php ActiveForm::end(); ?>
+            </div>
         </div>
-       </div> 
-    </div>
-    <br/>
-    <div class="row">
+        <? endif; ?>
+        <!-- Панель 2 -->
+        <div id="evPanel2" class="tab-pane fade">
+              <!-- Содержимое панели 2 -->
+            <div class="col-lg-12 tab-box">
+                <div class="col-lg-6">
+                    <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
+                        <?= $form->field($model, 'oldPassword')->passwordInput()->label('Старый пароль') ?>
+                        <?= $form->field($model, 'newPassword')->passwordInput()->label('Новый пароль') ?>
+                        <?= $form->field($model, 'retypePassword')->passwordInput()->label('Повторить новый пароль') ?>
+                        <div class="form-group">
+                            <?= Html::submitButton('Изменить пароль', ['class' => 'btn btn-primary', 'name' => 'change-button']) ?>
+                        </div>
+                        <div><?=isset($status) ? $status : ''; ?></div>
+                        <br/>
+                        <div class="api-box"><b>Ваш API Key:</b>&nbsp;&nbsp;<?=isset($accesstoken) ? $accesstoken : ''; ?></div>
+                    <?php ActiveForm::end(); ?>
+                </div>
+            </div>
+        </div>
+        <!-- Панель 3 -->
+        <div id="evPanel3" class="tab-pane fade">
+          <!-- Содержимое панели 3 -->
             <div class="col-lg-12 wiki-box">
                 <h1>Документация API</h1>
                 <div class="req-box">
@@ -131,5 +164,25 @@ $this->title = 'Изменить пароль';
                     <h4 class="header-tit">Запрос на получения статус заявки</h4>
                 </div>
             </div>
-        </div>   
+        </div>
+        <? if(Yii::$app->user->identity->role == 1): ?>
+        <!-- Панель 1 -->
+        <div id="evPanel4" class="tab-pane fade">
+            <!-- Содержимое панели 1 -->
+            <div class="col-lg-12 tab-box">
+                <div class="col-md-6">
+                    sdfsdf
+                </div>
+                <div class="col-md-6 text-right">
+                    <div id="list-dates"></div>
+                    <a id="getbydatetime" href="javascript:void(0)">
+                        <i class="glyphicon glyphicon-calendar getbydatetime"></i>
+                    </a>
+                    <input type="hidden" name="disableddays" id="disableddays">
+                </div> 
+            </div>
+        </div>
+        <? endif; ?>
     </div>
+
+</div>

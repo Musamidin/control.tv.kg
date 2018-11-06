@@ -323,10 +323,11 @@ class SiteController extends Controller
         
         if($data['token'] == md5(Yii::$app->session->getId().'opn')){
            $retData = (intval($data['cid']) == 0) ? Yii::$app->HelperFunc->dpickerblock() : Yii::$app->HelperFunc->getDatasToCallback($data);
-          //$retData = Yii::$app->HelperFunc->getDatasToCallback($data);
-          //return $retData;//Yii::$app->HelperFunc->dpickerblock();
+           $holidays = Yii::$app->HelperFunc->holidays();
+
           return json_encode(['status'=>0,
                             'data'=>$retData,
+                            'holidays' => $holidays,
                             'msg'=>'OK']
                           );
       }else{

@@ -81,8 +81,6 @@ $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv,
       }
     );
 
-
-
 $scope.onAccept = function(){
   $('#comment').val('');
   $('#actionBtn').html('Принять');
@@ -184,6 +182,26 @@ $scope.onAction = function(item){
 
 };
 }).controller("SettingsCtrl", function($scope,$http){
+
+$('#getbydatetime').datepicker({
+  startDate: '+1d',
+  multidate: true,
+  format: "yyyy-mm-dd",
+  startView: 0,
+  language: "ru",
+  //autoclose: true,
+  orientation: "bottom right"
+}).on('changeDate', function(e) {
+  //list-dates
+    var dates = [];
+    for(var i = 0; i < e.dates.length; i++){
+      if(e.dates.length > 0){
+        dates.push(moment(e.dates[i]).format('DD/MM/YYYY'));
+      }
+    }
+  
+  console.log(dates);
+});
 
   $scope.getUserList = function(){
     $http.get('/getuserlist?token='+$('#token').val()) // +'&pagenum='+pnum

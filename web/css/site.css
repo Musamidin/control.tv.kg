@@ -248,9 +248,10 @@ span.summ {
 .col-md-4.sum-box {
     width: 25%;
 }
-.col-lg-12.pswd-box {
+.col-lg-12.tab-box {
     border: 1px solid steelblue;
-    padding: 0px 10px 15px 10px;
+    padding: 10px 10px 15px 10px;
+    margin: 10px 0px;
 }
 .col-lg-7.wiki-box {
     margin-left: 10px;
@@ -292,3 +293,4 @@ div#view-dates {
     min-height: 150px;
     padding-left: 5px;
 }
+a#getbydatetime {font-size: 20px;}
