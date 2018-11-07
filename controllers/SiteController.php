@@ -46,6 +46,10 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getdatestocallback' || $action->id === 'callbacker'){
             $this->enableCsrfValidation = false;
+        }elseif($action->id ==='getholidaydates' || $action->id === 'setsave'){
+            $this->enableCsrfValidation = false;
+        }elseif($action->id ==='deletegetholidaydates'){
+            $this->enableCsrfValidation = false;
         }
 
         return parent::beforeAction($action);    
@@ -362,6 +366,58 @@ class SiteController extends Controller
       return json_encode(array('status'=>3,'message'=>'Error(Invalid token or your access denied!)'));
       }
     }
+
+    public function actionGetholidaydates()
+    {
+        header('Content-Type: application/json');
+        $request = Yii::$app->request->get();
+        if($request['token'] == md5(Yii::$app->session->getId().'opn') && Yii::$app->user->identity->role == 1){
+          $retData = Yii::$app->HelperFunc->getHolidayDates($request);
+          
+          return json_encode(['status'=>0,
+                              'data'=>[
+                                        'hdlist' => $retData['hdlist'],
+                                        'count' => $retData['count']],
+                                'msg'=>'OK']);
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token or your access denied!)'));
+        }
+    }
+
+    public function actionSetsave()
+    {
+        $data = Yii::$app->request->post();      
+        header('Content-Type: application/json');
+        if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
+            $saveresp = Yii::$app->HelperFunc->setsave($data);
+            if($saveresp){                
+                return json_encode(['status'=>0,'msg'=>'OK']);           
+            }else{ return json_encode(['error' => $saveresp]); }
+        }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
+            return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+
+    }
+
+    public function actionDeletegetholidaydates()
+    {
+        header('Content-Type: application/json');
+        $request = Yii::$app->request->get();
+        if($request['token'] == md5(Yii::$app->session->getId().'opn') && Yii::$app->user->identity->role == 1){
+          $retData = Yii::$app->HelperFunc->delHolidayDates($request);
+          if($retData){
+            return json_encode(['status'=>0,'msg'=>'OK']);
+        }else{
+            return json_encode(['status'=>0,'msg'=>$retData]);
+        }
+          
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token or your access denied!)'));
+        }
+    }
+
     public function actionSetdata()
     {
         $data = Yii::$app->request->post();      
@@ -373,8 +429,7 @@ class SiteController extends Controller
             }else{ return json_encode(['error' => $saveresp]); }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
         return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
-     }
-     else{
+     }else{
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
     }

@@ -343,13 +343,18 @@ $scope.removedata = function(){
 	        //console.log(response);
 	});
 
-
-
-
 };
 
-/*$("#mainhub-phone").mask("999999999",{placeholder:"XXX XX XX XX"}); */
+}).controller("SettingsCtrl", function($scope,$http){
 
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    //Получить название активной вкладки
+    var activeTab = $(e.target).text();
+    // Получить название предыдущей активной вкладки
+    var previousTab = $(e.relatedTarget).text(); 
+    $(".tab-active span").html(activeTab);
+    $(".tab-previous span").html(previousTab);
+  });
 
 }).filter("status", function()
 {	

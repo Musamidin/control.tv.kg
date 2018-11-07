@@ -294,3 +294,10 @@ div#view-dates {
     padding-left: 5px;
 }
 a#getbydatetime {font-size: 20px;}
+.row.add-date-box {
+    margin: 0;
+    border: 1px dashed #f39c12;
+    padding: 10px;
+}
+#hd-btn{display: none;margin-top: 5px;}
+.rem-btn{font-size: 16px;}

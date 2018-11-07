@@ -14,26 +14,14 @@ $this->title = 'Изменить пароль';
 
 <div class="row sett-box" ng-controller="SettingsCtrl">
 
-
-<script>
-$(function(){
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
-    //Получить название активной вкладки
-    var activeTab = $(e.target).text();
-    // Получить название предыдущей активной вкладки
-    var previousTab = $(e.relatedTarget).text(); 
-    $(".tab-active span").html(activeTab);
-    $(".tab-previous span").html(previousTab);
-  });
-});
-</script>
-
     <!-- Вкладки (навигация по панелям) -->
     <ul class="nav nav-tabs" id="myTabEvents">
+        <li class="active"><a class="tabnav" data-toggle="tab" href="#evPanel1">Изменить пароль</a></li>
+        
         <? if(Yii::$app->user->identity->role == 1): ?>
-            <li class="active"><a class="tabnav" data-toggle="tab" href="#evPanel1">Пользователи</a></li>
+            <li class="tabnav"><a class="tabnav" data-toggle="tab" href="#evPanel2">Пользователи</a></li>
             <? endif; ?>
-        <li><a class="tabnav" data-toggle="tab" href="#evPanel2">Изменить пароль</a></li>
+
         <li><a class="tabnav" data-toggle="tab" href="#evPanel3">Документация API</a></li>
         <? if(Yii::$app->user->identity->role == 1): ?>
             <li><a class="tabnav" data-toggle="tab" href="#evPanel4">Нерабочие дни</a></li>
@@ -43,9 +31,9 @@ $(function(){
     <!-- Панели -->
     <div class="tab-content" id="myTabContent">
         <? if(Yii::$app->user->identity->role == 1): ?>
-        <!-- Панель 1 -->
-        <div id="evPanel1" class="tab-pane fade in active">
-            <!-- Содержимое панели 1 -->
+        <!-- Панель 2 -->
+        <div id="evPanel2" class="tab-pane fade">
+            <!-- Содержимое панели 2 -->
             <div class="col-lg-12 tab-box">
                 <div class="col-lg-12">
                     <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
@@ -96,9 +84,9 @@ $(function(){
             </div>
         </div>
         <? endif; ?>
-        <!-- Панель 2 -->
-        <div id="evPanel2" class="tab-pane fade">
-              <!-- Содержимое панели 2 -->
+        <!-- Панель 1 -->
+        <div id="evPanel1" class="tab-pane fade in active">
+              <!-- Содержимое панели 1 -->
             <div class="col-lg-12 tab-box">
                 <div class="col-lg-6">
                     <?php $form = ActiveForm::begin(['id' => 'form-change']); ?>
@@ -170,16 +158,47 @@ $(function(){
         <div id="evPanel4" class="tab-pane fade">
             <!-- Содержимое панели 1 -->
             <div class="col-lg-12 tab-box">
-                <div class="col-md-6">
-                    sdfsdf
+                <div class="row add-date-box">
+                    <div class="col-md-6">
+                        <a id="getbydatetime" href="javascript:void(0)">
+                            <i class="glyphicon glyphicon-calendar getbydatetime"></i>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="list-dates"></div>
+                        <input type="hidden" name="disableddays" id="disableddays">
+                        <button ng-click="setSave()" id="hd-btn" class="btn btn-primary">Добаить</button>
+                    </div>
                 </div>
-                <div class="col-md-6 text-right">
-                    <div id="list-dates"></div>
-                    <a id="getbydatetime" href="javascript:void(0)">
-                        <i class="glyphicon glyphicon-calendar getbydatetime"></i>
-                    </a>
-                    <input type="hidden" name="disableddays" id="disableddays">
-                </div> 
+                <br/>
+                <div class="row list-disabled-box">
+                    <div class="col-md-12" ng-if="hdlist.length > 0">
+                        <table class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                <thead>
+                                <tr role="row">
+                                    <th class="sorting" aria-label="№">№</th>
+                                    <th class="sorting" aria-label="Дата">Дата</th>
+                                    <th class="sorting" aria-label="Телеканал">Нерабочие дни</th>
+                                    <th class="sorting" aria-label="Удалить">Удалить</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr role="row" class="odd" dir-paginate="hd in hdlist | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
+                                  <td>{{hd.id}}</td>
+                                  <td>{{hd.datetime | formatDatetime}}</td>
+                                  <td>{{hd.days}}</td>
+                                  <td>
+                                    <a ng-click="deletebtn(hd)" class="rem-btn" href="javascript:void(0)">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                  </td>
+                                </tr>
+                                </tbody>
+                      </table>
+                      <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">
+                      </dir-pagination-controls>
+                    </div>
+                </div>
             </div>
         </div>
         <? endif; ?>

@@ -183,25 +183,107 @@ $scope.onAction = function(item){
 };
 }).controller("SettingsCtrl", function($scope,$http){
 
-$('#getbydatetime').datepicker({
-  startDate: '+1d',
-  multidate: true,
-  format: "yyyy-mm-dd",
-  startView: 0,
-  language: "ru",
-  //autoclose: true,
-  orientation: "bottom right"
-}).on('changeDate', function(e) {
-  //list-dates
-    var dates = [];
-    for(var i = 0; i < e.dates.length; i++){
-      if(e.dates.length > 0){
-        dates.push(moment(e.dates[i]).format('DD/MM/YYYY'));
+$scope.totalmainlist = 0;
+$scope.mainlistPerPage = 15;
+$scope.pagination = { current: 1 };
+
+$scope.pageChanged = function(newPage) {
+    $scope.getData(newPage,$scope.mainlistPerPage);
+};
+
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
+    //Получить название активной вкладки
+    var activeTab = $(e.target).text();
+    // Получить название предыдущей активной вкладки
+    var previousTab = $(e.relatedTarget).text(); 
+    $(".tab-active span").html(activeTab);
+    $(".tab-previous span").html(previousTab);
+  });
+
+
+  $('#getbydatetime').datepicker({
+    startDate: '+1d',
+    multidate: true,
+    format: "yyyy-mm-dd",
+    startView: 0,
+    language: "ru",
+    //autoclose: true,
+    //orientation: "bottom right"
+  }).on('changeDate', function(e) {
+      var dates = [];
+      var str = '';
+      for(var i = 0; i < e.dates.length; i++){
+        if(e.dates.length > 0){
+          dates.push(moment(e.dates[i]).format('DD/MM/YYYY'));
+          str += moment(e.dates[i]).format('DD/MM/YYYY')+'<br/>';
+        }
       }
+    $('#list-dates').html(str);
+    $('#disableddays').val(dates);
+    if(dates.length > 0){
+      $('#hd-btn').show();
+    }else{
+      $('#hd-btn').hide();
     }
-  
-  console.log(dates);
-});
+    //console.log(dates);
+  });
+
+  $scope.setSave = function(){
+      var data ={};
+      data['token'] = $('#token').val();
+      data['days'] = $('#disableddays').val();
+      $http({
+        method: 'POST',
+        url: '/setsave',
+        data: data
+      }).then(function successCallback(response) {
+          var state = eval(response.data);
+          if(state.status == 0){
+              $scope.getHolidayDates($scope.pagination.current,$scope.mainlistPerPage);
+              $('#hd-btn').hide();
+              $('#list-dates').html('');
+              $('#disableddays').val('');
+              $('#getbydatetime').datepicker('update','');
+          }else{
+            alert('Error!');
+          }
+        }, function errorCallback(response) {
+              //console.log(response);
+      });    
+  };
+  $scope.deletebtn = function(event){
+    $http.get('/deletegetholidaydates?id='+ event.id +'&token='+ $('#token').val())
+          .then(function(result) {
+            var respdata = eval(result.data);
+            if(respdata.status == 0){
+              $scope.getHolidayDates($scope.pagination.current,$scope.mainlistPerPage);
+            } else if(respdata.status > 0){
+                alert(respdata.msg);
+            }
+          }, function errorCallback(response) {
+              //console.log(response);
+          });
+  };
+
+  $scope.getHolidayDates = function(pnum,shpcount){
+    $http.get('/getholidaydates?'+
+              'page='+ pnum +
+              '&shpcount='+ shpcount +
+              '&token='+ $('#token').val()
+              )
+          .then(function(result) {
+            var respdata = eval(result.data);
+            if(respdata.status == 0){
+                  $scope.hdlist = eval(respdata.data.hdlist);
+                  $scope.totalmainlist = eval(respdata.data.count);
+            } else if(respdata.status > 0){
+                alert(respdata.msg);
+            }
+          }, function errorCallback(response) {
+              //console.log(response);
+          });
+  };
+  $scope.getHolidayDates($scope.pagination.current,$scope.mainlistPerPage);
 
   $scope.getUserList = function(){
     $http.get('/getuserlist?token='+$('#token').val()) // +'&pagenum='+pnum
@@ -215,7 +297,7 @@ $('#getbydatetime').datepicker({
           }, function errorCallback(response) {
               //console.log(response);
           });
-    };
+  };
 
   $scope.getUserList();
 

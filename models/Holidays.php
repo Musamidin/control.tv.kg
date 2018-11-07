@@ -10,6 +10,7 @@ use Yii;
  * @property int $id
  * @property string $days
  * @property string $datetime
+ * @property int $status
  */
 class Holidays extends \yii\db\ActiveRecord
 {
@@ -29,6 +30,7 @@ class Holidays extends \yii\db\ActiveRecord
         return [
             [['days'], 'string'],
             [['datetime'], 'safe'],
+            [['status'], 'integer'],
         ];
     }
 
@@ -41,6 +43,7 @@ class Holidays extends \yii\db\ActiveRecord
             'id' => 'ID',
             'days' => 'Days',
             'datetime' => 'Datetime',
+            'status' => 'Status',
         ];
     }
 }

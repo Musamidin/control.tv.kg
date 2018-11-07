@@ -21,7 +21,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use app\models\MyReadFilter;
 use app\models\User;
-
 /**
  * This command echoes the first argument that you have entered.
  *
@@ -524,6 +523,61 @@ class HelperFunc extends Component
         return [];
     }
     
+  }
+
+  public function getHolidayDates($param)
+  {
+    $data = [];
+    try{
+      $data['count'] = Holidays::find()->where(['status'=> 0])->count();
+      
+      $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+      $data['hdlist'] = Holidays::find()
+      ->where(['status'=> 0])
+      ->offset($pagination->offset)
+      ->limit($pagination->limit)
+      ->asArray()
+      ->orderBy(['id'=>SORT_DESC])
+      ->all();
+
+      return $data;
+    }catch(Exception $e){
+        return $e->errorInfo;
+        //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+    }
+  }
+
+  public function setsave($data)
+  {
+    try{
+      unset($data['token']);
+      $hd = new Holidays();
+      $hd->attributes = $data;
+      if($hd->validate()){
+        if($hd->save(false)){
+          return true;
+        }else{
+          return false;
+        }
+      }else{
+        return false;
+      }
+
+    }catch(Exception $e){
+      return $e;
+    }
+  }
+
+  public function delHolidayDates($data)
+  {
+    try{
+      $hd = Holidays::findOne($data['id']);
+      $hd->status = 1;
+      if($hd->save()){ return true; }else{ return false; }
+    }catch(Exception $e){
+      return $e;
+    }
   }
 
   public function textupdater($dates)
