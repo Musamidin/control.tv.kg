@@ -13,6 +13,7 @@ body {
 .wrap > .container {
     padding: 70px 15px 20px;
     width: 98%;
+    min-height: 100%;
 }
 
 .footer {

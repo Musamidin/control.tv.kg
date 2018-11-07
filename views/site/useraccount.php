@@ -9,10 +9,10 @@ $tvlist = Yii::$app->HelperFunc->getTvlist();
 
 $this->title = 'Изменить пароль';
 ?>
-<div class="site-settings">
-<input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
 
 <div class="row sett-box" ng-controller="SettingsCtrl">
+
+<input type="hidden" name="token" value="<?=md5(Yii::$app->session->getId().'opn'); ?>" id="token"/>
 
     <!-- Вкладки (навигация по панелям) -->
     <ul class="nav nav-tabs" id="myTabEvents">
