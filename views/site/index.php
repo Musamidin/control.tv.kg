@@ -55,7 +55,7 @@ $this->title = 'Размещение бегущей строки на все Т�
 </div>
 <br/>
     <div class="row">
-        <div ng-if="mainlistview.length > 0" class="col-md-12">
+        <div class="col-md-12">
             <a id="expt-excel" class="export-excel" href="/exptexcel?token=<?=md5(Yii::$app->session->getId().'opn'); ?>&daterange=<?=date('Y-m-d')?> / <?=date('Y-m-d')?>&bytv=0&sts=0">
                 <i class="fa fa-file-excel-o"></i>
             </a>
