@@ -229,13 +229,14 @@ class HelperFunc extends Component
   {
         $data = [];
         try{
+            $key = ($param['field'] === 'id') ? '=' : 'LIKE';
             $data['count'] = AdminModerView::find()
-            ->filterWhere(['LIKE', $param['field'], $param['key']])
+            ->filterWhere([$key, $param['field'], $param['key']])
             ->andWhere(['!=','status',88])
             ->count();
 
             $data['mlv'] = AdminModerView::find()
-            ->filterWhere(['LIKE', $param['field'], $param['key']])
+            ->filterWhere([$key, $param['field'], $param['key']])
             ->andWhere(['!=','status',88])
             ->asArray()
             ->orderBy(['id'=>SORT_DESC])
@@ -252,14 +253,15 @@ class HelperFunc extends Component
   {
         $data = [];
         try{
+            $key = ($param['field'] === 'id') ? '=' : 'LIKE';
             $data['count'] = UserDataView::find()
-            ->filterWhere(['LIKE', $param['field'], $param['key']])
+            ->filterWhere([$key, $param['field'], $param['key']])
             ->andWhere(['!=','status',88])
             ->andWhere(['client_id'=> Yii::$app->user->identity->getId()])
             ->count();
 
             $data['mlv'] = UserDataView::find()
-            ->filterWhere(['LIKE', $param['field'], $param['key']])
+            ->filterWhere([$key, $param['field'], $param['key']])
             ->andWhere(['!=','status',88])
             ->andWhere(['client_id'=> Yii::$app->user->identity->getId()])
             ->asArray()

@@ -326,7 +326,6 @@ class SiteController extends Controller
 
         if($data['token'] == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getDatas($data);
-          
           return json_encode(['status'=>0,
                             'data'=>[
                                 'mainlistview' => $retData['mlv'],
@@ -634,8 +633,14 @@ class SiteController extends Controller
             }
 
             $retData = Yii::$app->HelperFunc->getDatas($data);
+            $tarr = [];
             foreach ($retData['mlv'] as $item) {
-                $string .= $item['text']."\r\n";
+                //$string .= $item['text']."\r\n";
+                array_push($tarr, $item['text']);
+            }
+            shuffle($tarr);
+            foreach ($tarr as $itm){
+                $string .=$itm."\r\n";
             }
             return $string;
         }else{
