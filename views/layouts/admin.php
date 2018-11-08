@@ -28,6 +28,13 @@ AdminAsset::register($this);
 
 <div class="wrap">
     <?php
+    $search = '<form class="navbar-form navbar-nav text-center nav-srch">
+            <div class="srch form-group has-success has-feedback">
+              <input type="text" placeholder="Поиск заявки по тексту, номеру" id="searcher" class="min-w input-sm form-control">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+      </form>';
+
     NavBar::begin([
         'brandLabel' => 'Online TV Маркет', //Yii::$app->name
         'brandUrl' => '/',
@@ -55,6 +62,8 @@ AdminAsset::register($this);
             )
         ],
     ]);
+    echo $search;
+
     NavBar::end();
     ?>
     <div class="container">

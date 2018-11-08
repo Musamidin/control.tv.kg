@@ -19,6 +19,42 @@ $scope.maxDate = moment(new Date()).format('DD/MM/YYYY');
 var dateft = moment(new Date()).format('YYYY-MM-DD');
 $scope.dfdt = dateft +' / '+ dateft;
 
+
+$(document).on('keyup','#searcher',function(){
+      if($.isNumeric(this.value) == true){
+        if(this.value.length > 1){
+          search('id',this.value);
+        }else if(this.value.length == 0){
+          //$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
+        }
+      }else{
+        if(this.value.length > 4){
+          search('text',this.value);
+        }else if(this.value.length == 0){
+          //$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
+        }
+      }
+});
+
+var search = function(field,value){
+  $http({
+    method: 'POST',
+    url: '/searchajax',
+    data: { field: field, key: value, token : $('#token').val() }
+  }).then(function successCallback(result) {
+        var respdata = eval(result.data);
+        if(respdata.status == 0){
+              $scope.mainlistview = eval(respdata.data.mainlistview);
+              $scope.totalmainlist = eval(respdata.data.count);
+        } else if(respdata.status > 0){
+            alert(respdata.msg);
+        }
+    }, function errorCallback(response) {
+        //console.log(response);
+  });
+};
+
+
 $scope.pageChanged = function(newPage) {
          $scope.getUserData(newPage,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
   };

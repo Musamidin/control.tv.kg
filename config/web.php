@@ -89,6 +89,7 @@ $config = [
                 'admin' => 'site/admin',
                 'export' => 'site/export',
                 'getdata' => 'site/getdata',
+                'searchajax' => 'site/searchajax',
                 'getdatas' => 'site/getdatas',
                 'getuserlist' => 'site/getuserlist',
                 'getdatestocallback' => 'site/getdatestocallback',

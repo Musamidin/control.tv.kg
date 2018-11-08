@@ -48,7 +48,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='getholidaydates' || $action->id === 'setsave'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='deletegetholidaydates'){
+        }elseif($action->id ==='deletegetholidaydates' || $action->id === 'searchajax'){
             $this->enableCsrfValidation = false;
         }
 
@@ -270,6 +270,24 @@ class SiteController extends Controller
             return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }
+    public function actionSearchajax()
+    {
+        header('Content-Type: application/json');
+        $data = Yii::$app->request->post();
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
+            if(Yii::$app->user->identity->role == 1){
+                $retData = Yii::$app->HelperFunc->getDataSearchAdm($data);
+            }else{
+                $retData = Yii::$app->HelperFunc->getDataSearchUsr($data);
+            }
+          return json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count'],'total'=>[] ],
+                            'msg'=>'OK']
+                          );
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }    
     public function actionGetuserdata()
     {
         //\Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

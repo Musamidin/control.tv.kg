@@ -115,6 +115,12 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+.nav-srch{
+    width: 44% !important;
+    border-color: #101010;
+}
+.nav-srch > .srch{ width: 100% !important; }
+.srch > input{ width: 100% !important; }
 
 @media (max-width: 420px) {
   .tabMenu a.active {
