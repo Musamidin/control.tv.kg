@@ -37,6 +37,7 @@ class ApiController extends ActiveController
         //         HttpBearerAuth::className(),
         //     ],
         // ];
+        // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
         $behaviors['authenticator'] = [
             'class' => HttpBearerAuth::className(), //включаем аутентификацию по токену
             'except' => ['options','login'],
@@ -48,6 +49,7 @@ class ApiController extends ActiveController
             'formats' => [
                 'application/json' => Response::FORMAT_JSON,
                 'application/xml' => Response::FORMAT_XML,
+                'application/html' => Response::FORMAT_HTML,
             ],
         ];
 
@@ -60,9 +62,6 @@ class ApiController extends ActiveController
         //         'Access-Control-Request-Headers' => ['*'],
         //     ],
         // ];
-
-        // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
-        $behaviors['authenticator']['except'] = ['options', 'login', 'signup'];
 
         $behaviors['access'] = [
             'class' => AccessControl::className(),
@@ -79,7 +78,8 @@ class ApiController extends ActiveController
                         // 'delete',
                         // 'view',
                         //'index',
-                        'ontvxml' => ['POST'],
+                        'ontvrawxml' => ['POST'],
+                        'ontvxwwwformxml' => ['POST'],
                         'ontvjson' => ['POST'],
                         'getstatusjson' => ['POST'],
                     ],
@@ -98,7 +98,8 @@ class ApiController extends ActiveController
                 // 'delete' => ['DELETE'],
                 // 'view' => ['GET'],
                 // 'index' => ['GET'],
-                'ontvxml' => ['POST'],
+                'ontvrawxml' => ['POST'],
+                'ontvxwwwformxml' => ['POST'],
                 'ontvjson' => ['POST'],
                 'getstatusjson' => ['POST'],
             ],
@@ -124,42 +125,18 @@ class ApiController extends ActiveController
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionOntvxml()
+    public function actionOntvrawxml()
     {
         \Yii::$app->response->format = Response:: FORMAT_XML;
-        // $mh = new MainHub();
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        //     // return $this->redirect(['view', 
-        //     //     'id' => $model->id,
-        //     //     //'vi' => Yii::$app->request->post()
-        //     //     ]);
 
-        // } else {
-        //     return $this->render('create', [
-        //         'model' => $model,
-        //     ]);
-        // }
-        //$mh->scenario = MainHub::SCENARIO_CREATE;
- 
-        // $mh->attributes = \yii::$app->request->post();
- 
-        //   if($mh->validate())
-        //   {
-        //    $mh->save();
-        //    return array('status' => true, 'data'=> 'mh record is successfully updated');
-        //   }else{
-        //    return array('status'=>false,'data'=>$mh->getErrors());
-        //   }
-        //return Yii::$app->request->getMethod();
-        //return $this->redirect(['view','id' => \yii::$app->request->post()->id]);
-        //return Yii::$app->getRequest()->getBodyParams();//$_GET;//Yii::$app->getRequest()->getBodyParams();
-        // $methods_to_check = array('POST', 'PUT');
-        // if(in_array(strtoupper(Yii::$app->request->getMethod()), $methods_to_check)){
-        //     return ['method is:' => Yii::$app->request->getMethod()];
-        // }else{
-        //     return $_REQUEST;//Yii::$app->request->getMethod();
-        // }
-        return Yii::$app->request->bodyParams;
+        $data = Yii::$app->Modules->xmlToArray(Yii::$app->request->getRawBody());
+        $resp = Yii::$app->HelperFunc->save($data);
+        return $resp;
+        //$arr = Yii::$app->HelperFunc->validateDates($data['dates']);
+        //$hd = Yii::$app->HelperFunc->upDatesStr($data['dates']);
+        //print_r($hd);
+
+        //Yii::$app->request->getRawBody();
 /*
         [
                 'method:' => Yii::$app->request->getMethod(), 
@@ -170,6 +147,14 @@ class ApiController extends ActiveController
                 ]; */
     }
 
+    public function actionOntvxwwwformxml()
+    {
+        
+        \Yii::$app->response->format = Response:: FORMAT_XML;
+
+        return Yii::$app->request->getRawBody;
+    }
+
     public function actionOntvjson()
     {
     	$resp = null;
@@ -178,7 +163,7 @@ class ApiController extends ActiveController
         $model->attributes = Yii::$app->request->post();
         if($model->validate()){
         	//return Yii::$app->request->post('phone');
-        	$resp = Yii::$app->HelperFunc->save(Yii::$app->request->post(),true);
+        	$resp = Yii::$app->HelperFunc->save(Yii::$app->request->post());
         	if($resp != false){
         		return ['status'=>0, 'message'=> 'OK','id'=>$resp];
         	}else{

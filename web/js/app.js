@@ -128,7 +128,7 @@ $scope.addformaction = function(){
          	$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
             $scope.pagination.current = 1;
             document.getElementById("addForm").reset();
-            $('#addstate').html('(Запись успешно добавлен!)').css('color','#8fff00');
+            $('#addstate').html(state.message).css('color','#8fff00');
             $('.sys_count').html(0);
 	    }else{
 	    	$('#addstate').html(state.message).css('color','red');

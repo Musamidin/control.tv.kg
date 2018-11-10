@@ -440,10 +440,12 @@ class SiteController extends Controller
         $data = Yii::$app->request->post();      
         header('Content-Type: application/json');
         if(isset($data['token']) == md5(Yii::$app->session->getId().'opn')){
-            $saveresp = Yii::$app->HelperFunc->save($data,true);
-            if($saveresp > 0){                
-                return json_encode(['status'=>0,'msg'=>'OK']);           
-            }else{ return json_encode(['error' => $saveresp]); }
+            $saved = Yii::$app->HelperFunc->save($data);
+            if(intval($saved['id']) > 0){                
+                return json_encode(['status'=>0,'message'=>$saved['message']]);           
+            }else{
+                return json_encode(['status'=>4,'message' => $saved['message']]); 
+            }
      }else if(isset($data['token']) != md5(Yii::$app->session->getId().'opn')){
         return json_encode(array('status'=>2,'message'=>'Сессия истек! Пожалуйста обновите страницу или зайдите в систему заново!'));
      }else{

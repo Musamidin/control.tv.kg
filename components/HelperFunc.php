@@ -34,13 +34,15 @@ class HelperFunc extends Component
 
   public function savedb($fileName,$fileType)
   {
-        try{
-             if($fileType == 'xlsx'){
+      try{
+             
+          if($fileType == 'xlsx'){
                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-             }elseif($fileType == 'xls'){
+          }elseif($fileType == 'xls'){
                 $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-             }
-            $reader->setReadDataOnly(true);
+          }
+          
+          $reader->setReadDataOnly(true);
             //$reader->setLoadSheetsOnly(["sheet1"]);
             //$reader->setReadFilter( new MyReadFilter() );
             $spreadsheet = $reader->load(\Yii::$app->basePath.'\web\data\\'.$fileName);
@@ -60,73 +62,160 @@ class HelperFunc extends Component
                         unset($row[$key]);
                         $row['dates'] = $value;
                     }
-                    // elseif($key == 'E'){
-                    //     unset($row[$key]);
-                    //     $row['state'] = $value;
-                    // }
+                    $this->save($row);
                 }
                 $rows[] = $row;
             }
 
-            return $this->save($rows,false);
+        //return $this->save($rows);
                     
-        }catch(Exception $e){
+      }catch(Exception $e){
             return $e;
+      }
+  }
+
+  public function save($data)
+  {
+    try{
+          $mh = new MainHub();
+          $mh->attributes = $data;
+          if($mh->validate())
+          {
+            $vdate = $this->validateDates($data['dates']);
+            if(!empty($vdate) && count($vdate) > 0)
+            {
+              //$mh->phone = $data['phone'];
+              $mh->chid = $data['chid'];
+              $mh->text = $data['text'];
+              $mh->dates = $this->upDatesStr($vdate);
+              $mh->state = 0;
+              $mh->client_id = Yii::$app->user->identity->getId();
+              $mh->cday = count($vdate);
+              if($mh->save())
+              {
+                foreach($vdate as $itm)
+                {
+                  $dh = new DatesHub();
+                  $dh->daterent = $itm;
+                  $dh->astatus = 0;
+                  $dh->mid = $mh->id;
+                  $dh->save();
+                }
+                return [
+                        'id'=> $mh->id,
+                        'coutDays' => $mh->cday,
+                        'status' => 0,
+                        'message'=> 'Запись успешно добавлен'
+                        ];
+              }else{
+                return [
+                        'id'=> 0,
+                        'coutDays' => 0,
+                        'status' => 1,
+                        'message'=>'Произашло ошибка при сохранения в БД. Обратитесь к администратору!'
+                        ];
+              }
+            }else{
+              return [
+                        'id'=> 0,
+                        'coutDays' => 0,
+                        'status' => 2,
+                        'message'=>'Даты проката неправильные'
+                        ];
+            }
+          }else{
+            return $mh->errors;
+          }
+        }catch(Exception $ex){
+          return $ex;
         }
   }
 
-  public function save($data,$single = false)
+  public function checkDates($dates)
   {
-            if($single == true){
-                try{
-                    $mh = new MainHub();
-                    $mh->attributes = $data;
-                    if($mh->validate()){
-                        //$mh->phone = $data['phone'];
-                        $mh->chid = $data['chid'];
-                        $mh->text = $data['text'];
-                        $mh->dates = $data['dates'];
-                        $mh->state = 0;
-                        $mh->client_id = Yii::$app->user->identity->getId();
-                        $mh->cday = $this->getCoutDays($data['dates']);
-                        if($mh->save()){
-                            $this->arr_map($data['dates'],$mh->id);
-                            return $mh->id;
-                        }else{
-                            return false; //['error'=> 'save false'];
-                        }
-                    }else{ return false; } //['error'=> 'validate false']; }
-                    
-                }catch(Exception $ex){
-                    return $ex;
-                }
+    $hdays = [];
+    $date = date('Y-m-d',strtotime(str_replace('/', '-', $dates)));
+    if($date >= $this->dpickerblock())
+    {
+      if(count($this->holidaysf()) > 0)
+      {
+        if( in_array( $date, $this->holidaysf() ) ){
+            return false;
+        }else{
+            return true;
+        }
+      }else{
+        return true;
+      }
+    }else{
+      return false;
+    }
+  }
 
+/* Функция validateDates() принимает строкувую дату 
+формате (dd/mm/yyyy,dd/mm/yyyy) или (dd/mm/yyyy-dd/mm/yyyy) 
+Возвращает массив даты формате YYYY-mm-dd или пустой массив [] 
+*/
+  public function validateDates($data)
+  {
+    $dates = [];
+    if(preg_match("/[\-]+/",$data)){
+        try{
+            $arr = preg_split("/[\-]+/",$data);
+            $dts = date('Y-m-d',strtotime(str_replace('/', '-', $arr[0])));
+            $dte = date('Y-m-d',strtotime(str_replace('/', '-', $arr[1])));
+
+            if($this->checkDates($arr[0]) && $this->checkDates($arr[1]))
+            {
+              $start = new DateTime($dts);
+              $interval = new \DateInterval('P1D');
+              $end = new DateTime($dte);
+              $end->add(new \DateInterval('P1D'));
+              $period = new \DatePeriod($start, $interval, $end);
+              foreach ($period as $date)
+              {
+                array_push($dates, $date->format('Y-m-d'));
+              }
+              return $dates;
             }else{
-                try{
-                    foreach($data as $itm) {
-                        $mh = new MainHub();
-                        $mh->attributes = $itm;
-                        if($mh->validate()){
-                            //$mh->phone = $itm['phone'];
-                            $mh->chid = $itm['chid'];
-                            $mh->text = $itm['text'];
-                            $mh->dates = $itm['dates'];
-                            $mh->state = 0;//$itm['state'];
-                            $mh->client_id = Yii::$app->user->identity->getId();
-                            $mh->cday = $this->getCoutDays($itm['dates']);
-                            if($mh->save()){
-                                $this->arr_map($itm['dates'],$mh->id);
-                                //return true;
-                            }else{
-                                return false;
-                            }
-                        }else{ return false; }
-                    }  
-                }catch(Exception $exc){
-                    return $exc;
-                }
+              return $dates = [];
+            }
+        }catch(Exception $e){
+          return $e;
+        }
 
-            }   
+    }elseif(preg_match("/[\,]+/",$data)){
+        try{
+            $arr = explode(',', $data);
+            foreach($arr as $itm)
+            {
+              if($this->checkDates(trim($itm)))
+              {
+                array_push($dates, date('Y-m-d',strtotime(str_replace('/', '-', $itm))));
+              }
+            }
+            return $dates;
+        }catch(Exception $e){
+          return $e;
+        }
+    }else{
+        if(!empty($data)){
+          array_push($dates,date('Y-m-d',strtotime(str_replace('/', '-', $data))));
+          return $dates;
+
+        }else{ return $dates; }
+    }
+  }
+
+  public function upDatesStr($data)
+  {
+    $str = '';
+    if(count($data) > 0){
+        foreach ($data as $itm) {
+          $str .= implode('/', array_reverse(explode('-', $itm))).',';
+        }
+    }
+    return substr($str, 0,-1);
   }
 
   public function arr_map($data,$id)
@@ -566,13 +655,44 @@ class HelperFunc extends Component
 
   public function holidays()
   {
-    $hd = Holidays::find()->select('days')->asArray()->orderBy(['id'=>SORT_DESC])->one();
+    $hd = Holidays::find()
+    ->select('days')
+    ->where(['status'=> 0])
+    ->asArray()
+    ->orderBy(['id'=>SORT_DESC])
+    ->one();
     if(!empty($hd['days'])){
         return explode(',', $hd['days']);
     }else{
         return [];
     }
     
+  }
+
+  public function holidaysf()
+  {
+
+      $dates = [];
+      $hd = Holidays::find()
+      ->select('days')
+      ->where(['status'=> 0])
+      ->asArray()
+      ->orderBy(['id'=>SORT_DESC])
+      ->one();
+      if(!empty($hd['days'])){
+          $data = explode(',', $hd['days']);
+          if(!empty($data)){
+            foreach ($data as $itm) {
+              array_push($dates,date('Y-m-d',strtotime(str_replace('/', '-', $itm))));
+          }
+          return $dates;
+          }else{ 
+            return $dates;
+          }
+
+      }else{
+          return $dates;
+      }
   }
 
   public function getHolidayDates($param)

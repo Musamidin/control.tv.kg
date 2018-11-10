@@ -28,6 +28,7 @@ $config = [
             ]
         ],
         'HelperFunc' => ['class'=>'app\components\HelperFunc'],
+        'Modules' => ['class'=>'app\components\Modules'],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'Sf7LapkC_wdc9me7F4TH74Hyf1XfTQV_',
@@ -108,7 +109,8 @@ $config = [
                 'setdata' => 'site/setdata',
                 'remove' => 'site/remove',
                 'onaction' => 'site/onaction',
-                'ontvxml' => 'api/ontvxml',
+                'ontvrawxml' => 'api/ontvrawxml',
+                'ontvxwwwformxml' => 'api/ontvxwwwformxml',
                 'ontvjson' => 'api/ontvjson',
                 'getstatusjson' => 'api/getstatusjson',
                 ['class' => 'yii\rest\UrlRule','controller' => 'api','pluralize'=>false],
