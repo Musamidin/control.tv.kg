@@ -127,24 +127,16 @@ class ApiController extends ActiveController
      */
     public function actionOntvrawxml()
     {
-        \Yii::$app->response->format = Response:: FORMAT_XML;
+        
+        Yii::$app->response->format = Response:: FORMAT_XML;
 
         $data = Yii::$app->Modules->xmlToArray(Yii::$app->request->getRawBody());
         $resp = Yii::$app->HelperFunc->save($data);
         return $resp;
+
         //$arr = Yii::$app->HelperFunc->validateDates($data['dates']);
         //$hd = Yii::$app->HelperFunc->upDatesStr($data['dates']);
         //print_r($hd);
-
-        //Yii::$app->request->getRawBody();
-/*
-        [
-                'method:' => Yii::$app->request->getMethod(), 
-                'POSTER' =>$_POST, 
-                'GETTER' => $_GET,
-                'IP' => Yii::$app->request->userIP,
-                'ts' => $request->bodyParams,
-                ]; */
     }
 
     public function actionOntvxwwwformxml()
@@ -152,7 +144,7 @@ class ApiController extends ActiveController
         
         \Yii::$app->response->format = Response:: FORMAT_XML;
 
-        return Yii::$app->request->getRawBody;
+        return Yii::$app->request->post();
     }
 
     public function actionOntvjson()
