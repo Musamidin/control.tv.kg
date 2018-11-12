@@ -154,11 +154,12 @@ $scope.onCallback = function(obj){
       data: data
     }).then(function successCallback(response) {
         var state = eval(response.data);
-        var ts = null;
+        var firstData = null,lastData=null;
         if(state.data.length > 0){
-          ts = state.data.pop();
-          $scope.maxDate = moment(ts.daterent).format('DD/MM/YYYY');
-          $scope.minDate = moment(state.data[0].daterent).format('DD/MM/YYYY');
+          firstData = state.data[0];
+		  lastData = state.data.slice(-1)[0];
+          $scope.maxDate = moment(lastData.daterent).format('DD/MM/YYYY');
+          $scope.minDate = moment(firstData.daterent).format('DD/MM/YYYY');
           //console.log($scope.minDate);
           /**********START DATE PICKER INLINE***************/
           $('#mydatepicker').datepicker({
