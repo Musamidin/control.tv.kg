@@ -120,8 +120,15 @@ class SiteController extends Controller
     
     public function actionAbout()
     {
+        $messageLog = [
+         'status' => 'Платеж не прошел.',
+         'post' => ['test'=>'Uraaa!']
+        ];
+        print_r($messageLog);
+        Yii::error($messageLog,'writelog');
+        Yii::info($messageLog, 'sendlog'); //запись в лог
         //$this->layout = 'client';
-        return $this->render('aboutRu');
+        //return $this->render('aboutRu');
     }
     
     public function actionLogin()

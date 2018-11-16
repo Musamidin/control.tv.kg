@@ -48,6 +48,7 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
+            //'viewPath' => '@common/mail',
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
@@ -62,11 +63,28 @@ $config = [
             ],    
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => 0,//YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget', //в файл
+                    'categories' => ['writelog'], //категория логов
+                    'logFile' => '@runtime/logs/warning.log', //куда сохранять
+                    'logVars' => [] //не добавлять в лог глобальные переменные ($_SERVER, $_SESSION...)
+                ],
+                [
+                    'class' => 'yii\log\EmailTarget', //шлет на e-mail
+                    'categories' => ['sendlog'],
+                    'mailer' => 'mailer',
+                    //'logVars' => [],
+                    'message' => [
+                            'from' => ['sales@myservice.kg' => 'НА ТВ'], //от кого
+                            'to' => ['musa@cs.kg'], //кому
+                            'subject' => 'Критическая ошибка!', //тема
+                        ],
                 ],
             ],
         ],
