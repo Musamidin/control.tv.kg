@@ -7,7 +7,7 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
-class UserIdentity extends User implements IdentityInterface
+class UserIdentity extends UserAgents implements IdentityInterface
 {
 
     /**
@@ -28,12 +28,12 @@ class UserIdentity extends User implements IdentityInterface
     /**
      * Finds user by login
      *
-     * @param string $login
+     * @param string $phoneAsLogin
      * @return static|null
      */
     public static function findByUsername($login)
     {
-        return static::findOne(['login'=>$login]);
+        return static::findOne(['phoneAsLogin'=>$login]);
     }
 
     /**

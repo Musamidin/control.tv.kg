@@ -1,6 +1,10 @@
 html,
 body {
     height: 100%;
+    background-image: url(/img/fon.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .wrap {
@@ -12,8 +16,9 @@ body {
 
 .wrap > .container {
     padding: 70px 15px 20px;
-    width: 98%;
+    width: 85%;
     min-height: 100%;
+    background: white;
 }
 
 .footer {
@@ -93,6 +98,7 @@ a.desc:after {
 }
 
 /* align the logout "link" (button in form) of the navbar */
+nav > .container{ width: 98%; }
 .nav li > form > button.logout {
     padding: 15px;
     border: none;
@@ -159,152 +165,28 @@ span#status {
     width: 695px !important;
 }
 
-
-#exml{
-width: 100%;
+.col-md-1.sidebar {
+    border: 1px dashed #59afe4;
+    min-height: 910px;
+    margin-bottom: 10px;
+    padding: 0;
+    padding-top: 0px;
 }
-.icon-style{
-    font-size: 22px;
-    margin-right: 10px;
-}
-#mlist > li > span{
- color:red;
-}
-#mlist > li >span.required{
-    color: red;
-}
-span.codex {
-    color: red;
-    font-weight: bold;
-    font-size: 15px;
-}
-.sim{color: #efff00;font-size: 16px;}
-#load-ing{display: none;}
-.form-group.has-success label {
-    color: white !important;
-}
-#removebtn{ display: none; }
-.btn-bitbucket {
-    color: #fff;
-    background-color: #205081;
-    border-color: rgba(0,0,0,0.2);
-    width: 200px !important;
-    height: 50px !important;
-    position: fixed !important;
-    bottom: 110px !important;
-    right: 120px !important;
-    padding-top: 12px !important;
-    padding-left: 73px !important;
-}
-.btn-social>:first-child {
-    position: absolute;
-    left: 10px !important;
-    top: 6px !important;
-    bottom: 0;
-    width: 32px;
-    line-height: 34px;
-    font-size: 1.6em;
+.mbox {
     text-align: center;
-    border-right: 1px solid rgba(0,0,0,0.2);
-}
-input[type=checkbox], input[type=radio] {
-    margin: 0px 0 0 0;
-    margin-top: 1px\9;
-    line-height: normal;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-.paddTop25{
-    padding-top: 25px;
-}
-.paddTop8{
-    padding-top: 8px;
-}
-.lg-btn{
-    position: fixed;
-    bottom: 180px;
-    z-index: 10;
-    right: 240px;
-    display: none;
-}
-.api-box{
-    border: 1px solid silver;
-    padding: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-}
-.sum-box{
-    padding-top: 4px;
-    border: 1px solid #337ab7;
-    border-radius: 10px;
-}
-span.summ {
-    font-weight: bold;
-    margin-left: 3px;
-}
-.col-md-3.btn-box {
-    width: 18%;
-    padding: 0 5px;
-}
-.col-md-5.filt-box {
-    width: 57%;
-    padding: 10px 5px;
-}
-.col-md-4.sum-box {
-    width: 25%;
-}
-.col-lg-12.tab-box {
-    border: 1px solid steelblue;
-    padding: 10px 10px 15px 10px;
-    margin: 10px 0px;
-}
-.col-lg-7.wiki-box {
-    margin-left: 10px;
-    width: 57%;
-    border: 1px solid steelblue;
-    padding: 0px 10px 15px 10px;
-}
-.row.sett-box {
-    margin-top: 30px;
-}
-.header-tit{
-    border-bottom: 2px solid red;
-    padding-bottom: 2px;
-    margin: 7px 0;
-}
-.imgsize{ border: 1px solid silver; }
-.export-excel{    
-    font-size: 22px;
+    padding: 5px;
+    font-size: 11px;
     margin-bottom: 5px;
+}
+.mbox:hover {
+    background: #59afe4;
+    color: white;
+    text-decoration: none;
+}
+.mbox > .glyphicon {
+    font-size: 24px;
+}
+.mbox > span {
     display: block;
-    width: 23px;
+    margin-top: 4px;
 }
-td.daterent {
-    max-width: 300px;
-    width: 300px;
-    word-break: break-all;
-    word-wrap: break-word;
-}
-.grid-box{
-    overflow: auto;
-}
-div#view-dates {
-    display: block;
-    background: #fde5cc;
-    width: 288px;
-    height: 150px;
-    overflow: auto;
-    color: black;
-    min-height: 150px;
-    padding-left: 5px;
-}
-a#getbydatetime {font-size: 20px;}
-.row.add-date-box {
-    margin: 0;
-    border: 1px dashed #f39c12;
-    padding: 10px;
-}
-#hd-btn{display: none;margin-top: 5px;}
-.rem-btn{font-size: 16px;}

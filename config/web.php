@@ -63,7 +63,7 @@ $config = [
             ],    
         ],
         'log' => [
-            'traceLevel' => 0,//YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
