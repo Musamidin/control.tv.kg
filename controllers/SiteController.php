@@ -105,8 +105,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $model = new UploadForm();
-        return $this->render('index',['model'=>$model]);
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
+        if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
+            $count = MainHub::find()
+                    ->filterWhere(['=', 'status', 0])
+                    ->count();
+            $mainhub = new MainHub();
+            $model = new UploadForm();
+            return $this->render('index',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub,'tvlist'=>$tvlist]);
+        }elseif(Yii::$app->user->identity->role == 1){
+            return $this->redirect('/admin');
+        }
     }
     
     public function actionAbout()
@@ -124,9 +133,14 @@ class SiteController extends Controller
     
     public function actionLogin()
     {   
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
         $model = new LoginForm();
         if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
+            if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
                 return $this->redirect('/');
+            }elseif(Yii::$app->user->identity->role == 1){
+                return $this->redirect('/admin');
+            }
         }else{
            $this->layout = 'login';
            return $this->render('login', ['model' => $model]);
