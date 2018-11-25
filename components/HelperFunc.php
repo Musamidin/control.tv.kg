@@ -126,7 +126,7 @@ class HelperFunc extends Component
           }else{
             return $mh->errors;
           }
-        }catch(Exception $ex){
+        }catch(\yii\base\Exception $ex){
           return $ex;
         }
   }
@@ -162,26 +162,31 @@ class HelperFunc extends Component
     if(preg_match("/[\-]+/",$data)){
         try{
             $arr = preg_split("/[\-]+/",$data);
-            $dts = date('Y-m-d',strtotime(str_replace('/', '-', $arr[0])));
-            $dte = date('Y-m-d',strtotime(str_replace('/', '-', $arr[1])));
-
-            if($this->checkDates($arr[0]) && $this->checkDates($arr[1]))
+            $stime1 = strtotime(str_replace('/', '-', $arr[0]));
+            $stime2 = strtotime(str_replace('/', '-', $arr[1]));
+            if($stime1 != false && $stime2 != false)
             {
-              $start = new DateTime($dts);
-              $interval = new \DateInterval('P1D');
-              $end = new DateTime($dte);
-              $end->add(new \DateInterval('P1D'));
-              $period = new \DatePeriod($start, $interval, $end);
-              foreach ($period as $date)
+              $dts = date('Y-m-d',$stime1);
+              $dte = date('Y-m-d',$stime2);
+              if($this->checkDates($dts) && $this->checkDates($dte))
               {
-                array_push($dates, $date->format('Y-m-d'));
+                $start = new DateTime($dts);
+                $interval = new \DateInterval('P1D');
+                $end = new DateTime($dte);
+                $end->add(new \DateInterval('P1D'));
+                $period = new \DatePeriod($start, $interval, $end);
+                foreach ($period as $date)
+                {
+                  array_push($dates, $date->format('Y-m-d'));
+                }
+                return $dates;
               }
-              return $dates;
-            }else{
-              return $dates = [];
+
             }
-        }catch(Exception $e){
-          return $e;
+          return $dates;
+        }catch(\yii\base\Exception $e){
+          Yii::error($e->getMessage(),'writelog');
+          //Yii::info($e->getMessage(), 'sendlog');
         }
 
     }elseif(preg_match("/[\,]+/",$data)){
@@ -191,19 +196,26 @@ class HelperFunc extends Component
             {
               if($this->checkDates(trim($itm)))
               {
-                array_push($dates, date('Y-m-d',strtotime(str_replace('/', '-', $itm))));
+                $strtime = strtotime(str_replace('/', '-', $itm));
+                if($strtime != false){
+                  array_push($dates, date('Y-m-d',$strtime));
+                }
               }
             }
             return $dates;
         }catch(Exception $e){
           return $e;
         }
+    
     }else{
         if(!empty($data)){
-          array_push($dates,date('Y-m-d',strtotime(str_replace('/', '-', $data))));
+          $strtime = strtotime(str_replace('/', '-', $data));
+          if($strtime != false){
+            array_push($dates,date('Y-m-d',$strtime));
+          }
           return $dates;
-
-        }else{ return $dates; }
+        }
+        return $dates;
     }
   }
 

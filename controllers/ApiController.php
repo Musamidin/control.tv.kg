@@ -74,10 +74,6 @@ class ApiController extends ActiveController
             'rules' => [
                 [
                     'actions' => [
-                        // 'update',
-                        // 'delete',
-                        // 'view',
-                        //'index',
                         'ontvrawxml' => ['POST'],
                         'ontvxwwwformxml' => ['POST'],
                         'ontvjson' => ['POST'],
@@ -128,7 +124,7 @@ class ApiController extends ActiveController
     public function actionOntvrawxml()
     {
         
-        Yii::$app->response->format = Response:: FORMAT_XML;
+        Yii::$app->response->format = Response::FORMAT_XML;
 
         $data = Yii::$app->Modules->xmlToArray(Yii::$app->request->getRawBody());
         $resp = Yii::$app->HelperFunc->save($data);
@@ -142,37 +138,25 @@ class ApiController extends ActiveController
     public function actionOntvxwwwformxml()
     {
         
-        \Yii::$app->response->format = Response:: FORMAT_XML;
+        Yii::$app->response->format = Response::FORMAT_XML;
 
-        return Yii::$app->request->post();
+        $data = Yii::$app->Modules->xmlToArray(Yii::$app->request->post());
+        $resp = Yii::$app->HelperFunc->save($data);
+        return $resp;
     }
 
     public function actionOntvjson()
     {
-    	$resp = null;
-        \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
-        $model = new MainHub();
-        $model->attributes = Yii::$app->request->post();
-        if($model->validate()){
-        	//return Yii::$app->request->post('phone');
-        	$resp = Yii::$app->HelperFunc->save(Yii::$app->request->post());
-        	if($resp != false){
-        		return ['status'=>0, 'message'=> 'OK','id'=>$resp];
-        	}else{
-        		return $resp;
-        	}
-        }else{
-        	return $model->errors;
-        }
-        //return Yii::$app->request->post('phone');
-        //Yii::$app->HelperFunc->save($data,true)
-        //return Yii::$app->request->headers['authorization'];
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
+        $data = Yii::$app->Modules->xmlToArray(Yii::$app->request->post());
+        return Yii::$app->HelperFunc->save($data);
         
     }
+    
     public function actionGetstatusjson()
     {
-        \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $response = MainHub::find()
         ->select(['status','description'])
         ->where(['id'=> Yii::$app->request->post('id')])
@@ -182,5 +166,5 @@ class ApiController extends ActiveController
             return $response;
         else
             return ['status'=>-1, 'description'=>'record not found!'];
-    }    
+    }
 }

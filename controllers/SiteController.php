@@ -125,8 +125,8 @@ class SiteController extends Controller
          'post' => ['test'=>'Uraaa!']
         ];
         print_r($messageLog);
-        Yii::error($messageLog,'writelog');
-        Yii::info($messageLog, 'sendlog'); //запись в лог
+        //Yii::error($messageLog,'writelog');
+        //Yii::info($messageLog, 'sendlog'); //запись в лог
         //$this->layout = 'client';
         //return $this->render('aboutRu');
     }
