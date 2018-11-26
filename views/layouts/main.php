@@ -77,7 +77,7 @@ AppAsset::register($this);
                     <span>Телефонная книга</span>
                 </div>
             </a>
-            <a href="/addtask">
+            <a href="/adddispatch">
                 <div class="mbox">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                     <span>Новая рассылка</span>

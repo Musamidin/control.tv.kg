@@ -82,7 +82,7 @@ $scope.getUserData = function(pageNum,showPageCount,sts,daterange,bytv){
     
 
 
-$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
+//$scope.getUserData(1,$scope.mainlistPerPage,$scope.bystatus,$scope.dfdt,$scope.bytv);
 
 $scope.getTvList = function(){
   $http.get('/gettvlist') // +'&pagenum='+pnum
@@ -198,6 +198,7 @@ $scope.onCallback = function(obj){
     $('#modal-callback').modal({ keyboard: false });
 
 };
+
 $(document).on('input change propertychange', '#mainhub-text', function(){
 	var str = this.value.replace(/\s/gimu, "");
     sym_count = str.length;
