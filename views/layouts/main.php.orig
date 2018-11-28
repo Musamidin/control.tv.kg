@@ -67,9 +67,49 @@ AppAsset::register($this);
     ?>
     <div class="container">
         <?= Alert::widget() ?>
-            <a href="/adddispatch">
+<<<<<<< HEAD
         <?= $content ?>
-    </div>
+=======
+        <div class="navBar">
+            <?php
+            NavBar::begin([
+                'brandLabel' => Yii::$app->name, //
+                'brandUrl' => '/',
+                'options' => [
+                    'class' => 'navbar navbar-inverse',
+                ],
+            ]);
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-right'],
+                'items' => [
+                    ['label' => 'Главная', 'url' => ['/']],
+                    //['label' => 'Отчёт', 'url' => ['/report']],
+                    ['label' => 'Настройки', 'url' => ['/useraccount']],
+                    Yii::$app->user->isGuest ? (
+                        ['label' => 'Login', Url::to(['/login'])]
+                    ) : (
+                        '<li>'
+                        . Html::beginForm(['/logout'], 'post')
+                        . Html::submitButton(
+                            'Выход (' . Yii::$app->user->identity->phoneAsLogin . ')',
+                            ['class' => 'btn btn-link logout']
+                        )
+                        . Html::endForm()
+                        . '</li>'
+                    )
+                ],
+            ]);
+            NavBar::end();
+            ?>
+        </div>
+        <div class="col-md-1 sidebar">
+            <a href="/phonebook">
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-book"></span>
+                    <span>Телефонная книга</span>
+                </div>
+            </a>
+            <a href="/adddispatch">
                 <div class="mbox">
                     <span class="glyphicon glyphicon-fullscreen"></span>
                     <span>Новая рассылка</span>
@@ -104,13 +144,13 @@ AppAsset::register($this);
             <?= $content ?>
         </div>
         
+>>>>>>> 3cf59620f3d9768f22a2c5c05b88daa3d8f37f99
     </div>
 </div>
 
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?><!--?= $this->render('language')?--></p>
-        <p class="pull-left">&copy; ОсОО «Перспективные решения» <?= date('Y') ?><!--?= $this->render('language')?--></p>
 
         <!--p class="pull-right"><?= Yii::powered() ?></p-->
     </div>
