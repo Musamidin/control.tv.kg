@@ -117,7 +117,16 @@ class SiteController extends Controller
             return $this->redirect('/admin');
         }
     }
+ 
+    public function actionPhonebook()
+    {
+        return $this->render('phonebook');
+    }
     
+    public function actionAdddispatch()
+    {
+        return $this->render('adddispatch');
+    }
     public function actionAbout()
     {
         $messageLog = [

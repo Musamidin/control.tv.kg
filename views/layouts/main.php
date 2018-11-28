@@ -67,13 +67,50 @@ AppAsset::register($this);
     ?>
     <div class="container">
         <?= Alert::widget() ?>
+            <a href="/adddispatch">
         <?= $content ?>
+    </div>
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-fullscreen"></span>
+                    <span>Новая рассылка</span>
+                </div>
+            </a>
+            <a href="/dispatchlist">
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-list"></span>
+                    <span>Список рассылок</span>
+                </div>
+            </a>
+            <a href="/statistic">
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-stats"></span>
+                    <span>Статистика отправленных сообщений</span>
+                </div>
+            </a>
+            <a href="/sendername">
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-tag"></span>
+                    <span>Запросить имя отправителя</span>
+                </div>
+            </a>
+            <a href="/settings">
+                <div class="mbox">
+                    <span class="glyphicon glyphicon-cog"></span>
+                    <span>Настройки</span>
+                </div>
+            </a>           
+        </div>
+        <div class="col-md-11 main" style="min-height:500px;">
+            <?= $content ?>
+        </div>
+        
     </div>
 </div>
 
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; ОсОО «Медиа маркет групп» <?= date('Y') ?><!--?= $this->render('language')?--></p>
+        <p class="pull-left">&copy; ОсОО «Перспективные решения» <?= date('Y') ?><!--?= $this->render('language')?--></p>
 
         <!--p class="pull-right"><?= Yii::powered() ?></p-->
     </div>
