@@ -324,5 +324,4 @@ $this->title = 'Размещение бегущей строки на все Т�
     background-color: #1a95d0 !important;
 }
 </style>
-
 </div>
