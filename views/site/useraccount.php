@@ -109,16 +109,15 @@ $this->title = 'Изменить пароль';
             <div class="col-lg-12 wiki-box">
                 <h1>Документация API</h1>
                 <div class="req-box">
-                    <h4 class="header-tit">Запрос на добавления заявки</h4>
+                    <h3 class="header-tit"> 2) Запрос на добавления заявки (Ответ в JSON формате)</h3>
                     <h4> * Загаловок запроза (Header request)</h4>
                     Значение ключа <code>Authorization</code> после <code>Bear</code> вводите свой API ключ (API key)
                     <img class="imgsize" src="/img/header-req.png"/>
                     <h4> * Тело запроса (BODY request)</h4>
                     В теле запроса принимается 4 параметра:
                     <ul>
-                        <li><code>phone</code> в 9 значном формате</li>
                         <li><code>text</code> текст объявления</li>
-                        <li><code>dates</code> Даты выхода бегушки фомат даты <code>дд/мм/гггг</code>
+                        <li><code>dates</code> Даты выхода бегушки, фомат даты <code>дд/мм/гггг</code>
                             <ul>
                                 <li>Массив даты разделяются знаком <code>,</code> на пример: <code>дд/мм/гггг,дд/мм/гггг,дд/мм/гггг</code></li>
                                 <li>Диапазон даты с по через знак тире <code>-</code>на пример: <code>дд/мм/гггг - дд/мм/гггг</code></li>
@@ -133,7 +132,7 @@ $this->title = 'Изменить пароль';
                         </li>
                     </ul>
                     <img class="imgsize" src="/img/body-req.png"/>
-                    <h4 class="header-tit">Ответ на запрос добавления заявки</h4>
+                    <h4 class="header-tit">Ответ от сервера на запрос добавления заявки</h4>
                     Ответ запроса в формате JSON
                     <code>{
                     "status" : 0,
@@ -149,7 +148,7 @@ $this->title = 'Изменить пароль';
                     <code>message</code> статус сообщения
                     <br/>
                     <code>id</code> записи (заявки)
-                    <h4 class="header-tit">Запрос на получения статус заявки</h4>
+                    <h3 class="header-tit"> 1) Запрос на добавления заявки в формате XML (<code>RAW</code>)</h3>
                 </div>
             </div>
         </div>
