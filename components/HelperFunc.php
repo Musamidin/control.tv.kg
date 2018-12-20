@@ -9,6 +9,7 @@ use DateTime;
 
 use app\models\MainHub;
 use app\models\AdminModerView;
+use app\models\DailyCountSimView;
 use app\models\DatesHub;
 use app\models\ExportView;
 use app\models\ClientView;
@@ -323,6 +324,46 @@ class HelperFunc extends Component
         }catch(Exception $e){
             return $e->errorInfo;
           //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+  }
+
+  public function getDataReport($param)
+  {
+        $data = [];
+        try{
+            $da = explode('/', $param['daterange']);
+            $df = trim($da[0]);
+            $dt = trim($da[1]);
+            $bytv = (intval($param['bytv']) === 0) ? [] : ['chid' => $param['bytv']];
+            $sortbycli = (intval($param['sortbycli']) === 0) ? [] : ['client_id' => $param['sortbycli']];
+
+            $data['count'] = DailyCountSimView::find()
+            ->andWhere($bytv)
+            ->andWhere($sortbycli)
+            ->andWhere(['BETWEEN','daterent',$df,$dt])
+            ->andWhere(['IN','status',[0,1]])
+            ->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['mlv'] = DailyCountSimView::find()
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->andWhere($bytv)
+            ->andWhere($sortbycli)
+            ->andWhere(['BETWEEN','daterent',$df,$dt])
+            ->andWhere(['IN','status',[0,1]])
+            ->asArray()
+            ->orderBy(['id'=>SORT_DESC])
+            ->all();
+            
+            $str_bytv = (intval($param['bytv']) === 0) ? '' : 'AND chid = '.$param['bytv'];
+            $str_sortbycli = (intval($param['sortbycli']) === 0) ? '' : 'AND client_id = '.$param['sortbycli'];
+
+           $command=Yii::$app->db->createCommand("SELECT SUM(countSim) AS countSim FROM [dbo].[dailyCountSimView] WHERE status IN(0,1) AND [daterent] BETWEEN '".$df."' AND '".$dt."' {$str_bytv} {$str_sortbycli}");
+            $data['totalsumm'] = $command->queryAll();
+
+          return $data;
+        }catch(\yii\base\Exception $ex){
+            return $ex->errorInfo;
         }
   }
 

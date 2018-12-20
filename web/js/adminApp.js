@@ -215,6 +215,95 @@ $scope.onAction = function(item){
   });
 
 };
+}).controller("AppReportCtrl", function($scope,$http){
+/**NO CONFLICT**/
+$.fn.bootstrapBtn = $.fn.button.noConflict();
+
+$scope.totalmainlist = 0;
+$scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
+$scope.pagination = { current: 1 };
+
+$scope.bystatus = 0;
+$scope.bytv = 0;
+$scope.sortbycli = 0;
+
+var dateft = moment(new Date()).format('YYYY-MM-DD');
+$scope.dfdt = dateft +' / '+ dateft;
+
+
+/**********START DATE PICKER RANG***************/
+  var now = new Date();
+    $('.getbydatetime').daterangepicker({
+      //"autoUpdateInput": false,
+       "locale": {
+        "format": "YYYY-MM-DD", //MM/DD/YYYY
+        "separator": " / ",
+        "applyLabel": "Принять",
+        "cancelLabel": "Отмена",
+        "fromLabel": "С",
+        "toLabel": "По",
+        "customRangeLabel": "Custom",
+        "weekLabel": "W",
+        "daysOfWeek": ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+        "monthNames": ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],
+        "firstDay": 1
+    },
+      "startDate": now,
+      alwaysShowCalendars: false,
+      //"dateLimit": { "days": 31 } //only 31 day can select 
+    }, function(start, end, label) {
+      var df = moment(start).format('YYYY-MM-DD');
+      var dt = moment(end).format('YYYY-MM-DD');
+      var dfdt = df+'/'+dt;
+      //console.log( $('.getbydatetime').val() );
+      $scope.dfdt = dfdt;
+      $scope.getData($scope.pagination.current,$scope.mainlistPerPage,dfdt,$scope.bytv,$scope.sortbycli );
+
+      $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+    + "&daterange="+ dfdt +"&bytv="+ $scope.bytv+'&sts='+$scope.bystatus+'&sortbycli='+$scope.sortbycli);
+      }
+    );
+
+$scope.pageChanged = function(newPage) {
+  $scope.getData(newPage,$scope.mainlistPerPage,$scope.dfdt,$scope.bytv,$scope.sortbycli);
+};
+
+$scope.getData = function(pageNum,showPageCount,daterange,bytv,sortbycli){
+  $http.get('/getdatareport?page=' 
+    + pageNum +'&shpcount='
+    + showPageCount+'&token='
+    + $('#token').val()+'&daterange='
+    + daterange+'&bytv='
+    + bytv+'&sortbycli='+ sortbycli)
+        .then(function(result) {
+          var respdata = eval(result.data);
+          if(respdata.status == 0){
+                $scope.mainlistview = eval(respdata.data.mainlistview);
+                $scope.totalmainlist = eval(respdata.data.count);
+                $scope.total = eval(respdata.data.total);
+          } else if(respdata.status > 0){
+              alert(respdata.msg);
+          }
+        }, function errorCallback(response) {
+            //console.log(response);
+        });
+  };
+
+$scope.getData(1,$scope.mainlistPerPage,$scope.dfdt,$scope.bytv,$scope.sortbycli);
+
+$(document).on('change', '#sortbytv', function(){
+  $scope.bytv = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.dfdt,this.value,$scope.sortbycli);
+  // $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+  //   + "&daterange="+ $scope.dfdt +"&bytv="+ this.value+'&sts='+$scope.bystatus+'&sortbycli='+$scope.sortbycli);
+});
+$(document).on('change', '#sortbycli', function(){
+  $scope.sortbycli = this.value;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.dfdt,$scope.bytv,this.value);
+  // $('#exptexcel').attr("href","/exptexceladm?token="+$('#token').val()
+  //   + "&daterange="+ $scope.dfdt +"&bytv="+ $scope.bytv+'&sts='+$scope.bystatus+'&sortbycli='+this.value);
+});
+
 }).controller("SettingsCtrl", function($scope,$http){
 
 $scope.totalmainlist = 0;
@@ -340,13 +429,6 @@ $scope.pageChanged = function(newPage) {
     alert(id);
   };
 
-/*
-.controller("AdminNavBarAppCtrl", function($scope,$http){
-
-
-
-})
-*/
 
 }).controller("AdminExportAppCtrl", function($scope,$http){
 /**NO CONFLICT**/

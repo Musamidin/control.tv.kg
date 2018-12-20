@@ -108,6 +108,7 @@ $config = [
                 'admin' => 'site/admin',
                 'export' => 'site/export',
                 'getdata' => 'site/getdata',
+                'getdatareport' => 'site/getdatareport',
                 'searchajax' => 'site/searchajax',
                 'getdatas' => 'site/getdatas',
                 'getuserlist' => 'site/getuserlist',

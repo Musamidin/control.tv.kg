@@ -50,6 +50,8 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='deletegetholidaydates' || $action->id === 'searchajax'){
             $this->enableCsrfValidation = false;
+        }elseif($action->id ==='getdatareport'){
+            $this->enableCsrfValidation = false;
         }
 
         return parent::beforeAction($action);    
@@ -197,9 +199,16 @@ class SiteController extends Controller
 
     public function actionReport()
     {
-        if(Yii::$app->user->identity->role != 1){
-            return $this->render('report');
-        }else{
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
+        if(Yii::$app->user->identity->role == 1){
+            $count = MainHub::find()
+                    ->filterWhere(['=', 'status', 0])
+                    ->count();
+            $mainhub = new MainHub();
+            $model = new UploadForm();
+            $this->layout = 'admin';
+            return $this->render('report',['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub]);
+        }elseif(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
             return $this->redirect('/');
         }
     }
@@ -250,6 +259,7 @@ class SiteController extends Controller
             return $this->redirect('/');
         }
     }
+   
     public function actionExport()
     {
         if(Yii::$app->user->identity->role == 1){
@@ -277,6 +287,31 @@ class SiteController extends Controller
             return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }
+    public function actionGetdatareport(){
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $data = Yii::$app->request->get();
+        if($data['token'] == md5(Yii::$app->session->getId().'opn')){
+            if(Yii::$app->user->identity->role == 1){
+                try{
+                $retData = Yii::$app->HelperFunc->getDataReport($data);
+                return ['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],
+                                     'count' => $retData['count'],
+                                     'total'=>$retData['totalsumm'][0]['countSim']],
+                            'msg'=>'OK'];
+                }catch(\yii\base\Exception $ex){
+                    Yii::error($ex,'writelog');
+                    return $ex;
+                }
+
+            }else{
+            return ['status'=>4,'message'=>'Уровень доступа не позволяет!'];
+            }
+        }else{
+            return ['status'=>3,'message'=>'Error(Invalid token!)'];
+        }
+    }
+
     public function actionSearchajax()
     {
         header('Content-Type: application/json');

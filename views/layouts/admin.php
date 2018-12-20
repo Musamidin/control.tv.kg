@@ -47,6 +47,7 @@ AdminAsset::register($this);
         'items' => [
             ['label' => 'Главная', 'url' => ['/admin']],
             ['label' => 'Настройки', 'url' => ['/useraccount']],
+            ['label' => 'Отчёт', 'url' => ['/report']],
             ['label' => 'Выгрузка', 'url' => ['/export']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', Url::to(['/login'])]
