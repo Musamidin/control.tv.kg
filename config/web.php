@@ -63,7 +63,7 @@ $config = [
             ],    
         ],
         'log' => [
-            'traceLevel' => 0,//YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
@@ -115,6 +115,7 @@ $config = [
                 'getdatestocallback' => 'site/getdatestocallback',
                 'callbacker' => 'site/callbacker',
                 'report' => 'site/report',
+                'add' => 'site/add',
                 'useraccount' => 'site/useraccount',
                 'download' => 'site/download',
                 'exptexcel' => 'site/exptexcel',

@@ -308,3 +308,174 @@ a#getbydatetime {font-size: 20px;}
 }
 #hd-btn{display: none;margin-top: 5px;}
 .rem-btn{font-size: 16px;}
+
+/*site verstka */
+.text-title {
+    margin-top: 4px;
+    background: #3c8dbc;
+    color: #fff;
+    padding: 18px 20px 10px 20px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.text-enter {
+    background: #fff;
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+    border: 1px solid #d9d9d9;
+    border-top-width: 3px;
+    height: 320px;
+    font-size: 24px;
+    padding: 20px;
+    outline: none !important;
+    -webkit-box-shadow: 0px 4px 0px 0px #cfcfcf;
+    -moz-box-shadow: 0px 4px 0px 0px #cfcfcf;
+    box-shadow: 0px 4px 0px 0px #cfcfcf;
+    margin-top: -7px;
+}
+.pdb-40 {
+    padding-bottom: 40px;
+}
+.pd-40 {
+    padding-left: 40px;
+    padding-right: 40px;
+}
+.steps .step {
+    margin-bottom: 20px;
+    position: relative;
+}
+.steps .step .numb {
+    color: #3c8dbc;
+    float: left;
+    border: 2px solid #3c8dbc;
+    font-size: 50px;
+    font-weight: bold;
+    border-radius: 25%;
+    width: 95px;
+    height: 95px;
+    line-height: 95px;
+    text-align: center;
+}
+.steps .step .text {
+    float: left;
+}
+.steps .step .text p {
+    position: absolute;
+    padding: 0 15px 0 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.channel-list-cont .title {
+    border-bottom: 2px solid #808084;
+}
+.channel-list-cont {
+    border-bottom: 4px solid #d9d9d9;
+    padding-top: 35px;
+    padding-bottom: 60px;
+}
+.channel-list-cont h2 {
+    margin-bottom: 30px;
+}
+.channel-list-cont .title label {
+    margin-bottom: 1px;
+}
+.channel-list .one .cal_cont {
+    padding-top: 17px;
+    width: 100%;
+}
+.channel-list .one .form-control {
+    font-size: 14px;
+    padding-left: 10px;
+    height: 34px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    background-color: #fdfdfd;
+    border-color: #e1e1e1;
+}
+.channel-list .one .show_dates {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 80%;
+    float: left;
+}
+.form-control {
+    box-shadow: none;
+    border-color: #e1e1e1;
+    font-size: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.form-control {
+    display: block;
+    width: 100%;
+    height: 50px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555555;
+    background-color: #ffffff;
+    background-image: none;
+    border: 1px solid #cccccc;
+    border-radius: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+.channel-list .one .input-group-addon {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    background: url(/img/calen.png) no-repeat 50% 50% #eeeeee;
+    width: 10%;
+    float: left;
+    display: block;
+    height: 34px;
+}
+.channel-list .one {
+    border-top: 1px solid #e1e1e1;
+    padding: 20px 0;
+}
+.channel-list .one .img {
+    text-align: center;
+    float: left;
+    margin: 0 30px 0 20px;
+    vertical-align: middle;
+    display: inline-block;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    width: 132px;
+    height: 67px;
+    line-height: 67px;
+}
+.channel-list .one .img img {
+    border-radius: 10px;
+    vertical-align: top;
+}
+.channel-list .one .one-title {
+    text-transform: uppercase;
+    font-size: 18px;
+    display: table-cell;
+    height: 65px;
+    vertical-align: middle;
+}
+.channel-list .one .price {
+    font-size: 18px;
+    padding-top: 20px;
+    color: #808084;
+}
+.channel-list .one .price .price_real {
+    display: inline-block;
+    margin-right: 5px;
+}
+.channel-list .one .price .price_old {
+    display: inline-block;
+    color: #c20937;
+    font-size: 14px;
+    text-decoration: line-through;
+}
+.total-block {
+    font-size: 24px;
+}

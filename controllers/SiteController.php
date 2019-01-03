@@ -120,6 +120,22 @@ class SiteController extends Controller
         }
     }
     
+    public function actionAdd()
+    {
+        $tvlist = Yii::$app->HelperFunc->getTvlist();
+        if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
+            $count = MainHub::find()
+                    ->filterWhere(['=', 'status', 0])
+                    ->count();
+            $mainhub = new MainHub();
+            $model = new UploadForm();
+            return $this->render('add',
+            ['model'=>$model,'upcount'=>$count,'mainhub'=>$mainhub,'tvlist'=>$tvlist]);
+        }elseif(Yii::$app->user->identity->role == 1){
+            return $this->redirect('/admin');
+        }
+    }
+
     public function actionAbout()
     {
         $messageLog = [

@@ -571,20 +571,15 @@ class HelperFunc extends Component
 
   public function getTvlist()
   {
-        $data = [];
-        try{
-              $data['tvlist'] = Channels::find()
-              ->select('id, channel_name,email')
-              ->where(['status'=> 0])
-              ->asArray()
-              ->orderBy(['id'=>SORT_ASC])
-              ->all();
-
-          return $data;
-        }catch(Exception $e){
-            return $e->errorInfo;
-          //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-        }
+      try{
+          return Channels::find()
+          ->select('id,channel_name as tvname,agency_price as price,img')
+          ->where(['=','status',0])
+          ->asArray()
+          ->all();
+      }catch(\yii\base\Exception $e){
+          Yii::error($e->getMessage(),'writelog');
+      }
   }
 
   public function getClients()
