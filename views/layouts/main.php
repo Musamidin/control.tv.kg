@@ -9,8 +9,15 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\assets\AddAsset;
 
-AppAsset::register($this);
+
+if(Yii::$app->request->url === '/add'){
+    AddAsset::register($this);
+}else{
+    AppAsset::register($this);
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -25,16 +32,19 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<?=Yii::$app->request->url; ?>
 <div class="wrap">
     <?php
+    if(Yii::$app->request->url === '/'){
     $search = '<form class="navbar-form navbar-nav text-center nav-srch">
             <div class="srch form-group has-success has-feedback">
               <input type="text" placeholder="Поиск заявки по тексту, номеру" id="searcher" class="min-w input-sm form-control">
               <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
       </form>';
-
+    }else{
+        $search = '';
+    }
     NavBar::begin([
         'brandLabel' => 'Online TV Маркет', //Yii::$app->name
         'brandUrl' => '/',

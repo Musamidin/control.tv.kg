@@ -125,8 +125,8 @@ $this->title = 'Изменить пароль';
                         </li>
                         <li><code>chid</code> - это номер телеканала <code>INT</code> значение, список ТК:
                             <ul>
-                            <? foreach($tvlist['tvlist'] as $tl): ?>
-                                <li><code><?=$tl['id'];?></code> - <?=$tl['channel_name'];?></li>
+                            <? foreach($tvlist as $tl): ?>
+                                <li><code><?=$tl['id'];?></code> - <?=$tl['tvname'];?></li>
                             <? endforeach; ?>
                             </ul>
                         </li>

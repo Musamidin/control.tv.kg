@@ -318,6 +318,9 @@ a#getbydatetime {font-size: 20px;}
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
 }
+.text-title h3{
+    color: #fff;
+}
 .text-enter {
     background: #fff;
     width: 100%;
@@ -478,4 +481,14 @@ a#getbydatetime {font-size: 20px;}
 }
 .total-block {
     font-size: 24px;
+}
+.lichr{border-top: 2px solid #3c8dbc;}
+#save{
+    width: 80%;
+    height: 60px;
+    font-size: 22px;
+}
+.action-btn{
+    text-align: center;
+    padding: 20px;
 }

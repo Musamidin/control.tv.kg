@@ -25,8 +25,8 @@ $this->title = 'Размещение бегущей строки на все Т�
         <div class="input-group">
         <select id="sortbytv" name="sortbytv" class="form-control">
             <option value="0">Телеканалы...</option>
-            <? foreach($tvlist['tvlist'] as $tl): ?>
-                <option value="<?=$tl['id']; ?>"><?=$tl['channel_name']; ?></option>
+            <? foreach($tvlist as $tl): ?>
+                <option value="<?=$tl['id']; ?>"><?=$tl['tvname']; ?></option>
             <? endforeach; ?>
         </select>
         <span class="input-group-addon input-sm"></span>

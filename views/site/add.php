@@ -10,11 +10,24 @@ use dosamigos\fileupload\FileUpload;
 
 $this->title = 'Размещение бегущей строки на все ТВ и Радио! «онлайн сервис»'; 
 ?>
-
+<script type="text/javascript">
+    var valuta = 'сом';
+    var tv_packet = {};
+    var mlang = {
+        lang: 'ru'
+    };
+</script>
+<br/>
 <div class="site-add" ng-controller="AppAddCtrl">
     <div class="row">
         <div class="col-md-12">
-
+        <?
+            $form = ActiveForm::begin([
+                'enableClientScript' => false,
+                'action' => ['/add'],
+                'options' => ['class' => 'form-horizontal'],
+            ]) 
+        ?>
             <div class="pdRL10 pdb-40">
                 <div class="row">
                     <div class="col-lg-7 col-md-7">
@@ -37,10 +50,13 @@ $this->title = 'Размещение бегущей строки на все Т�
                             <li>Рекламодатель самостоятельно несет ответственность за&nbsp;соответствие рекламы действующему законодательству Кыргызской Республики о&nbsp;рекламе;</li>
                             <li>Если рекламируемый товар/услуга подлежат лицензированию укажите номера лицензий и&nbsp;наименование органов, выдавшего их&nbsp;и/или укажите «товар сертифицирован», если рекламируемый товар подлежит обязательной сертификации;</li>
                         </ul>
+                        <hr class="lichr"/>
+                        <input name="licdoc" value="" placeholder="Поле для ввода лицензий" class="form-control"/>
                     </div>
                 </div>
             </div>
-            <div class="pdRL10 bg-white channel-list-cont">
+            
+			<div class="pdRL10 bg-white channel-list-cont">
                 <h2>Выбор каналов</h2>
                 <div class="channel-list">
                     <div class="title hidden-xs">
@@ -80,7 +96,55 @@ $this->title = 'Размещение бегущей строки на все Т�
                     <div class="col-md-2 col-sm-3 total-summ" id="total">0 сом</div>
                 </div>
             </div>
-        
+            <div class="pdRL10 action-btn">
+            <?= Html::button('Сохранить объявление', ['class' => 'btn btn-success','id'=>'save']) ?>
+            </div>
+        </div>
+        <?php ActiveForm::end() ?>
+		</div>
+	</div>
+
+
+
+<div class="modal fade" id="modal_date" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                ×
+                            </span>
+            </button>
+
+            <div class="modal-body">
+                <div class="one_tv_modal">
+                    <div class="row" id="skidka" style="display: block;">
+                        <div class="cont">
+                       При заказе на данном телеканале действует система скидок:
+                        </div>
+                        <div class="items">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div id="calend_rows" style="display: block;">
+                            <div class="one_inp"><input type="checkbox" value="" disabled="disabled"></div>
+                            <div class="one_inp"><input type="checkbox" value=""></div>
+                            <div class="one_inp"><input type="checkbox" value=""></div>
+                            <div class="one_inp"><input type="checkbox" value=""></div>
+                            <div class="one_inp"><input type="checkbox" value=""></div>
+                            <div class="one_inp" style="display: block;"><input type="checkbox" value=""></div>
+                        </div>
+                        <div id="calendar" unselectable="on"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6"><input type="button" value="Отмена" class="btn btn-default" id="cancel_date"></div>
+                        <div class="col-xs-6 text-right"><input type="button" id="ok_date" class="btn btn-success savedate" value="Сохранить"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
+
+
 </div>

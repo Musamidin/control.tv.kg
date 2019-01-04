@@ -50,7 +50,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id ==='deletegetholidaydates' || $action->id === 'searchajax'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id ==='getdatareport'){
+        }elseif($action->id ==='getdatareport' || $action->id === 'gettvinfo'){
             $this->enableCsrfValidation = false;
         }
 
@@ -750,5 +750,23 @@ class SiteController extends Controller
         }else{
             return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
+    }
+
+    public function actionGetjsontvdates()
+    {
+        $id = Yii::$app->request->get('id');
+        $data = [
+            'dates' => [
+                    'begin' => strtotime( date('Y-m-d') ),
+                    'end' => strtotime(date('Y-m-d',strtotime('+1 Year'))),
+                    'begin_str' => date('Y-m-d'),
+                    'end_str' => date('Y-m-d',strtotime('+1 Year')),
+                    'discount' => ['3'=> 10, '7'=> 20, '10'=>30],
+                    'list' => [],
+                    'id' => $id,
+                ]
+        ];
+        //print_r($data = Yii::$app->request->get());
+        return json_encode($data);//$this->render('info',$data);
     }
 }

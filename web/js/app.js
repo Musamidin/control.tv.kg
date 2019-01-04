@@ -382,6 +382,10 @@ $scope.removedata = function(){
 
 };
 
+}).controller("AppAddCtrl", function($scope,$http){
+/**NO CONFLICT**/
+$.fn.bootstrapBtn = $.fn.button.noConflict();
+
 }).controller("SettingsCtrl", function($scope,$http){
 
   $('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
