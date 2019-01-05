@@ -39,7 +39,8 @@ class AddAsset extends AssetBundle
         'js/jquery/jquery-ui.min.js',
         'js/jquery.table2excel.min.js',
         'js/moment.js',
-        'js/main.js'
+        'js/main.js',
+        'js/jquery.serializejson.min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -769,4 +769,54 @@ class SiteController extends Controller
         //print_r($data = Yii::$app->request->get());
         return json_encode($data);//$this->render('info',$data);
     }
+
+    public function actionSaveticket()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $response = [
+            'error' => false,
+            'msg' => '',
+        ];
+    
+        if (!$request->validateCsrfToken()) {
+            $response = [
+                'error' => true,
+                'msg' => 'Ошибка! Не прошла проверка CSFR'
+            ];
+            return $response;
+        }
+        if ($request->isAjax) {
+            try {
+                $data = $request->post();
+                $inside = [];
+                if(!isset($data['text']) || empty($data['text'])){
+                    $response['error'] = true;
+                    $response['msg'] = 'Введите текст вашего объявления';
+                    $response['data'] = '';
+                }elseif(count(Yii::$app->HpFunc->dateValidation($data['dates'])) <= 0){
+                    $response['error'] = true;
+                    $response['msg'] = 'выберите каналы';
+                    $response['data'] = '';
+                }else{
+                    $data['countSim']=Yii::$app->HpFunc->getCountSim($data['text']);
+                    $data['valid'] = Yii::$app->HpFunc->dateValidation($data['dates']);
+                    //$data['sum'] = Yii::$app->HpFunc->calculate($data);
+                    //$sdata = Yii::$app->HpFunc->save($data);
+                    $response['data'] = $data;
+                }
+                $response['data'] = $data;
+            } catch (\yii\base\Exception $e) {
+                $response['error'] = true;
+                $response['msg'] = $e->getMessage();
+            }
+        } else {
+            $response['error'] = true;
+            $response['msg'] = 'OK';
+        }
+    
+        return $response;
+    }
+
 }

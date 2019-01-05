@@ -63,7 +63,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                         <div class="row">
                             <div class="col-md-6 col-sm-6"><label id="choicech">выберите каналы</label></div>
                             <div class="col-md-4 col-sm-3"><label>укажите даты</label></div>
-                            <div class="col-md-2 col-sm-3"><label>стоимость</label></div>
+                            <div class="col-md-2 col-sm-3"><label>количество дней</label></div>
                         </div>
                     </div>
                     
@@ -85,15 +85,15 @@ $this->title = 'Размещение бегущей строки на все Т�
                                         <span class="input-group-addon showcalend"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-2 col-sm-3 price col-xs-12"><span class="price_real">0.0 сом</span><span class="price_old"></span></div>
+                                    <div class="col-md-2 col-sm-3 price col-xs-12"><!--span class="price_real">0.0 сом</span--><span class="countdays_real"></span><span class="price_old"></span></div>
                                 </div>
                             </div>
                             <? $i++; ?>
                         <? endforeach; ?>
                     </div>
                 <div class="row total-block">
-                    <div class="col-md-10 col-sm-9 text-right">Общая сумма:</div>
-                    <div class="col-md-2 col-sm-3 total-summ" id="total">0 сом</div>
+                    <!--div class="col-md-10 col-sm-9 text-right">Общая сумма:</div>
+                    <div class="col-md-2 col-sm-3 total-summ" id="total">0 сом</div-->
                 </div>
             </div>
             <div class="pdRL10 action-btn">
@@ -105,7 +105,7 @@ $this->title = 'Размещение бегущей строки на все Т�
 	</div>
 
 
-
+<!--modal_date Modal -->
 <div class="modal fade" id="modal_date" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -145,6 +145,66 @@ $this->title = 'Размещение бегущей строки на все Т�
     </div>
 </div>
 
+<!--Loading Modal -->
+<div id="loading-modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <img id="img-load" src="/img/loading.gif"/>
+    </div>
+  </div>
+</div>
 
+<!--Error Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <button type="button"  id="resultClose" class="close" data-dismiss="modal">
+			    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+			  </button>
+            <div class="modal-header">
+                <h3 class="modal-title"></h3>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Result-->
+<div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header tgradient">
+			<button type="button"  id="resultClose" class="close" data-dismiss="modal">
+			<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+			</button>
+					<div>
+				<div class="modal-title h4"  id="resultModalLabel">
+				<span id="resultIcon" aria-hidden="true"></span>
+				<span id="resutTitleText">Резульат оформления заявки </span></div>
+					</div>
+		</div>
+      <div id="getResult" class="modal-body">
+	  <div id="tt"></div>
+	  <p class="bold">Ваша Заявка зарегистрирована.</p>
+
+            <table class="checkReport">
+                <thead class="dreport">
+                  <th class="th">№</th>
+                    <th class="th">Телеканалы</th>
+                    <th class="th">Дата выхода</th>
+                    <th class="th">Кол.дней</th>
+                    <th class="th">Сумма</th>
+                </thead>
+                <tbody id="checkReport">
+
+                </tbody>
+            </table>
+			Мы рады быть с Вами на связи, Коллектив Myservice.kg
+			<div class="">
+			<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>&nbsp;+996(705)&nbsp;90-50-80</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 </div>

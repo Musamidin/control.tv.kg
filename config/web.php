@@ -28,6 +28,7 @@ $config = [
             ]
         ],
         'HelperFunc' => ['class'=>'app\components\HelperFunc'],
+        'HpFunc' => ['class'=>'app\components\HpFunc'],
         'Modules' => ['class'=>'app\components\Modules'],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -109,6 +110,7 @@ $config = [
                 'export' => 'site/export',
                 'getdata' => 'site/getdata',
                 'getjsontvdates' => 'site/getjsontvdates',
+                'saveticket' => 'site/saveticket',
                 'getdatareport' => 'site/getdatareport',
                 'searchajax' => 'site/searchajax',
                 'getdatas' => 'site/getdatas',

@@ -492,3 +492,13 @@ a#getbydatetime {font-size: 20px;}
     text-align: center;
     padding: 20px;
 }
+#loading-modal > .modal-dialog {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#loading-modal > .modal-dialog > .modal-content {
+    margin: 0 auto;
+}
+.price_real{display: none;}

@@ -14,19 +14,20 @@ var trans = {
 */
 document.addEventListener("DOMContentLoaded", function() {
 
-    $(document).on('click', "#resultClose", function(){
-		window.location.reload();
-    });
+    // $(document).on('click', "#resultClose", function(){
+	// 	window.location.reload();
+    // });
     
     $(document).on("click", "#save", function() {
         
         var fdata = $( '#w0' ).serializeJSON();
         fdata['dates'] = chechDates(fdata.dates);
+       
         if(valid(fdata) === true){
             $('#loading-modal').modal({ backdrop: 'static',keyboard: false });
-            console.log(fdata);
+            //console.log(fdata);
             
-            $.post("/" + mlang.lang + "/saveticket", fdata, function(response) {
+            $.post("/saveticket", fdata, function(response) {
                 if(response.error === false){
                     $('#loading-modal').modal('hide');
                     modalFill(response.data);
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 //console.log(response);
             }, 'json');
         }
+        //console.log(fdata);
     });
 
     function modalFill(data){
@@ -76,27 +78,11 @@ document.addEventListener("DOMContentLoaded", function() {
     function valid(data){
         if(data.text === '' || data.text === undefined || data.text === null)
         {   
-            modalError($('.text-title>div.row>div>h3').text(),$('.text-title>div.row>div>h3').text());
+            modalError('Введите текст объявления','Введите текст объявления');
             $('#msg_text').focus();
             return false;
         }else if(jQuery.isEmptyObject(data.dates) === true){
-            modalError($('#choicech').text(),$('#choicech').text());
-            return false;
-        }else if(data.phone === '' || data.phone === undefined || data.phone === null){
-                if(mlang.lang == 'ru'){
-                    modalError('Введите ваш номер телефона!','Введите ваш номер телефона!');
-                }else{
-                    modalError('Чөнток телефонуңуздун номерин жазыңыз!','Чөнток телефонуңуздун номерин жазыңыз!');
-                }
-                $('#phone').focus();
-                return false;
-        }else if($.isNumeric(data.phone) === false || data.phone.length !== 9) {
-            if(mlang.lang == 'ru'){
-                modalError('Неверный формат номера!','Неверный формат номера!');
-            }else{
-                modalError('телефондун номерин туура жазыңыз!','телефондун номерин туура жазыңыз!');
-            } 
-            $('#phone').focus();
+            modalError('Выберите телеканал','Выберите телеканал');
             return false;
         }else{
             return true;
@@ -156,6 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id: cur_one.data("id")
         }, renderCalendar)
     });
+
     $(document).on("click", "#calend_rows input", function(e) {
         var me = $(this);
         var days = calendarGetDaysByRow(me.parent());
@@ -184,6 +171,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
     });
+    
     $(document).on("click", "#ok_date", function() {
         var str = [];
         var inp_str = [];
@@ -200,6 +188,7 @@ document.addEventListener("DOMContentLoaded", function() {
         recalcAll();
         return false
     });
+    
     $(document).on("click", "#cancel_date", function() {
         $("#modal_date").modal("hide");
         datepicker.clear();
@@ -319,7 +308,10 @@ function recalcAll() {
                     s = tmp
                 }
             }
+
             $(".price_real", one).html(s.toFixed(2) + " " + valuta);
+            $(".countdays_real", one).html(c +" дней");
+
             if (old > 0) {
                 $(".price_old", one).html(old.toFixed(2) + " " + valuta)
             } else {
@@ -329,6 +321,7 @@ function recalcAll() {
             one.addClass("active")
         } else {
             $(".price_real", one).html("0.0 " + valuta);
+            //$(".countdays_real", one).html("0 дней");
             $(".price_old", one).html("");
             one.removeClass("active")
         }
