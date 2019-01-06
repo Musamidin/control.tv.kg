@@ -46,13 +46,6 @@ class MainHub extends \yii\db\ActiveRecord
         ];
     }
 
-    // public function scenarios()
-    // {
-    //     $scenarios = parent::scenarios();
-    //     $scenarios['create'] = ['phone','chid','text','dates']; 
-    //     return $scenarios; 
-    // }
-
     /**
      * {@inheritdoc}
      */

@@ -32,6 +32,63 @@ use app\models\User;
  */
 class HpFunc extends Component
 {
+    public function save($k,$v,$data)
+    {
+      try{
+            $mh = new MainHub();
+            //$mh->attributes = $data;
+            // if($mh->validate())
+            // {
+              if(!empty($v) && count($v) > 0)
+              {
+                $mh->chid = $k;
+                $mh->text = $data['text'];
+                $mh->dates = $this->upDatesStr($v);
+                $mh->state = 0;
+                $mh->client_id = Yii::$app->user->identity->getId();
+                $mh->cday = count($v);
+                if($mh->save())
+                {
+                  foreach($v as $itm)
+                  {
+                    $dh = new DatesHub();
+                    $dh->daterent = $itm;
+                    $dh->astatus = 0;
+                    $dh->mid = $mh->id;
+                    $dh->save();
+                  }
+                  return [
+                          'id'=> $mh->id,
+                          'coutDays' => $mh->cday,
+                          'status' => 0,
+                          'message'=> 'Запись успешно добавлен'
+                          ];
+                }else{
+                  return [
+                          'id'=> 0,
+                          'coutDays' => 0,
+                          'status' => 1,
+                          'message'=>'Произашло ошибка при сохранения в БД. Обратитесь к администратору!'
+                          ];
+                }
+              }else{
+                return [
+                          'id'=> 0,
+                          'coutDays' => 0,
+                          'status' => 2,
+                          'message'=>'Даты проката неправильные'
+                          ];
+              }
+            // }else{
+            //   Yii::error($mh->errors,'writelog');
+            //   return $mh->errors;
+            // }
+          }catch(\yii\base\Exception $ex){
+            Yii::error($ex->getMessage(),'writelog');
+            return $ex;
+          }
+    }
+    
     public function calculate($data)
     {
         $price = [];
@@ -61,7 +118,7 @@ class HpFunc extends Component
                 if(!empty($v)){
                     if(!empty($this->validateDates($v))){
                         $ds[$k] = $this->validateDates($v);
-                        $ds['countDays'][$k] = count($this->validateDates($v));
+                        //$ds['countDays'][$k] = count($this->validateDates($v));
                     }
                 }
             }
@@ -75,16 +132,7 @@ class HpFunc extends Component
       $date = date('Y-m-d',strtotime( $dates));
       if($date >= $this->dpickerblock())
       {
-        if(count($this->holidaysf()) > 0)
-        {
-          if( in_array( $date, $this->holidaysf() ) ){
-              return false;
-          }else{
-            return true;
-          }
-        }else{
-          return true;
-        }
+        return true;
       }else{
         return false;
       }

@@ -775,10 +775,7 @@ class SiteController extends Controller
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $request = Yii::$app->request;
-        $response = [
-            'error' => false,
-            'msg' => '',
-        ];
+        $response = ['error' => false,'msg' => '',];
     
         if (!$request->validateCsrfToken()) {
             $response = [
@@ -800,8 +797,13 @@ class SiteController extends Controller
                     $response['msg'] = 'выберите каналы';
                     $response['data'] = '';
                 }else{
-                    $data['countSim']=Yii::$app->HpFunc->getCountSim($data['text']);
-                    $data['valid'] = Yii::$app->HpFunc->dateValidation($data['dates']);
+                    //$data['countSim']=Yii::$app->HpFunc->getCountSim($data['text']);
+                    $data['vdates'] = Yii::$app->HpFunc->dateValidation($data['dates']);
+                    if(!empty($data['vdates'])){
+                        foreach($data['vdates'] as $k => $v){
+                            Yii::$app->HpFunc->save($k,$v,$data);
+                        }
+                    }
                     //$data['sum'] = Yii::$app->HpFunc->calculate($data);
                     //$sdata = Yii::$app->HpFunc->save($data);
                     $response['data'] = $data;
