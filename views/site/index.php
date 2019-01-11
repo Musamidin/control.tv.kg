@@ -25,8 +25,8 @@ $this->title = 'Размещение бегущей строки на все Т�
         <div class="input-group">
         <select id="sortbytv" name="sortbytv" class="form-control">
             <option value="0">Телеканалы...</option>
-            <? foreach($tvlist as $tl): ?>
-                <option value="<?=$tl['id']; ?>"><?=$tl['tvname']; ?></option>
+            <? foreach($tvlist['tvlist'] as $tl): ?>
+                <option value="<?=$tl['id']; ?>"><?=$tl['channel_name']; ?></option>
             <? endforeach; ?>
         </select>
         <span class="input-group-addon input-sm"></span>
@@ -89,7 +89,7 @@ $this->title = 'Размещение бегущей строки на все Т�
                   <td>{{ml.id}}</td>
                   <td>{{ml.datetime | formatDatetime}}</td>
                   <td>{{ml.chname}}</td>
-                  <td>{{ml.text}}</td>
+                  <td>{{ml.text}}&nbsp;{{ml.licdoc}}</td>
                   <td class="daterent">{{ml.dates}}</td>
                   <td>{{ml.cday}}</td>
                   <td>{{ml.simcount}}</td>
@@ -255,8 +255,17 @@ $this->title = 'Размещение бегущей строки на все Т�
                       <div class="col-md-12">
                           <?= $form->field($mainhub, 'text')->textarea(['autofocus' => false,'placeholder'=>'Текст объявления','ng-model'=>'data.text'])->label('Текст объявления'); ?>
                       </div>
-                      <div class="col-md-12">
+                      <div class="col-md-6">
                           <p>Символов: <span class="sys_count">0</span></p>
+                      </div>
+                      <div class="col-md-6">
+                        <?=$form->field($mainhub, 'licdoc',['options'=>
+                            ['tag' => 'div','class'=> 'form-group field-mainhub-licdoc has-feedback required'],
+                            'template'=>'{input}<span class="fa fa-certificate form-control-feedback"></span>{error}{hint}'
+                            ])->textInput(['autofocus' => false,'placeholder'=>'Лицензия','title'=>'Лицензия',
+                              'ng-model'=>'data.licdoc',
+                              'autocomplete'=>'off'])->label(false);
+                        ?>
                       </div>
                   </div>
                 <?php ActiveForm::end(); ?>  

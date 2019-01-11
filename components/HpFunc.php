@@ -43,6 +43,7 @@ class HpFunc extends Component
               {
                 $mh->chid = $k;
                 $mh->text = $data['text'];
+                $mh->licdoc = $data['licdoc'];
                 $mh->dates = $this->upDatesStr($v);
                 $mh->state = 0;
                 $mh->client_id = Yii::$app->user->identity->getId();
@@ -257,6 +258,19 @@ class HpFunc extends Component
 
       }else{
           return $dates;
+      }
+  }
+
+  public function getTvlist()
+  {
+      try{
+          return Channels::find()
+          ->select('id,channel_name as tvname,agency_price as price,img')
+          ->where(['=','status',0])
+          ->asArray()
+          ->all();
+      }catch(\yii\base\Exception $e){
+          Yii::error($e->getMessage(),'writelog');
       }
   }
 

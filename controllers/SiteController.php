@@ -122,7 +122,7 @@ class SiteController extends Controller
     
     public function actionAdd()
     {
-        $tvlist = Yii::$app->HelperFunc->getTvlist();
+        $tvlist = Yii::$app->HpFunc->getTvlist();
         if(Yii::$app->user->identity->role == 0 || Yii::$app->user->identity->role == 2){
             $count = MainHub::find()
                     ->filterWhere(['=', 'status', 0])
@@ -696,7 +696,7 @@ class SiteController extends Controller
             $tarr = [];
             foreach ($retData['mlv'] as $item) {
                 //$string .= $item['text']."\r\n";
-                array_push($tarr, $item['text']);
+                array_push($tarr, $item['text'].' '.$item['licdoc']);
             }
             shuffle($tarr);
             foreach ($tarr as $itm){
@@ -732,7 +732,7 @@ class SiteController extends Controller
             $retData = Yii::$app->HelperFunc->getDatas($data);
 
             foreach ($retData['mlv'] as $item) {
-                $string .= $item['text']."\r\n";
+                $string .= $item['text'].' '.$item['licdoc']."\r\n";
             }
             $bucket->saveFileContent(date('Y-m-d').'.txt', $string);
             $path = \Yii::$app->basePath."\web\\files\\tempFiles\\".date('Y-m-d').".txt";

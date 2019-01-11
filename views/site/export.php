@@ -57,7 +57,7 @@ $this->title = 'Admin';
                 <tbody>
                 <tr role="row" class="odd" ng-repeat="ml in mainlistview">
                   <td>{{ml.daterent}}</td>
-                  <td>{{ml.text}}</td>
+                  <td>{{ml.text}}&nbsp;{{ml.licdoc}}</td>
                 </tr>
                 </tbody>
               </table>

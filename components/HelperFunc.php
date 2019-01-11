@@ -88,6 +88,7 @@ class HelperFunc extends Component
               //$mh->phone = $data['phone'];
               $mh->chid = $data['chid'];
               $mh->text = $data['text'];
+              $mh->licdoc = $data['licdoc'];
               $mh->dates = $this->upDatesStr($vdate);
               $mh->state = 0;
               $mh->client_id = Yii::$app->user->identity->getId();
@@ -571,15 +572,20 @@ class HelperFunc extends Component
 
   public function getTvlist()
   {
-      try{
-          return Channels::find()
-          ->select('id,channel_name as tvname,agency_price as price,img')
-          ->where(['=','status',0])
+    $data = [];
+    try{
+          $data['tvlist'] = Channels::find()
+          ->select('id, channel_name,email')
+          ->where(['status'=> 0])
           ->asArray()
+          ->orderBy(['id'=>SORT_ASC])
           ->all();
-      }catch(\yii\base\Exception $e){
-          Yii::error($e->getMessage(),'writelog');
-      }
+
+      return $data;
+    }catch(\yii\base\Exception $e){
+      Yii::error($e->getMessage(),'writelog');
+    }
+
   }
 
   public function getClients()

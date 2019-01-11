@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function() {
             $.post("/saveticket", fdata, function(response) {
                 if(response.error === false){
 
-                    $.each(response.data.vdates, function(i, v) {
-                        console.log(i +' ^: '+v);
-                    });
+                    // $.each(response.data.vdates, function(i, v) {
+                    //     console.log(i +' ^: '+v);
+                    // });
                     
                     $('#loading-modal').modal('hide');
                     modalFill(response.data);

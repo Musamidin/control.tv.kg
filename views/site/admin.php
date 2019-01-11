@@ -89,7 +89,7 @@ $clients = Yii::$app->HelperFunc->getClients();
                   <td>{{ml.datetime | formatDatetime}}</td>
                   <td>{{ml.order}}</td>
                   <td>{{ml.chname}}</td>
-                  <td>{{ml.text}}</td>
+                  <td>{{ml.text}}&nbsp;{{ml.licdoc}}</td>
                   <td class="daterent">{{ml.dates}}</td>
                   <td>{{ml.cday}}</td>
                   <td>{{ml.simcount}}</td>
