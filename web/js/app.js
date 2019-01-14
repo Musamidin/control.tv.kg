@@ -130,6 +130,7 @@ $scope.addformaction = function(){
             document.getElementById("addForm").reset();
             $('#addstate').html(state.message).css('color','#8fff00');
             $('.sys_count').html(0);
+            delete $scope.data['licdoc'];
 	    }else{
 	    	$('#addstate').html(state.message).css('color','red');
 	    }

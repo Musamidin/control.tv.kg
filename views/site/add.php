@@ -185,23 +185,7 @@ $this->title = 'Размещение бегущей строки на все Т�
 		</div>
       <div id="getResult" class="modal-body">
 	  <div id="tt"></div>
-	  <p class="bold">Ваша Заявка зарегистрирована.</p>
-
-            <table class="checkReport">
-                <thead class="dreport">
-                  <th class="th">№</th>
-                    <th class="th">Телеканалы</th>
-                    <th class="th">Дата выхода</th>
-                    <th class="th">Кол.дней</th>
-                    <th class="th">Сумма</th>
-                </thead>
-                <tbody id="checkReport">
-
-                </tbody>
-            </table>
-			Мы рады быть с Вами на связи, Коллектив Myservice.kg
-			<div class="">
-			<span class="glyphicon glyphicon-earphone" aria-hidden="true"></span>&nbsp;+996(705)&nbsp;90-50-80</div>
+	    <p class="bold">Ваша Заявка зарегистрирована.</p>
       </div>
     </div>
   </div>

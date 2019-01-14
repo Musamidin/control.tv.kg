@@ -88,7 +88,7 @@ class HelperFunc extends Component
               //$mh->phone = $data['phone'];
               $mh->chid = $data['chid'];
               $mh->text = $data['text'];
-              $mh->licdoc = $data['licdoc'];
+              $mh->licdoc = isset($data['licdoc']) ? $data['licdoc'] : '';
               $mh->dates = $this->upDatesStr($vdate);
               $mh->state = 0;
               $mh->client_id = Yii::$app->user->identity->getId();
